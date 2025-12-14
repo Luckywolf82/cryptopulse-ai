@@ -245,7 +245,7 @@ export default function SmartRecommendations({ recommendations, isGenerating, on
                     </div>
                     <div className="p-2 rounded bg-amber-500/10 text-amber-400">
                       <div className="font-semibold">Blue Chip</div>
-                      <div className="text-slate-400">> Rp 10,000</div>
+                      <div className="text-slate-400">&gt; Rp 10,000</div>
                     </div>
                   </div>
                 </motion.div>
