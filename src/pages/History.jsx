@@ -599,6 +599,8 @@ export default function History() {
           </motion.div>
         )}
 
+        </div>
+
         {/* Analysis Detail Modal */}
         <AnalysisModal
           analysis={selectedAnalysis}
