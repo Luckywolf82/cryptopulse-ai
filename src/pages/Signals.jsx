@@ -43,11 +43,8 @@ export default function SignalsPage() {
 
   const createTestSignal = async () => {
     try {
-      const response = await fetch('/api/signals/seed', {
-        method: 'POST'
-      });
-      const result = await response.json();
-      toast.success(`Test signal created: ${result.createdSignalId}`);
+      const result = await base44.functions.invoke('signals-seed', {});
+      toast.success(`Test signal created: ${result.data.signalId}`);
       await loadSignals();
     } catch (error) {
       console.error('Failed to create test signal:', error);
