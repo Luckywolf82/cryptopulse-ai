@@ -8,6 +8,7 @@ import { ArrowLeft, Filter, Eye, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 import HistoryFilters from "../components/history/HistoryFilters";
 import AnalysisCard from "../components/history/AnalysisCard";
@@ -156,8 +157,8 @@ export default function History() {
             <ArrowLeft className="w-4 h-4 text-white" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-white">Trading History</h1>
-            <p className="text-slate-400 text-sm md:text-base">Track performance and AI analysis results</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-white">{t('history.title')}</h1>
+            <p className="text-slate-400 text-sm md:text-base">{t('history.subtitle')}</p>
           </div>
           <Button
             onClick={loadAnalyses}
@@ -165,7 +166,7 @@ export default function History() {
             className="bg-blue-600 hover:bg-blue-700"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
+            {t('common.refresh')}
           </Button>
         </motion.div>
 
@@ -181,23 +182,23 @@ export default function History() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div>
                   <div className="text-lg md:text-2xl font-bold text-white">{totalAnalysisCount}</div>
-                  <div className="text-slate-400 text-xs md:text-sm">Total Analysis</div>
+                  <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.totalAnalysis')}</div>
                 </div>
                 <div>
                   <div className="text-lg md:text-2xl font-bold text-emerald-400">{getSuccessRate().toFixed(1)}%</div>
-                  <div className="text-slate-400 text-xs md:text-sm">Success Rate</div>
+                  <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.successRate')}</div>
                 </div>
                 <div>
                   <div className="text-lg md:text-2xl font-bold text-blue-400">
                     {profitableCount}
                   </div>
-                  <div className="text-slate-400 text-xs md:text-sm">Profitable</div>
+                  <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.profitable')}</div>
                 </div>
                 <div>
                   <div className="text-lg md:text-2xl font-bold text-red-400">
                     {lossCount}
                   </div>
-                  <div className="text-slate-400 text-xs md:text-sm">Loss</div>
+                  <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.losses')}</div>
                 </div>
               </div>
             </CardContent>
@@ -243,23 +244,23 @@ export default function History() {
               <CardContent className="p-8 md:p-12 text-center">
                 <Eye className="w-12 h-12 md:w-16 md:h-16 text-slate-600 mx-auto mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-white mb-2">
-                  No Analysis Yet
+                  {t('history.noAnalysis')}
                 </h3>
                 <p className="text-slate-400 mb-6">
-                  No analysis has been performed yet. Start by analyzing your first chart.
+                  {t('history.noAnalysisDesc')}
                 </p>
                 <div className="space-y-2">
                   <Button
                     onClick={() => navigate(createPageUrl("Analyze"))}
                     className="bg-blue-600 hover:bg-blue-700 mr-2"
                   >
-                    Analyze Crypto & Forex
+                    {t('history.analyzeCrypto')}
                   </Button>
                   <Button
                     onClick={() => navigate(createPageUrl("StockAnalysis"))}
                     className="bg-red-600 hover:bg-red-700"
                   >
-                    Analyze Indonesian Stocks
+                    {t('history.analyzeStocks')}
                   </Button>
                 </div>
               </CardContent>
@@ -305,10 +306,10 @@ export default function History() {
               <CardContent className="p-8 md:p-12 text-center">
                 <Filter className="w-12 h-12 md:w-16 md:h-16 text-slate-600 mx-auto mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-white mb-2">
-                  No Analysis Matching Filter
+                  {t('history.noMatch')}
                 </h3>
                 <p className="text-slate-400 mb-6">
-                  No analysis matches the selected filters.
+                  {t('history.noMatchDesc')}
                 </p>
                 <Button
                   onClick={() => setFilters({ tradingType: "all", riskLevel: "all", dateRange: "all", resultStatus: "all" })}
