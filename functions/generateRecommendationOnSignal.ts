@@ -141,17 +141,48 @@ Deno.serve(async (req) => {
 
 async function fetchMarketContext(symbol, exchange) {
   try {
-    // For simplicity, we'll return mock data - in production, fetch from an API
+    // Map exchange and symbol to CoinGecko format
+    let coinId = symbol.toLowerCase().replace('usdt', '').replace('usd', '');
+    if (coinId === 'btc') coinId = 'bitcoin';
+    if (coinId === 'eth') coinId = 'ethereum';
+    if (coinId === 'bnb') coinId = 'binancecoin';
+    if (coinId === 'sol') coinId = 'solana';
+    if (coinId === 'xrp') coinId = 'ripple';
+    if (coinId === 'ada') coinId = 'cardano';
+    if (coinId === 'doge') coinId = 'dogecoin';
+    if (coinId === 'dot') coinId = 'polkadot';
+
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true`,
+      { headers: { 'Accept': 'application/json' } }
+    );
+
+    if (!response.ok) {
+      throw new Error(`CoinGecko API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const coinData = data[coinId];
+
+    if (!coinData) {
+      throw new Error(`No data found for ${symbol}`);
+    }
+
+    const currentPrice = coinData.usd || 0;
+    const change24h = coinData.usd_24h_change || 0;
+
     return {
-      currentPrice: 0, // Would be fetched from API
-      volume24h: 0,
-      trend: 'neutral'
+      currentPrice,
+      volume24h: coinData.usd_24h_vol || 0,
+      trend: change24h > 2 ? 'bullish' : change24h < -2 ? 'bearish' : 'neutral'
     };
   } catch (error) {
+    console.error(`Failed to fetch market context for ${symbol}:`, error);
+    // Return safe defaults if API fails
     return {
       currentPrice: 0,
       volume24h: 0,
-      trend: 'unknown'
+      trend: 'neutral'
     };
   }
 }
