@@ -54,7 +54,10 @@ export default function SignalsPage() {
 
   const testWebhook = async () => {
     try {
+      // Note: In production, the secret would come from TradingView webhook settings
+      // For testing, we need to include it in the payload
       const result = await base44.functions.invoke('tradingview-webhook', {
+        secret: "test-secret-for-ui-testing",
         symbol: "ETHUSDT",
         exchange: "BINANCE",
         timeframe: "1h",
