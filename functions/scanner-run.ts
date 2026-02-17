@@ -151,9 +151,13 @@ Deno.serve(async (req) => {
     
     const results = {
       scannedCount: 0,
+      symbolsWithData: 0,
+      symbolsMissingData: 0,
+      triggersFoundCount: 0,
       signalsCreatedCount: 0,
       skippedCooldown: 0,
       errorsCount: 0,
+      topCandidates: [],
       created: [],
       errors: []
     };
