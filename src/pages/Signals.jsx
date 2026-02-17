@@ -337,7 +337,7 @@ export default function SignalsPage() {
                             className="bg-emerald-600 hover:bg-emerald-700"
                           >
                             <BarChart2 className="w-4 h-4 mr-1" />
-                            Paper Trade
+                            Simuler handel
                           </Button>
                           <Button
                             size="sm"
