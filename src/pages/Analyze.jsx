@@ -7,12 +7,14 @@ import { ArrowLeft, Brain, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 import UploadArea from "../components/analyze/UploadArea";
 import TradingTypeSelector from "../components/analyze/TradingTypeSelector";
 import AnalysisResult from "../components/analyze/AnalysisResult";
 
 export default function Analyze() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -380,8 +382,8 @@ SPECIFIC INSTRUCTIONS:
             <ArrowLeft className="w-4 h-4 text-white" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-white">Professional AI Analyzer</h1>
-            <p className="text-slate-400">Master-level pattern recognition with 99%+ accuracy</p>
+            <h1 className="text-3xl font-bold text-white">{t('analyze.title')}</h1>
+            <p className="text-slate-400">{t('analyze.subtitle')}</p>
           </div>
         </motion.div>
 
@@ -458,10 +460,10 @@ SPECIFIC INSTRUCTIONS:
                     <Brain className="w-12 h-12 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2">
-                    🧠 Master {tradingType.toUpperCase()} AI Analyzing...
+                    🧠 {t('analyze.analyzing.title', { type: tradingType.toUpperCase() })}
                   </h3>
                   <p className="text-slate-400 mb-6">
-                    Using institutional {tradingType.toUpperCase()} trading methodology for 99%+ accuracy
+                    {t('analyze.analyzing.subtitle', { type: tradingType.toUpperCase() })}
                   </p>
                   
                   <div className="space-y-3 mb-6">
@@ -469,25 +471,25 @@ SPECIFIC INSTRUCTIONS:
                       <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                         <span className="text-white font-bold">1</span>
                       </div>
-                      <span className="text-slate-300">Enhanced chart validation...</span>
+                      <span className="text-slate-300">{t('analyze.analyzing.step1')}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                         <span className="text-white font-bold">2</span>
                       </div>
-                      <span className="text-slate-300">Master pattern recognition (1000+ patterns)...</span>
+                      <span className="text-slate-300">{t('analyze.analyzing.step2')}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
                         <span className="text-white font-bold">3</span>
                       </div>
-                      <span className="text-slate-300">Institutional confluence analysis...</span>
+                      <span className="text-slate-300">{t('analyze.analyzing.step3')}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
                         <span className="text-white font-bold">4</span>
                       </div>
-                      <span className="text-slate-300">Master quality control...</span>
+                      <span className="text-slate-300">{t('analyze.analyzing.step4')}</span>
                     </div>
                   </div>
                   
@@ -500,7 +502,7 @@ SPECIFIC INSTRUCTIONS:
                     />
                   </div>
                   <p className="text-sm text-slate-500">
-                    Master-level analysis requires 15-20 seconds for maximum precision...
+                    {t('analyze.analyzing.wait')}
                   </p>
                 </CardContent>
               </Card>
