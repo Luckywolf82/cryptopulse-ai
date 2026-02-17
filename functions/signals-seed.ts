@@ -6,25 +6,33 @@
 export default async function handler(request, context) {
   const { base44 } = context;
 
-  // Create test signal
-  const signal = await base44.entities.Signal.create({
-    symbol: "SOLUSDT",
-    exchange: "BINANCE",
-    timeframe: "1h",
-    triggerType: "EMA_FLIP",
-    direction: "long",
-    score: 78,
-    price: 152.44,
-    payloadJson: { source: "seed" }
-  });
+  try {
+    // Create test signal
+    const signal = await base44.entities.Signal.create({
+      symbol: "SOLUSDT",
+      exchange: "BINANCE",
+      timeframe: "1h",
+      triggerType: "EMA_FLIP",
+      direction: "long",
+      score: 78,
+      price: 152.44
+    });
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      createdSignalId: signal.id,
-      signal: signal
-    })
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        createdSignalId: signal.id,
+        signal: signal
+      })
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: error.message
+      })
+    };
+  }
 }
 
 export const config = {

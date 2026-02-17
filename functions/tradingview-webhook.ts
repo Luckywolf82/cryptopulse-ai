@@ -11,18 +11,32 @@ export default async function handler(request, context) {
   console.log('[TradingView Webhook] Request received');
 
   // Parse webhook payload - handle string or object
-  const payload = typeof request.body === 'string' ? JSON.parse(request.body) : request.body;
+  let payload;
+  try {
+    payload = typeof request.body === 'string' ? JSON.parse(request.body) : request.body;
+    console.log('[TradingView Webhook] Payload parsed successfully');
+  } catch (error) {
+    console.log('[TradingView Webhook] Invalid JSON payload');
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        accepted: false,
+        error: 'invalid_json'
+      })
+    };
+  }
   
-  // Validate webhook secret from multiple sources
+  // Validate webhook secret from multiple sources (case-insensitive header)
+  const headerSecret = Object.keys(request.headers).find(k => k.toLowerCase() === 'x-signal-secret');
   const providedSecret = 
-    request.headers['x-signal-secret'] || 
+    (headerSecret ? request.headers[headerSecret] : null) ||
     payload.secret || 
     new URLSearchParams(request.url.split('?')[1] || '').get('secret');
   
   const expectedSecret = secrets.SIGNAL_WEBHOOK_SECRET;
 
   if (!providedSecret || providedSecret !== expectedSecret) {
-    console.log('[TradingView Webhook] Auth failed');
+    console.log('[TradingView Webhook] Auth failed - secret mismatch or missing');
     return {
       statusCode: 401,
       body: JSON.stringify({ 
@@ -83,31 +97,39 @@ export default async function handler(request, context) {
   const alertTriggered = score >= 70;
 
   // Store signal in database
-  const signal = await base44.entities.Signal.create({
-    symbol,
-    exchange: exchange || 'UNKNOWN',
-    timeframe,
-    triggerType,
-    direction,
-    score,
-    price: price ?? null,
-    volume: payload.volume ?? null,
-    liquidityScore: payload.liquidityScore ?? null,
-    htfBias: payload.htfBias ?? null,
-    payloadJson: payload
-  });
-
-  console.log('[TradingView Webhook] Signal created:', signal.id);
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      accepted: true,
+  try {
+    const signal = await base44.entities.Signal.create({
+      symbol,
+      exchange: exchange || 'UNKNOWN',
+      timeframe,
+      triggerType,
+      direction,
       score,
-      alertTriggered,
-      createdSignalId: signal.id
-    })
-  };
+      price: price ?? null
+    });
+
+    console.log('[TradingView Webhook] Signal created successfully:', signal.id);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        accepted: true,
+        score,
+        alertTriggered,
+        createdSignalId: signal.id
+      })
+    };
+  } catch (error) {
+    console.log('[TradingView Webhook] DB create failed:', error.message);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        accepted: false,
+        error: 'db_create_failed',
+        message: error.message
+      })
+    };
+  }
 }
 
 export const config = {
