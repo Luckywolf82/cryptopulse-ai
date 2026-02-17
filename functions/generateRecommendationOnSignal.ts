@@ -3,9 +3,20 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    
-    const body = await req.json();
-    const { event, data } = body;
+
+    // Validate request body
+    let body, event, data;
+    try {
+      body = await req.json();
+      event = body?.event;
+      data = body?.data;
+    } catch {
+      return Response.json({ error: 'Invalid JSON in request body' }, { status: 400 });
+    }
+
+    if (!event || !event.type) {
+      return Response.json({ error: 'Missing event.type in request' }, { status: 400 });
+    }
 
     // Only process create events for signals with score >= 70
      if (event.type !== 'create' || !data || data.score < 70) {
@@ -133,11 +144,17 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('Error generating recommendation:', error);
+
+    // Return detailed error for debugging, but safe message to client
+    const errorMessage = error?.message || 'Failed to generate recommendation';
+    const statusCode = error?.statusCode || 500;
+
     return Response.json({
-      error: error.message
-    }, { status: 500 });
+      error: errorMessage,
+      timestamp: new Date().toISOString()
+    }, { status: statusCode });
   }
-});
+  });
 
 async function fetchMarketContext(symbol, exchange) {
   try {
