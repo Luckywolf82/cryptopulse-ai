@@ -3,12 +3,14 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, TrendingUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import SignalFrequencyChart from "../components/analytics/SignalFrequencyChart";
 import ScoreDistribution from "../components/analytics/ScoreDistribution";
 import PerformanceMetrics from "../components/analytics/PerformanceMetrics";
 import StatsCards from "../components/analytics/StatsCards";
 
 export default function SignalAnalyticsPage() {
+  const { t } = useTranslation();
   const [signals, setSignals] = useState([]);
   const [paperTrades, setPaperTrades] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,8 +40,8 @@ export default function SignalAnalyticsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Signalanalyse</h1>
-            <p className="text-slate-300">Statistikk og innsikt i handelsignaler</p>
+            <h1 className="text-4xl font-bold text-white mb-2">{t('analytics.title')}</h1>
+            <p className="text-slate-300">{t('analytics.subtitle')}</p>
           </div>
           <Button
             onClick={loadData}
@@ -47,20 +49,20 @@ export default function SignalAnalyticsPage() {
             className="bg-emerald-600 hover:bg-emerald-700"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Oppdater
+            {t('analytics.update')}
           </Button>
         </div>
 
         {isLoading ? (
           <div className="text-center py-12">
             <div className="animate-spin w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full mx-auto"></div>
-            <p className="text-slate-400 mt-4">Laster analysedata...</p>
+            <p className="text-slate-400 mt-4">{t('analytics.loadingData')}</p>
           </div>
         ) : signals.length === 0 ? (
           <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl">
             <CardContent className="py-12 text-center">
               <TrendingUp className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <p className="text-slate-400 text-lg">Ingen signaler å analysere ennå</p>
+              <p className="text-slate-400 text-lg">{t('analytics.noData')}</p>
             </CardContent>
           </Card>
         ) : (

@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import SignalDetailModal from "../components/signals/SignalDetailModal";
 
 export default function SignalsPage() {
+  const { t } = useTranslation();
   const [signals, setSignals] = useState([]);
   const [filteredSignals, setFilteredSignals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -164,8 +166,8 @@ export default function SignalsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Trading Signals</h1>
-            <p className="text-slate-300">Real-time alerts from TradingView</p>
+            <h1 className="text-4xl font-bold text-white mb-2">{t('signals.title')}</h1>
+            <p className="text-slate-300">{t('signals.subtitle')}</p>
           </div>
           <div className="flex gap-2">
             <Button
@@ -174,14 +176,14 @@ export default function SignalsPage() {
               className="border-slate-600 hover:bg-slate-800"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Quick Test
+              {t('signals.quickTest')}
             </Button>
             <Button
               onClick={testWebhook}
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Test Webhook
+              {t('signals.testWebhook')}
             </Button>
             <Button
               onClick={loadSignals}
@@ -189,7 +191,7 @@ export default function SignalsPage() {
               className="bg-emerald-600 hover:bg-emerald-700"
             >
               <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh
+              {t('signals.refresh')}
             </Button>
           </div>
         </div>
@@ -197,11 +199,11 @@ export default function SignalsPage() {
         {/* Filters */}
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl mb-6">
           <CardHeader>
-            <CardTitle className="text-white">Filters</CardTitle>
+            <CardTitle className="text-white">{t('signals.filters')}</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Input
-              placeholder="Search symbol..."
+              placeholder={t('signals.searchSymbol')}
               value={symbolFilter}
               onChange={(e) => setSymbolFilter(e.target.value)}
               className="bg-slate-900/50 border-slate-700 text-white"
@@ -212,7 +214,7 @@ export default function SignalsPage() {
                 <SelectValue placeholder="Timeframe" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Timeframes</SelectItem>
+                <SelectItem value="all">{t('signals.allTimeframes')}</SelectItem>
                 <SelectItem value="15m">15m</SelectItem>
                 <SelectItem value="1h">1h</SelectItem>
                 <SelectItem value="4h">4h</SelectItem>
@@ -225,7 +227,7 @@ export default function SignalsPage() {
                 <SelectValue placeholder="Trigger Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="all">{t('signals.allTypes')}</SelectItem>
                 <SelectItem value="EMA_FLIP">EMA Flip</SelectItem>
                 <SelectItem value="MSS">Market Structure Shift</SelectItem>
                 <SelectItem value="RSI_DIV">RSI Divergence</SelectItem>
@@ -234,13 +236,13 @@ export default function SignalsPage() {
 
             <Select value={minScoreFilter.toString()} onValueChange={(v) => setMinScoreFilter(Number(v))}>
               <SelectTrigger className="bg-slate-900/50 border-slate-700 text-white">
-                <SelectValue placeholder="Min Score" />
+                <SelectValue placeholder={t('signals.minScore')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="0">All Scores</SelectItem>
+                <SelectItem value="0">{t('signals.allScores')}</SelectItem>
                 <SelectItem value="50">50+</SelectItem>
                 <SelectItem value="60">60+</SelectItem>
-                <SelectItem value="70">70+ (High Quality)</SelectItem>
+                <SelectItem value="70">70+ ({t('signals.highQuality')})</SelectItem>
                 <SelectItem value="80">80+</SelectItem>
               </SelectContent>
             </Select>
@@ -251,22 +253,22 @@ export default function SignalsPage() {
         {isLoading ? (
           <div className="text-center py-12">
             <div className="animate-spin w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full mx-auto"></div>
-            <p className="text-slate-400 mt-4">Loading signals...</p>
+            <p className="text-slate-400 mt-4">{t('signals.loadingSignals')}</p>
           </div>
         ) : filteredSignals.length === 0 ? (
           <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl">
             <CardContent className="py-12 text-center">
               <TrendingUp className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <p className="text-slate-400 text-lg">No signals found</p>
+              <p className="text-slate-400 text-lg">{t('signals.noSignals')}</p>
               <p className="text-slate-500 text-sm mt-2">
-                {signals.length > 0 ? "Try adjusting your filters" : "Waiting for incoming signals from TradingView webhook"}
+                {signals.length > 0 ? t('signals.adjustFilters') : t('signals.waitingSignals')}
               </p>
               {signals.length === 0 && (
                 <Button
                   onClick={createTestSignal}
                   className="mt-6 bg-blue-600 hover:bg-blue-700"
                 >
-                  Create Test Signal
+                  {t('signals.createTest')}
                 </Button>
               )}
             </CardContent>
@@ -304,7 +306,7 @@ export default function SignalsPage() {
                             </Badge>
                           </div>
                           <p className="text-sm text-slate-400">
-                            {signal.direction.toUpperCase()} • {signal.timeframe}
+                            {t(`signals.${signal.direction}`)} • {signal.timeframe}
                           </p>
                         </div>
                       </div>
@@ -324,7 +326,7 @@ export default function SignalsPage() {
 
                         <div className={`px-4 py-2 rounded-lg border ${getScoreColor(signal.score)}`}>
                           <div className="text-2xl font-bold">{signal.score}</div>
-                          <div className="text-xs">Score</div>
+                          <div className="text-xs">{t('signals.score')}</div>
                         </div>
 
                         <div className="flex items-center gap-2">
@@ -337,7 +339,7 @@ export default function SignalsPage() {
                             className="bg-emerald-600 hover:bg-emerald-700"
                           >
                             <BarChart2 className="w-4 h-4 mr-1" />
-                            Simuler handel
+                            {t('signals.simulateTrade')}
                           </Button>
                           <Button
                             size="sm"
