@@ -6,7 +6,7 @@
 export default async function handler(request, context) {
   const { base44 } = context;
 
-  // Create realistic test signal
+  // Create test signal
   const signal = await base44.entities.Signal.create({
     symbol: "SOLUSDT",
     exchange: "BINANCE",
@@ -15,19 +15,14 @@ export default async function handler(request, context) {
     direction: "long",
     score: 78,
     price: 152.44,
-    payload: {
-      volumeSpike: true,
-      htfAlign: true,
-      volatilityHealthy: true
-    }
+    payload: { source: "seed" }
   });
 
   return {
     statusCode: 200,
     body: JSON.stringify({
-      success: true,
       createdSignalId: signal.id,
-      message: "Test signal created"
+      signal: signal
     })
   };
 }

@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowUpRight, ArrowDownRight, TrendingUp, RefreshCw } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, TrendingUp, RefreshCw, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 export default function SignalsPage() {
   const [signals, setSignals] = useState([]);
@@ -46,10 +47,11 @@ export default function SignalsPage() {
         method: 'POST'
       });
       const result = await response.json();
-      console.log('Test signal created:', result);
+      toast.success(`Test signal created: ${result.createdSignalId}`);
       await loadSignals();
     } catch (error) {
       console.error('Failed to create test signal:', error);
+      toast.error('Failed to create test signal');
     }
   };
 
@@ -92,14 +94,23 @@ export default function SignalsPage() {
             <h1 className="text-4xl font-bold text-white mb-2">Trading Signals</h1>
             <p className="text-slate-300">Real-time alerts from TradingView</p>
           </div>
-          <Button
-            onClick={loadSignals}
-            disabled={isLoading}
-            className="bg-emerald-600 hover:bg-emerald-700"
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={createTestSignal}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create Test Signal
+            </Button>
+            <Button
+              onClick={loadSignals}
+              disabled={isLoading}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
