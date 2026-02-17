@@ -77,7 +77,7 @@ export default function History() {
 
   const loadPerformances = async () => {
     try {
-      const perf = await base44.entities.SignalPerformance.list("-created_date", 100);
+      const perf = await base44.entities.SignalPerformance.list("-created_date", 1000);
       setPerformances(perf);
     } catch (error) {
       console.error("Error loading performances:", error);
