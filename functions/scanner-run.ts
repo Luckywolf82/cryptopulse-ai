@@ -451,12 +451,16 @@ Deno.serve(async (req) => {
         });
 
       } catch (error) {
-        results.errorsCount++;
-        results.errors.push({
-          symbol: watchItem.symbol,
-          error: error.message
-        });
-      }
+         results.errorsCount++;
+         results.symbolsMissingData++;
+         results.errors.push({
+           symbol: watchItem.symbol,
+           error: error.message
+         });
+         return;
+       }
+
+       results.symbolsWithData++;
     }, maxConcurrency);
 
     return Response.json(results);
