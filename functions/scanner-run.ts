@@ -350,20 +350,29 @@ Deno.serve(async (req) => {
         const avgRange120 = ranges120.reduce((a, b) => a + b, 0) / ranges120.length;
         const volatilityHealthy = avgRange20 > avgRange120 * 0.7;
 
-        const close4h = data4h.close[lastClosedIndex4h];
-        const ema50_4hValue = ema50_4h[lastClosedIndex4h];
-        const htfAlign = (direction === 'long' && close4h > ema50_4hValue) ||
-                         (direction === 'short' && close4h < ema50_4hValue);
-
         const distFromEma50 = Math.abs(data1h.close[lastClosedIndex] - currEma50) / currEma50;
         const tooExtended = distFromEma50 > 0.06;
 
-        // Calculate score
-        let score = triggerType === 'MSS' ? 60 : (triggerType === 'EMA_FLIP' ? 50 : 45);
+        // Check symbol quality
+        const isLowQuality = watchItem.min24hVolumeUsd && watchItem.min24hVolumeUsd < 5000000;
+
+        // Calculate score based on trigger type
+        let score = 0;
+        if (triggerType === 'MSS') score = 60;
+        else if (triggerType === 'EMA_FLIP') score = 50;
+        else if (triggerType === 'PULLBACK_RETEST') score = 45;
+        else if (triggerType === 'RSI_REVERSAL') score = 40;
+        else score = 35;
+
+        // Add bonuses
         if (volumeSpike) score += 10;
         if (htfAlign) score += 10;
         if (volatilityHealthy) score += 5;
+
+        // Apply penalties
         if (tooExtended) score -= 10;
+        if (isLowQuality) score -= 10;
+
         score = Math.max(0, Math.min(100, score));
 
         // Check cooldown
