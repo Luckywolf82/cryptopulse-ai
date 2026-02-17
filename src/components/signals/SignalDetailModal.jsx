@@ -161,7 +161,7 @@ export default function SignalDetailModal({ signal, onClose, onCreatePaperTrade 
               className="flex-1 bg-emerald-600 hover:bg-emerald-700"
             >
               <BarChart2 className="w-4 h-4 mr-2" />
-              Create Paper Trade
+              Simuler handel
             </Button>
             <Button
               onClick={onClose}
