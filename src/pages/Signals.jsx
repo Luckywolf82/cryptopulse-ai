@@ -51,8 +51,20 @@ export default function SignalsPage() {
     setIsLoading(true);
     try {
       const data = await base44.entities.Signal.list("-created_date", 100);
-      console.log('Loaded signals:', data.length, data);
-      setSignals(data);
+      
+      // Deduplicate by keeping latest signal per (symbol, timeframe, triggerType, direction)
+      const seen = {};
+      const unique = data.filter(signal => {
+        const key = `${signal.symbol}|${signal.timeframe}|${signal.triggerType}|${signal.direction}`;
+        if (!seen[key]) {
+          seen[key] = true;
+          return true;
+        }
+        return false;
+      });
+      
+      console.log('Loaded signals:', unique.length, 'from', data.length);
+      setSignals(unique);
     } catch (error) {
       console.error("Failed to load signals:", error);
     }
