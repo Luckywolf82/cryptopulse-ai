@@ -30,10 +30,10 @@ export default function HistoryFilters({ filters, onFiltersChange }) {
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Semua</SelectItem>
-              <SelectItem value="stock">Saham</SelectItem>
-              <SelectItem value="spot">Spot</SelectItem>
-              <SelectItem value="forex">Forex</SelectItem>
+              <SelectItem value="all">{t('history.filters.all')}</SelectItem>
+              <SelectItem value="stock">{t('history.filters.stock')}</SelectItem>
+              <SelectItem value="spot">{t('history.filters.spot')}</SelectItem>
+              <SelectItem value="forex">{t('history.filters.forex')}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -45,10 +45,10 @@ export default function HistoryFilters({ filters, onFiltersChange }) {
               <SelectValue placeholder="Risk" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Risk</SelectItem>
-              <SelectItem value="low">Low</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="all">{t('history.filters.risk')}</SelectItem>
+              <SelectItem value="low">{t('history.filters.low')}</SelectItem>
+              <SelectItem value="medium">{t('history.filters.medium')}</SelectItem>
+              <SelectItem value="high">{t('history.filters.high')}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -60,12 +60,12 @@ export default function HistoryFilters({ filters, onFiltersChange }) {
               <SelectValue placeholder="Result" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="tracked">Tracked</SelectItem>
-              <SelectItem value="untracked">Untracked</SelectItem>
-              <SelectItem value="SUCCESS">Success</SelectItem>
-              <SelectItem value="FAILED">Failed</SelectItem>
-              <SelectItem value="ONGOING">Ongoing</SelectItem>
+              <SelectItem value="all">{t('history.filters.all')}</SelectItem>
+              <SelectItem value="tracked">{t('history.filters.tracked')}</SelectItem>
+              <SelectItem value="untracked">{t('history.filters.untracked')}</SelectItem>
+              <SelectItem value="SUCCESS">{t('history.filters.success')}</SelectItem>
+              <SelectItem value="FAILED">{t('history.filters.failed')}</SelectItem>
+              <SelectItem value="ONGOING">{t('history.filters.ongoing')}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -77,10 +77,10 @@ export default function HistoryFilters({ filters, onFiltersChange }) {
               <SelectValue placeholder="Time" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Semua</SelectItem>
-              <SelectItem value="today">Hari Ini</SelectItem>
-              <SelectItem value="week">Minggu</SelectItem>
-              <SelectItem value="month">Bulan</SelectItem>
+              <SelectItem value="all">{t('history.filters.all')}</SelectItem>
+              <SelectItem value="today">{t('history.filters.today')}</SelectItem>
+              <SelectItem value="week">{t('history.filters.week')}</SelectItem>
+              <SelectItem value="month">{t('history.filters.month')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
