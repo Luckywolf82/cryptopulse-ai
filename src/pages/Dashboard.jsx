@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { TrendingUp, BarChart3, Target, Zap, Building2, History } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 import StatsCard from "../components/dashboard/StatsCard";
 import RecentAnalyses from "../components/dashboard/RecentAnalyses";
@@ -16,6 +17,7 @@ import SmartRecommendations from "../components/dashboard/SmartRecommendations";
 import AnalysisModal from "../components/history/AnalysisModal"; // Import the modal
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const [analyses, setAnalyses] = useState([]);
   const [stockAnalyses, setStockAnalyses] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
@@ -153,19 +155,19 @@ Provide ACTIONABLE recommendations with clear target price and stop loss.`,
         >
           <div className="text-center md:text-left">
             <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
-              Professional Trading Hub
+              {t('dashboard.title')}
             </h1>
             <p className="text-slate-400 text-base md:text-lg">
-              AI-Powered Analysis • Real-time Recommendations • 95%+ Accuracy
+              {t('dashboard.subtitle')}
             </p>
             <div className="flex items-center justify-center md:justify-start gap-4 mt-3">
               <div className="flex items-center gap-2 text-sm">
                 <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                <span className="text-slate-300">AI Active</span>
+                <span className="text-slate-300">{t('dashboard.aiActive')}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span className="text-slate-300">Market Live</span>
+                <span className="text-slate-300">{t('dashboard.marketLive')}</span>
               </div>
             </div>
           </div>
@@ -181,32 +183,32 @@ Provide ACTIONABLE recommendations with clear target price and stop loss.`,
         {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
           <StatsCard
-            title="Total Analysis"
+            title={t('dashboard.stats.totalAnalysis')}
             value={totalAnalyses}
             icon={BarChart3}
             gradient="from-blue-500 to-cyan-500"
-            trend="+12% this week"
+            trend={t('dashboard.stats.thisWeek')}
           />
           <StatsCard
-            title="Stocks 🇮🇩"
+            title={t('dashboard.stats.stocks')}
             value={totalStocks}
             icon={Building2}
             gradient="from-red-500 to-orange-500"
-            trend="IDX analysis"
+            trend={t('dashboard.stats.idxAnalysis')}
           />
           <StatsCard
-            title="AI Accuracy"
+            title={t('dashboard.stats.aiAccuracy')}
             value={`${avgConfidence.toFixed(1)}%`}
             icon={Zap}
             gradient="from-emerald-500 to-green-500"
-            trend="Institutional grade"
+            trend={t('dashboard.stats.institutionalGrade')}
           />
           <StatsCard
-            title="Success Rate"
+            title={t('dashboard.stats.successRate')}
             value={successfulTrades}
             icon={Target}
             gradient="from-purple-500 to-pink-500"
-            trend={`${successfulTrades} profitable`}
+            trend={`${successfulTrades} ${t('dashboard.stats.profitable')}`}
           />
         </div>
 
@@ -219,8 +221,8 @@ Provide ACTIONABLE recommendations with clear target price and stop loss.`,
                   <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
                     <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   </div>
-                  <h3 className="font-bold text-white mb-2">Crypto & Forex</h3>
-                  <p className="text-slate-400 text-xs md:text-sm">Technical analysis crypto and forex</p>
+                  <h3 className="font-bold text-white mb-2">{t('dashboard.quickActions.cryptoForex')}</h3>
+                  <p className="text-slate-400 text-xs md:text-sm">{t('dashboard.quickActions.cryptoDesc')}</p>
                 </CardContent>
               </Card>
             </Link>
@@ -233,8 +235,8 @@ Provide ACTIONABLE recommendations with clear target price and stop loss.`,
                   <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Building2 className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   </div>
-                  <h3 className="font-bold text-white mb-2">Indonesian Stocks 🇮🇩</h3>
-                  <p className="text-slate-400 text-xs md:text-sm">IDX stock analysis + fundamental news</p>
+                  <h3 className="font-bold text-white mb-2">{t('dashboard.quickActions.stocksTitle')}</h3>
+                  <p className="text-slate-400 text-xs md:text-sm">{t('dashboard.quickActions.stocksDesc')}</p>
                 </CardContent>
               </Card>
             </Link>
@@ -247,8 +249,8 @@ Provide ACTIONABLE recommendations with clear target price and stop loss.`,
                   <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3">
                     <History className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   </div>
-                  <h3 className="font-bold text-white mb-2">Track Results</h3>
-                  <p className="text-slate-400 text-xs md:text-sm">Monitor trading performance</p>
+                  <h3 className="font-bold text-white mb-2">{t('dashboard.quickActions.trackResults')}</h3>
+                  <p className="text-slate-400 text-xs md:text-sm">{t('dashboard.quickActions.trackDesc')}</p>
                 </CardContent>
               </Card>
             </Link>

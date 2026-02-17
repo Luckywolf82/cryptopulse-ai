@@ -106,17 +106,17 @@ export default function TradingInsights({ analyses }) {
           <div className="space-y-3 text-sm">
             <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
               <p className="text-blue-300">
-                💡 Use stop loss to protect your capital
+                {t('dashboard.insights.tip1')}
               </p>
             </div>
             <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
               <p className="text-green-300">
-                📈 Take profit gradually to maximize gains
+                {t('dashboard.insights.tip2')}
               </p>
             </div>
             <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
               <p className="text-purple-300">
-                🎯 Check AI confidence score before trading
+                {t('dashboard.insights.tip3')}
               </p>
             </div>
           </div>

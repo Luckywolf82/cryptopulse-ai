@@ -35,6 +35,7 @@ const getPriceCategoryBadge = (price) => {
 };
 
 export default function SmartRecommendations({ recommendations, isGenerating, onRefresh }) {
+  const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
   
   const displayCount = showAll ? recommendations.length : 4;
@@ -54,7 +55,7 @@ export default function SmartRecommendations({ recommendations, isGenerating, on
               Smart Recommendations Ready
             </h3>
             <p className="text-slate-400 mb-4">
-              AI will generate best recommendations based on real-time analysis
+              {t('dashboard.recommendations.generateDesc')}
             </p>
             <Button 
               onClick={onRefresh}
@@ -81,7 +82,7 @@ export default function SmartRecommendations({ recommendations, isGenerating, on
             <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
               🚀 Smart AI Recommendations
             </CardTitle>
-            <p className="text-slate-400 text-sm">Today's best recommendations - All Indonesian stock price categories</p>
+            <p className="text-slate-400 text-sm">{t('dashboard.recommendations.subtitle')}</p>
           </div>
           <Button
             variant="outline"
@@ -157,7 +158,7 @@ export default function SmartRecommendations({ recommendations, isGenerating, on
                                 </span>
                                 {rec.recommendation_type === 'stock' && (
                                    <span className="text-blue-400">
-                                     {rec.current_price <= 5000 ? 'Affordable' : 'Premium'}
+                                     {rec.current_price <= 5000 ? t('dashboard.recommendations.affordable') : t('dashboard.recommendations.premium')}
                                    </span>
                                  )}
                               </div>
@@ -228,7 +229,7 @@ export default function SmartRecommendations({ recommendations, isGenerating, on
                   transition={{ delay: 0.4 }}
                 >
                   <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                    🇮🇩 Indonesian Stock Categories
+                    {t('dashboard.recommendations.stockCategories')}
                   </h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                     <div className="p-2 rounded bg-emerald-500/10 text-emerald-400">
