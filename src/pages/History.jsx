@@ -246,7 +246,7 @@ export default function History() {
         </motion.div>
 
         {/* Tabs for History and Performance */}
-        <Tabs value="history" onValueChange={() => {}} className="mb-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
           <TabsList className="grid w-full max-w-md grid-cols-2 bg-slate-800/50 border border-slate-700">
             <TabsTrigger value="history" className="text-slate-300 data-[state=active]:text-white">History</TabsTrigger>
             <TabsTrigger value="performance" className="text-slate-300 data-[state=active]:text-white">Performance</TabsTrigger>
