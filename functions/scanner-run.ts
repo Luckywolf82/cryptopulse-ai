@@ -123,24 +123,42 @@ Deno.serve(async (req) => {
         const fsym = symbol.replace('USDT', '');
         
         // Fetch historical data from CryptoCompare
-        const [data1hRes, data4hRes] = await Promise.all([
-          fetchWithRetry(`https://min-api.cryptocompare.com/data/v2/histohour?fsym=${fsym}&tsym=USD&limit=${lookback}`),
-          fetchWithRetry(`https://min-api.cryptocompare.com/data/v2/histohour?fsym=${fsym}&tsym=USD&limit=${lookback}&aggregate=4`)
-        ]);
+        const data1hRes = await fetchWithRetry(`https://min-api.cryptocompare.com/data/v2/histohour?fsym=${fsym}&tsym=USD&limit=${lookback}`);
 
-        if (!data1hRes.ok || !data4hRes.ok) {
-          throw new Error(`HTTP ${data1hRes.status} / ${data4hRes.status}`);
+        if (!data1hRes.ok) {
+          throw new Error(`HTTP ${data1hRes.status}`);
         }
 
         const json1h = await data1hRes.json();
-        const json4h = await data4hRes.json();
 
-        if (json1h.Response === 'Error' || json4h.Response === 'Error') {
-          throw new Error('CryptoCompare API error');
+        if (json1h.Response === 'Error') {
+          throw new Error(`CryptoCompare: ${json1h.Message || 'Unknown error'}`);
         }
 
         const data1h = parseCryptoCompare(json1h.Data.Data);
-        const data4h = parseCryptoCompare(json4h.Data.Data);
+        
+        // For 4h, aggregate 1h data (simpler than separate API call)
+        const data4h = {
+          open: [],
+          high: [],
+          low: [],
+          close: [],
+          volume: [],
+          openTime: [],
+          closeTime: []
+        };
+        
+        for (let i = 0; i < data1h.open.length; i += 4) {
+          if (i + 3 < data1h.open.length) {
+            data4h.open.push(data1h.open[i]);
+            data4h.high.push(Math.max(...data1h.high.slice(i, i + 4)));
+            data4h.low.push(Math.min(...data1h.low.slice(i, i + 4)));
+            data4h.close.push(data1h.close[i + 3]);
+            data4h.volume.push(data1h.volume.slice(i, i + 4).reduce((a, b) => a + b, 0));
+            data4h.openTime.push(data1h.openTime[i]);
+            data4h.closeTime.push(data1h.closeTime[i + 3]);
+          }
+        }
 
         // Use last closed candle
         const lastClosedIndex = data1h.close.length - 2;
