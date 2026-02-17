@@ -6,6 +6,7 @@ import { TrendingUp, Building2, Zap, Newspaper, ArrowRight, RefreshCw, Target, C
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useTranslation } from "react-i18next";
 
 const actionColors = {
   STRONG_BUY: "bg-green-500/20 text-green-400 border-green-500/30",

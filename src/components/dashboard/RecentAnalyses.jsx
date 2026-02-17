@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw, ExternalLink, TrendingUp } from "lucide-react";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const riskColors = {
   low: "bg-green-500/20 text-green-400 border-green-500/30",
@@ -13,6 +14,7 @@ const riskColors = {
 };
 
 export default function RecentAnalyses({ analyses, isLoading, onRefresh, onCardClick }) {
+  const { t } = useTranslation();
   return (
     <Card className="glass-effect border-gray-700">
       <CardHeader className="flex flex-row items-center justify-between">
