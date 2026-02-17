@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, TrendingUp, BarChart3, Shield, Zap, Target, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBack }) {
+  const { t } = useTranslation();
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -24,10 +27,10 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
             </Button>
             <div>
               <CardTitle className="text-2xl font-bold text-white">
-                Select Trading Type
+                {t('analyze.typeSelector.title')}
               </CardTitle>
               <p className="text-slate-400 mt-1">
-                Choose trading type to optimize AI analysis for better accuracy
+                {t('analyze.typeSelector.subtitle')}
               </p>
             </div>
           </div>
@@ -68,10 +71,9 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
                 <div className="w-20 h-20 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                   <TrendingUp className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Spot Trading</h3>
+                <h3 className="text-2xl font-bold text-white mb-2">{t('analyze.typeSelector.spot.title')}</h3>
                 <p className="text-slate-400 mb-6 leading-relaxed">
-                  Spot crypto trading with direct asset ownership. 
-                  Ideal for long-term investors and beginners.
+                  {t('analyze.typeSelector.spot.description')}
                 </p>
               </div>
 
@@ -82,35 +84,30 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
                     <Shield className="w-4 h-4 text-emerald-400" />
                     <span className="text-slate-300 text-sm">Leverage:</span>
                   </div>
-                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">1:1 (No Leverage)</Badge>
+                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">{t('analyze.typeSelector.spot.leverage')}</Badge>
                 </div>
                 
                 <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50">
                   <div className="flex items-center gap-2">
                     <Target className="w-4 h-4 text-emerald-400" />
-                    <span className="text-slate-300 text-sm">Risk Level:</span>
+                    <span className="text-slate-300 text-sm">{t('analyze.typeSelector.spot.risk')}</span>
                   </div>
-                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">Conservative</Badge>
+                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">{t('analyze.typeSelector.spot.risk').split(': ')[1]}</Badge>
                 </div>
                 
                 <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50">
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 text-emerald-400" />
-                    <span className="text-slate-300 text-sm">Ownership:</span>
+                    <span className="text-slate-300 text-sm">{t('analyze.typeSelector.spot.ownership').split(':')[0]}:</span>
                   </div>
-                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">Real Asset</Badge>
+                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">{t('analyze.typeSelector.spot.ownership').split(': ')[1]}</Badge>
                 </div>
               </div>
 
               {/* Best For */}
               <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                <h4 className="text-emerald-300 font-semibold mb-2">✅ Best For:</h4>
-                <ul className="text-sm text-emerald-200 space-y-1">
-                  <li>• Long-term investment strategy</li>
-                  <li>• Capital preservation focus</li>
-                  <li>• Beginners to crypto trading</li>
-                  <li>• Buy-and-hold approach</li>
-                </ul>
+                <h4 className="text-emerald-300 font-semibold mb-2">✅ {t('analyze.typeSelector.spot.bestFor')}</h4>
+                <p className="text-sm text-emerald-200">{t('analyze.typeSelector.spot.bestFor').split(': ')[1]}</p>
               </div>
             </CardContent>
           </Card>
@@ -133,10 +130,9 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
                 <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
                   <BarChart3 className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Forex/Leverage Trading</h3>
+                <h3 className="text-2xl font-bold text-white mb-2">{t('analyze.typeSelector.forex.title')}</h3>
                 <p className="text-slate-400 mb-6 leading-relaxed">
-                  Trading with high leverage for maximum profit. 
-                  Suitable for experienced traders with high risk appetite.
+                  {t('analyze.typeSelector.forex.description')}
                 </p>
               </div>
 
@@ -147,46 +143,30 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
                     <Zap className="w-4 h-4 text-blue-400" />
                     <span className="text-slate-300 text-sm">Leverage:</span>
                   </div>
-                  <Badge variant="outline" className="border-blue-500/30 text-blue-400">Up to 1:100</Badge>
+                  <Badge variant="outline" className="border-blue-500/30 text-blue-400">{t('analyze.typeSelector.forex.leverage')}</Badge>
                 </div>
                 
                 <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50">
                   <div className="flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4 text-amber-400" />
-                    <span className="text-slate-300 text-sm">Risk Level:</span>
+                    <span className="text-slate-300 text-sm">{t('analyze.typeSelector.forex.risk').split(':')[0]}:</span>
                   </div>
-                  <Badge variant="outline" className="border-amber-500/30 text-amber-400">Aggressive</Badge>
+                  <Badge variant="outline" className="border-amber-500/30 text-amber-400">{t('analyze.typeSelector.forex.risk').split(': ')[1]}</Badge>
                 </div>
                 
                 <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50">
                   <div className="flex items-center gap-2">
                     <Target className="w-4 h-4 text-blue-400" />
-                    <span className="text-slate-300 text-sm">Position Type:</span>
+                    <span className="text-slate-300 text-sm">{t('analyze.typeSelector.forex.position').split(':')[0]}:</span>
                   </div>
-                  <Badge variant="outline" className="border-blue-500/30 text-blue-400">Contract CFD</Badge>
+                  <Badge variant="outline" className="border-blue-500/30 text-blue-400">{t('analyze.typeSelector.forex.position').split(': ')[1]}</Badge>
                 </div>
               </div>
 
               {/* Best For */}
               <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                <h4 className="text-blue-300 font-semibold mb-2">⚡ Best For:</h4>
-                <ul className="text-sm text-blue-200 space-y-1">
-                  <li>• Experienced traders</li>
-                  <li>• Short-term profit opportunities</li>
-                  <li>• High-risk high-reward strategy</li>
-                  <li>• Both BUY and SELL positions</li>
-                </ul>
-              </div>
-
-              {/* Risk Warning */}
-              <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mt-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <AlertTriangle className="w-4 h-4 text-amber-400" />
-                  <span className="text-amber-300 font-semibold text-sm">High Risk Warning</span>
-                </div>
-                <p className="text-xs text-amber-200">
-                  Leveraged trading can result in significant losses. Only use funds you can afford to lose.
-                </p>
+                <h4 className="text-blue-300 font-semibold mb-2">⚡ {t('analyze.typeSelector.forex.bestFor')}</h4>
+                <p className="text-sm text-blue-200">{t('analyze.typeSelector.forex.bestFor').split(': ')[1]}</p>
               </div>
             </CardContent>
           </Card>
@@ -207,11 +187,9 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
                 <Zap className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h4 className="font-semibold text-white mb-2">🧠 AI Optimization</h4>
+                <h4 className="font-semibold text-white mb-2">🧠 {t('analyze.typeSelector.aiOptimization')}</h4>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  Trading type selection will optimize our AI analysis algorithm. 
-                  Each trading type has different risk management and pattern recognition parameters 
-                  to provide the most accurate analysis results according to your trading strategy.
+                  {t('analyze.typeSelector.aiOptDesc')}
                 </p>
               </div>
             </div>

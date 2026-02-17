@@ -3,8 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Upload, Image, Camera, Zap, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function UploadArea({ onImageUpload }) {
+  const { t } = useTranslation();
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -50,8 +52,8 @@ export default function UploadArea({ onImageUpload }) {
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">Professional Chart Analyzer</h3>
-                <p className="text-slate-300 text-sm">Institutional-grade AI with 95%+ accuracy</p>
+                <h3 className="text-xl font-bold text-white">{t('analyze.upload.title')}</h3>
+                <p className="text-slate-300 text-sm">{t('analyze.upload.subtitle')}</p>
               </div>
             </div>
           </div>
@@ -88,12 +90,10 @@ export default function UploadArea({ onImageUpload }) {
               </motion.div>
               
               <h3 className="text-2xl font-bold text-white mb-3">
-                Upload Chart Candlestick
+                {t('analyze.upload.title')}
               </h3>
               <p className="text-slate-400 mb-8 max-w-lg mx-auto leading-relaxed">
-                Drag & drop chart image or click button below. Our AI will perform 
-                <span className="text-emerald-400 font-semibold">institutional-grade</span> analysis with 
-                professional trader methodology.
+                {t('analyze.upload.description')}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -102,7 +102,7 @@ export default function UploadArea({ onImageUpload }) {
                   className="bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <Image className="w-5 h-5 mr-2" />
-                  Select Chart Image
+                  {t('analyze.upload.selectImage')}
                 </Button>
                 
                 <Button
@@ -110,7 +110,7 @@ export default function UploadArea({ onImageUpload }) {
                   className="border-slate-600 hover:bg-slate-800 text-white px-8 py-4 rounded-xl"
                 >
                   <Camera className="w-5 h-5 mr-2" />
-                  Take Screenshot
+                  {t('analyze.upload.takeScreenshot')}
                 </Button>
               </div>
 
@@ -136,8 +136,8 @@ export default function UploadArea({ onImageUpload }) {
               </div>
               
               <p className="text-xs text-slate-500 mt-8 border-t border-slate-700 pt-4">
-                <strong>Supported formats:</strong> JPG, PNG, WebP (Max 10MB) • 
-                <strong> Best results:</strong> Clear charts with visible price levels and timeframe
+                <strong>{t('analyze.upload.supportedFormats')}</strong> JPG, PNG, WebP (Max 10MB) • 
+                <strong> {t('analyze.upload.bestResults')}</strong> {t('analyze.upload.clearCharts')}
               </p>
             </div>
           </div>
