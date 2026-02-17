@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Analysis } from "@/entities/Analysis";
 import { StockAnalysis } from "@/entities/StockAnalysis";
@@ -56,27 +55,27 @@ export default function Dashboard() {
     setIsGeneratingRecs(true);
     try {
       const aiRecommendations = await InvokeLLM({
-        prompt: `Anda adalah SENIOR INVESTMENT ADVISOR Indonesia dengan akses ke real-time market data.
+        prompt: `You are a SENIOR INVESTMENT ADVISOR with access to real-time market data.
 
-TUGAS: Generate 3-5 rekomendasi trading TERBAIK untuk hari ini berdasarkan:
-1. **ANALISIS TEKNIKAL**: Pattern, trend, momentum
-2. **BERITA FUNDAMENTAL**: News yang mempengaruhi aset
-3. **MARKET SENTIMENT**: Kondisi pasar global dan lokal
-4. **TIMING ANALYSIS**: Waktu entry yang optimal
+TASK: Generate 3-5 BEST trading recommendations for today based on:
+1. **TECHNICAL ANALYSIS**: Patterns, trends, momentum
+2. **FUNDAMENTAL NEWS**: News affecting assets
+3. **MARKET SENTIMENT**: Global and local market conditions
+4. **TIMING ANALYSIS**: Optimal entry timing
 
-FOKUS ASET:
-- **Saham Indonesia**: Blue chips BEI (BBCA, BMRI, TLKM, ASII, GOTO, UNVR)
+ASSET FOCUS:
+- **Indonesian Stocks**: BEI blue chips (BBCA, BMRI, TLKM, ASII, GOTO, UNVR)
 - **Crypto**: Major coins (BTC, ETH, BNB, SOL)
 - **Forex**: Major pairs (EUR/USD, GBP/USD, USD/JPY)
 
-KRITERIA REKOMENDASI:
-- Confidence score minimum 85%
-- Risk-reward ratio minimum 1:2
-- Ada catalyst fundamental (berita, earnings, dll)
-- Setup teknikal yang jelas
-- Timeframe yang realistic
+RECOMMENDATION CRITERIA:
+- Minimum confidence score 85%
+- Minimum risk-reward ratio 1:2
+- Has fundamental catalyst (news, earnings, etc.)
+- Clear technical setup
+- Realistic timeframe
 
-Berikan rekomendasi yang ACTIONABLE dengan target price dan stop loss yang jelas.`,
+Provide ACTIONABLE recommendations with clear target price and stop loss.`,
         add_context_from_internet: true,
         response_json_schema: {
           type: "object",
@@ -186,14 +185,14 @@ Berikan rekomendasi yang ACTIONABLE dengan target price dan stop loss yang jelas
             value={totalAnalyses}
             icon={BarChart3}
             gradient="from-blue-500 to-cyan-500"
-            trend="+12% minggu ini"
+            trend="+12% this week"
           />
           <StatsCard
-            title="Saham 🇮🇩"
+            title="Stocks 🇮🇩"
             value={totalStocks}
             icon={Building2}
             gradient="from-red-500 to-orange-500"
-            trend="BEI analysis"
+            trend="IDX analysis"
           />
           <StatsCard
             title="AI Accuracy"
@@ -221,7 +220,7 @@ Berikan rekomendasi yang ACTIONABLE dengan target price dan stop loss yang jelas
                     <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   </div>
                   <h3 className="font-bold text-white mb-2">Crypto & Forex</h3>
-                  <p className="text-slate-400 text-xs md:text-sm">Analisis teknikal crypto dan forex</p>
+                  <p className="text-slate-400 text-xs md:text-sm">Technical analysis crypto and forex</p>
                 </CardContent>
               </Card>
             </Link>
@@ -234,8 +233,8 @@ Berikan rekomendasi yang ACTIONABLE dengan target price dan stop loss yang jelas
                   <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Building2 className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   </div>
-                  <h3 className="font-bold text-white mb-2">Saham Indonesia 🇮🇩</h3>
-                  <p className="text-slate-400 text-xs md:text-sm">Analisis saham BEI + berita fundamental</p>
+                  <h3 className="font-bold text-white mb-2">Indonesian Stocks 🇮🇩</h3>
+                  <p className="text-slate-400 text-xs md:text-sm">IDX stock analysis + fundamental news</p>
                 </CardContent>
               </Card>
             </Link>

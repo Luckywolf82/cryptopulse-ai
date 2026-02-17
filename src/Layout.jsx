@@ -15,12 +15,12 @@ const navigationItems = [
     icon: TrendingUp,
   },
   {
-    title: "Saham 🇮🇩",
+    title: "Stocks 🇮🇩",
     url: createPageUrl("StockAnalysis"),
     icon: Building2,
   },
   {
-    title: "Riwayat",
+    title: "History",
     url: createPageUrl("History"),
     icon: History,
   },
