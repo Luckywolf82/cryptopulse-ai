@@ -52,15 +52,11 @@ Deno.serve(async (req) => {
       return Response.json({ started: 0 });
     }
 
-    const deduped = {};
-    for (const sig of recentSignals) {
-      const key = `${sig.symbol}|${sig.timeframe}|${sig.triggerType}`;
-      if (!deduped[key] || new Date(sig.created_date) > new Date(deduped[key].created_date)) {
-        deduped[key] = sig;
-      }
-    }
-
-    const signals = Object.values(deduped).slice(0, 50);
+    // Get signals that haven't been evaluated yet
+    const evaluatedSignalIds = (await base44.entities.SignalPerformance.list("-created_date", 5000)).map(p => p.signalId);
+    const unevaluatedSignals = recentSignals.filter(s => !evaluatedSignalIds.includes(s.id));
+    
+    const signals = unevaluatedSignals.slice(0, 50);
     
     // Process all signals without waiting
     const promises = signals.map(signal => 
