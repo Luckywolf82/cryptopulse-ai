@@ -22,7 +22,7 @@ export default async function handler(request, context) {
   const expectedSecret = secrets.SIGNAL_WEBHOOK_SECRET;
 
   if (!providedSecret || providedSecret !== expectedSecret) {
-    console.log('[TradingView Webhook] Auth failed - Invalid or missing secret');
+    console.log('[TradingView Webhook] Auth failed');
     return {
       statusCode: 401,
       body: JSON.stringify({ 
@@ -32,7 +32,23 @@ export default async function handler(request, context) {
     };
   }
 
-  console.log('[TradingView Webhook] Auth successful');
+  console.log('[TradingView Webhook] Auth passed');
+
+  // Validate required fields
+  const requiredFields = ['symbol', 'timeframe', 'triggerType', 'direction'];
+  const missing = requiredFields.filter(field => !payload[field]);
+  
+  if (missing.length > 0) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        accepted: false,
+        error: 'invalid_payload',
+        missing
+      })
+    };
+  }
+
   const {
     symbol,
     exchange,
@@ -67,7 +83,7 @@ export default async function handler(request, context) {
   // Store signal in database
   const signal = await base44.entities.Signal.create({
     symbol,
-    exchange,
+    exchange: exchange || 'UNKNOWN',
     timeframe,
     triggerType,
     direction,
@@ -76,15 +92,15 @@ export default async function handler(request, context) {
     payload
   });
 
-  console.log('[TradingView Webhook] Signal created:', signal.id, 'Score:', score);
+  console.log('[TradingView Webhook] Signal created:', signal.id);
 
   return {
     statusCode: 200,
     body: JSON.stringify({
       accepted: true,
-      createdSignalId: signal.id,
       score,
-      alertTriggered: true
+      alertTriggered: true,
+      createdSignalId: signal.id
     })
   };
 }
