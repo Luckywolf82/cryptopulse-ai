@@ -398,6 +398,12 @@ const translations = {
           "description": "Dra og slipp chart-bilde eller klikk knappen under. Vår AI vil utføre analyse på institusjonelt nivå med profesjonell trader-metodikk.",
           "selectImage": "Velg Chart Bilde",
           "takeScreenshot": "Ta Skjermbilde",
+          "feature1Title": "50+ Mønstre",
+          "feature1Desc": "Omfattende mønsterbibliotek",
+          "feature2Title": "Multi-Lags AI",
+          "feature2Desc": "4-fase analyseprosess",
+          "feature3Title": "Høy Nøyaktighet",
+          "feature3Desc": "Institusjonell presisjon",
           "supportedFormats": "Støttede formater:",
           "bestResults": "Beste resultater:",
           "clearCharts": "Tydelige charts med synlige prisnivåer og tidsramme"

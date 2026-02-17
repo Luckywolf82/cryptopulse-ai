@@ -118,20 +118,20 @@ export default function UploadArea({ onImageUpload }) {
               <div className="grid md:grid-cols-3 gap-4 text-sm">
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                   <TrendingUp className="w-5 h-5 text-emerald-400 mx-auto mb-2" />
-                  <div className="text-emerald-300 font-semibold">50+ Patterns</div>
-                  <div className="text-slate-400">Comprehensive pattern library</div>
+                  <div className="text-emerald-300 font-semibold">{t('analyze.upload.feature1Title')}</div>
+                  <div className="text-slate-400">{t('analyze.upload.feature1Desc')}</div>
                 </div>
 
                 <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
                   <Zap className="w-5 h-5 text-blue-400 mx-auto mb-2" />
-                  <div className="text-blue-300 font-semibold">Multi-Layer AI</div>
-                  <div className="text-slate-400">4-phase analysis process</div>
+                  <div className="text-blue-300 font-semibold">{t('analyze.upload.feature2Title')}</div>
+                  <div className="text-slate-400">{t('analyze.upload.feature2Desc')}</div>
                 </div>
 
                 <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
                   <div className="w-5 h-5 mx-auto mb-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded text-xs flex items-center justify-center text-white font-bold">95%</div>
-                  <div className="text-purple-300 font-semibold">High Accuracy</div>
-                  <div className="text-slate-400">Institutional precision</div>
+                  <div className="text-purple-300 font-semibold">{t('analyze.upload.feature3Title')}</div>
+                  <div className="text-slate-400">{t('analyze.upload.feature3Desc')}</div>
                 </div>
               </div>
               
