@@ -24,10 +24,10 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
             </Button>
             <div>
               <CardTitle className="text-2xl font-bold text-white">
-                Pilih Jenis Trading
+                Select Trading Type
               </CardTitle>
               <p className="text-slate-400 mt-1">
-                Pilih jenis trading untuk optimasi analisis AI yang lebih akurat
+                Choose trading type to optimize AI analysis for better accuracy
               </p>
             </div>
           </div>
@@ -70,8 +70,8 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">Spot Trading</h3>
                 <p className="text-slate-400 mb-6 leading-relaxed">
-                  Trading spot crypto dengan kepemilikan aset langsung. 
-                  Ideal untuk investor jangka panjang dan pemula.
+                  Spot crypto trading with direct asset ownership. 
+                  Ideal for long-term investors and beginners.
                 </p>
               </div>
 
@@ -135,8 +135,8 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">Forex/Leverage Trading</h3>
                 <p className="text-slate-400 mb-6 leading-relaxed">
-                  Trading dengan leverage tinggi untuk profit maksimal. 
-                  Cocok untuk trader berpengalaman dengan risk appetite tinggi.
+                  Trading with high leverage for maximum profit. 
+                  Suitable for experienced traders with high risk appetite.
                 </p>
               </div>
 
@@ -209,9 +209,9 @@ export default function TradingTypeSelector({ uploadedImage, onTypeSelect, onBac
               <div>
                 <h4 className="font-semibold text-white mb-2">🧠 AI Optimization</h4>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  Pemilihan jenis trading akan mengoptimalkan algoritma analisis AI kami. 
-                  Setiap jenis trading memiliki parameter risk management dan pattern recognition yang berbeda 
-                  untuk memberikan hasil analisis yang paling akurat sesuai dengan strategi trading Anda.
+                  Trading type selection will optimize our AI analysis algorithm. 
+                  Each trading type has different risk management and pattern recognition parameters 
+                  to provide the most accurate analysis results according to your trading strategy.
                 </p>
               </div>
             </div>

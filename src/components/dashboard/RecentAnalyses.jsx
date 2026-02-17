@@ -17,7 +17,7 @@ export default function RecentAnalyses({ analyses, isLoading, onRefresh, onCardC
     <Card className="glass-effect border-gray-700">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-xl font-bold text-white">
-          Analisis Terbaru
+          Recent Analysis
         </CardTitle>
         <Button
           variant="outline"
@@ -76,7 +76,7 @@ export default function RecentAnalyses({ analyses, isLoading, onRefresh, onCardC
                       {isStock ? analysis.stock_code : (analysis.crypto_pair || 'Crypto Analysis')}
                     </h4>
                     <Badge variant="outline" className="text-xs border-gray-600">
-                      {isStock ? 'SAHAM' : analysis.trading_type?.toUpperCase()}
+                      {isStock ? 'STOCK' : analysis.trading_type?.toUpperCase()}
                     </Badge>
                   </div>
                   <p className="text-sm text-gray-400 mb-2 truncate">
@@ -86,7 +86,7 @@ export default function RecentAnalyses({ analyses, isLoading, onRefresh, onCardC
                     <span>{format(new Date(analysis.created_date), 'dd MMM yyyy')}</span>
                     <span className="flex items-center gap-1">
                       <TrendingUp className="w-3 h-3 text-green-400" />
-                      {analysis.confidence_score}% akurasi
+                      {analysis.confidence_score}% accuracy
                     </span>
                   </div>
                 </div>
@@ -110,9 +110,9 @@ export default function RecentAnalyses({ analyses, isLoading, onRefresh, onCardC
         ) : (
           <div className="text-center py-8">
             <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">Belum ada analisis</p>
+            <p className="text-gray-400">No analysis yet</p>
             <p className="text-sm text-gray-500 mt-1">
-              Upload chart pertama Anda untuk memulai
+              Upload your first chart to get started
             </p>
           </div>
         )}

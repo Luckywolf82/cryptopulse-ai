@@ -51,7 +51,7 @@ export default function UploadArea({ onImageUpload }) {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white">Professional Chart Analyzer</h3>
-                <p className="text-slate-300 text-sm">Institutional-grade AI dengan akurasi 95%+</p>
+                <p className="text-slate-300 text-sm">Institutional-grade AI with 95%+ accuracy</p>
               </div>
             </div>
           </div>
@@ -91,9 +91,9 @@ export default function UploadArea({ onImageUpload }) {
                 Upload Chart Candlestick
               </h3>
               <p className="text-slate-400 mb-8 max-w-lg mx-auto leading-relaxed">
-                Drag & drop gambar chart atau klik tombol di bawah. AI kami akan melakukan 
-                analisis <span className="text-emerald-400 font-semibold">institutional-grade</span> dengan 
-                metodologi trader profesional.
+                Drag & drop chart image or click button below. Our AI will perform 
+                <span className="text-emerald-400 font-semibold">institutional-grade</span> analysis with 
+                professional trader methodology.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -102,7 +102,7 @@ export default function UploadArea({ onImageUpload }) {
                   className="bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <Image className="w-5 h-5 mr-2" />
-                  Pilih Gambar Chart
+                  Select Chart Image
                 </Button>
                 
                 <Button
@@ -110,7 +110,7 @@ export default function UploadArea({ onImageUpload }) {
                   className="border-slate-600 hover:bg-slate-800 text-white px-8 py-4 rounded-xl"
                 >
                   <Camera className="w-5 h-5 mr-2" />
-                  Ambil Screenshot
+                  Take Screenshot
                 </Button>
               </div>
 
@@ -137,7 +137,7 @@ export default function UploadArea({ onImageUpload }) {
               
               <p className="text-xs text-slate-500 mt-8 border-t border-slate-700 pt-4">
                 <strong>Supported formats:</strong> JPG, PNG, WebP (Max 10MB) • 
-                <strong> Best results:</strong> Clear charts dengan visible price levels dan timeframe
+                <strong> Best results:</strong> Clear charts with visible price levels and timeframe
               </p>
             </div>
           </div>

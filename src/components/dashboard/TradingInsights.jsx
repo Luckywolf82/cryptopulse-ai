@@ -106,17 +106,17 @@ export default function TradingInsights({ analyses }) {
           <div className="space-y-3 text-sm">
             <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
               <p className="text-blue-300">
-                💡 Gunakan stop loss untuk melindungi modal Anda
+                💡 Use stop loss to protect your capital
               </p>
             </div>
             <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
               <p className="text-green-300">
-                📈 Take profit secara bertahap untuk maksimalkan keuntungan
+                📈 Take profit gradually to maximize gains
               </p>
             </div>
             <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
               <p className="text-purple-300">
-                🎯 Perhatikan confidence score AI sebelum trading
+                🎯 Check AI confidence score before trading
               </p>
             </div>
           </div>

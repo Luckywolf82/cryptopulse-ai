@@ -54,7 +54,7 @@ export default function SmartRecommendations({ recommendations, isGenerating, on
               Smart Recommendations Ready
             </h3>
             <p className="text-slate-400 mb-4">
-              AI akan generate rekomendasi terbaik berdasarkan analisis real-time
+              AI will generate best recommendations based on real-time analysis
             </p>
             <Button 
               onClick={onRefresh}
@@ -81,7 +81,7 @@ export default function SmartRecommendations({ recommendations, isGenerating, on
             <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
               🚀 Smart AI Recommendations
             </CardTitle>
-            <p className="text-slate-400 text-sm">Rekomendasi terbaik hari ini - Semua kategori harga saham Indonesia</p>
+            <p className="text-slate-400 text-sm">Today's best recommendations - All Indonesian stock price categories</p>
           </div>
           <Button
             variant="outline"
@@ -156,10 +156,10 @@ export default function SmartRecommendations({ recommendations, isGenerating, on
                                   {rec.time_horizon}
                                 </span>
                                 {rec.recommendation_type === 'stock' && (
-                                  <span className="text-blue-400">
-                                    {rec.current_price <= 5000 ? 'Terjangkau' : 'Premium'}
-                                  </span>
-                                )}
+                                   <span className="text-blue-400">
+                                     {rec.current_price <= 5000 ? 'Affordable' : 'Premium'}
+                                   </span>
+                                 )}
                               </div>
                             </div>
 
@@ -228,7 +228,7 @@ export default function SmartRecommendations({ recommendations, isGenerating, on
                   transition={{ delay: 0.4 }}
                 >
                   <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                    🇮🇩 Kategori Saham Indonesia
+                    🇮🇩 Indonesian Stock Categories
                   </h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                     <div className="p-2 rounded bg-emerald-500/10 text-emerald-400">
