@@ -8,50 +8,64 @@ Deno.serve(async (req) => {
     const { event, data } = body;
 
     // Only process create events for signals with score >= 70
-    if (event.type !== 'create' || !data || data.score < 70) {
-      return Response.json({ skipped: true, reason: 'Score too low or not a create event' });
-    }
+     if (event.type !== 'create' || !data || data.score < 70) {
+       return Response.json({ skipped: true, reason: 'Score too low or not a create event' });
+     }
 
-    const signal = data;
+     const signal = data;
+
+     // Check if recommendation already exists for this signal
+     const existingRecs = await base44.entities.TradingRecommendation.filter({
+       signalId: signal.id
+     });
+
+     if (existingRecs.length > 0) {
+       return Response.json({ skipped: true, reason: 'Recommendation already exists for this signal' });
+     }
 
     // Fetch current price and market context
     const marketContext = await fetchMarketContext(signal.symbol, signal.exchange);
 
     // Generate AI recommendation using LLM
     const prompt = `
-You are a professional trading analyst. Based on the following signal, generate a detailed trading recommendation.
+    You are a professional trading analyst. Based on the following signal, generate a detailed trading recommendation.
 
-**Signal Details:**
-- Symbol: ${signal.symbol}
-- Exchange: ${signal.exchange}
-- Direction: ${signal.direction.toUpperCase()}
-- Timeframe: ${signal.timeframe}
-- Trigger Type: ${signal.triggerType}
-- Signal Score: ${signal.score}/100
-- Entry Price: $${signal.price}
-- Current Price: $${marketContext.currentPrice}
-- 24h Volume: $${marketContext.volume24h?.toLocaleString() || 'N/A'}
-- Market Trend: ${marketContext.trend}
+    **Signal Details:**
+    - Symbol: ${signal.symbol}
+    - Exchange: ${signal.exchange}
+    - Direction: ${signal.direction.toUpperCase()}
+    - Timeframe: ${signal.timeframe}
+    - Trigger Type: ${signal.triggerType}
+    - Signal Score: ${signal.score}/100
+    - Entry Price: $${signal.price}
+    - Current Price: $${marketContext.currentPrice}
+    - 24h Volume: $${marketContext.volume24h?.toLocaleString() || 'N/A'}
+    - Market Trend: ${marketContext.trend}
 
-**Your response should be a JSON object with:**
-{
-  "recommendation_action": "STRONG_BUY" | "BUY" | "HOLD" | "SELL" | "STRONG_SELL",
-  "target_price": number (in USD),
-  "stop_loss": number (in USD),
-  "expected_return_percent": number,
-  "confidence_score": number (0-100),
-  "time_horizon": "short_term" | "medium_term" | "long_term",
-  "technical_reason": "string explaining technical analysis",
-  "risk_factors": ["string1", "string2"],
-  "entry_timing": "string with timing recommendation"
-}
+    **CRITICAL REQUIREMENTS:**
+    - target_price MUST be a positive number (> 0), NEVER 0 or null
+    - If direction is LONG, target_price should be 10-30% above entry price
+    - If direction is SHORT, target_price should be 10-30% below entry price
 
-Base your recommendation on:
-1. The signal strength (score of ${signal.score})
-2. The technical trigger (${signal.triggerType})
-3. Current market conditions
-4. Risk/reward ratio
-`;
+    **Your response should be a JSON object with:**
+    {
+    "recommendation_action": "STRONG_BUY" | "BUY" | "HOLD" | "SELL" | "STRONG_SELL",
+    "target_price": number (in USD - MUST be positive and calculated as described above),
+    "stop_loss": number (in USD),
+    "expected_return_percent": number,
+    "confidence_score": number (0-100),
+    "time_horizon": "short_term" | "medium_term" | "long_term",
+    "technical_reason": "string explaining technical analysis",
+    "risk_factors": ["string1", "string2"],
+    "entry_timing": "string with timing recommendation"
+    }
+
+    Base your recommendation on:
+    1. The signal strength (score of ${signal.score})
+    2. The technical trigger (${signal.triggerType})
+    3. Current market conditions
+    4. Risk/reward ratio
+    `;
 
     const response = await base44.integrations.Core.InvokeLLM({
       prompt,
@@ -81,11 +95,20 @@ Base your recommendation on:
       }
     });
 
+    // Validate target price
+    if (!response.target_price || response.target_price <= 0) {
+      return Response.json({
+        error: 'Invalid target price from LLM',
+        skipped: true
+      }, { status: 400 });
+    }
+
     // Determine asset type
     const assetType = signal.exchange === 'BINANCE' ? 'crypto' : 'forex';
 
     // Create recommendation
     const recommendation = await base44.entities.TradingRecommendation.create({
+      signalId: signal.id,
       recommendation_type: assetType,
       asset_symbol: signal.symbol,
       asset_name: `${signal.symbol} - ${signal.direction.toUpperCase()} Signal`,
