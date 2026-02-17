@@ -6,9 +6,11 @@ import { InvokeLLM } from "@/integrations/Core";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { TrendingUp, BarChart3, Target, Zap, Building2, History } from "lucide-react";
+import { TrendingUp, BarChart3, Target, Zap, Building2, History, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { base44 } from "@/api/base44Client";
+import { toast } from "sonner";
 
 import StatsCard from "../components/dashboard/StatsCard";
 import RecentAnalyses from "../components/dashboard/RecentAnalyses";
@@ -24,6 +26,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGeneratingRecs, setIsGeneratingRecs] = useState(false);
   const [selectedAnalysis, setSelectedAnalysis] = useState(null); // State for modal
+  const [isPopulatingWatchlist, setIsPopulatingWatchlist] = useState(false);
 
   useEffect(() => {
     loadAllData();
@@ -43,6 +46,21 @@ export default function Dashboard() {
     setStockAnalyses(stockData);
     setRecommendations(recsData);
     setIsLoading(false);
+  };
+
+  const populateWatchlist = async () => {
+    setIsPopulatingWatchlist(true);
+    try {
+      const result = await base44.functions.invoke('autopopulate-top50', {});
+      toast.success(
+        `Watchlist updated: ${result.data.updatedCount} symbols added/updated, ${result.data.deactivatedCount} deactivated`
+      );
+    } catch (error) {
+      console.error('Failed to populate watchlist:', error);
+      toast.error('Failed to populate watchlist: ' + error.message);
+    } finally {
+      setIsPopulatingWatchlist(false);
+    }
   };
 
   const generateDailyRecommendations = async () => {
@@ -160,7 +178,7 @@ Provide ACTIONABLE recommendations with clear target price and stop loss.`,
             <p className="text-slate-400 text-base md:text-lg">
               {t('dashboard.subtitle')}
             </p>
-            <div className="flex items-center justify-center md:justify-start gap-4 mt-3">
+            <div className="flex items-center justify-center md:justify-start gap-4 mt-3 flex-wrap">
               <div className="flex items-center gap-2 text-sm">
                 <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                 <span className="text-slate-300">{t('dashboard.aiActive')}</span>
@@ -169,6 +187,14 @@ Provide ACTIONABLE recommendations with clear target price and stop loss.`,
                 <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                 <span className="text-slate-300">{t('dashboard.marketLive')}</span>
               </div>
+              <button
+                onClick={populateWatchlist}
+                disabled={isPopulatingWatchlist}
+                className="flex items-center gap-2 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors"
+              >
+                <RefreshCw className={`w-3 h-3 ${isPopulatingWatchlist ? 'animate-spin' : ''}`} />
+                <span className="text-white">Populate Watchlist</span>
+              </button>
             </div>
           </div>
         </motion.div>
