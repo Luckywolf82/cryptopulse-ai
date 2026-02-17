@@ -167,9 +167,51 @@ export default function History() {
     setTradeResults(resultsData);
   };
 
+  // Performance stats
+  const stats = React.useMemo(() => {
+    if (performances.length === 0) {
+      return { total: 0, wins: 0, losses: 0, breakeven: 0, winRate: 0, avgPnl: 0, avgRMultiple: 0 };
+    }
+
+    const total = performances.length;
+    const wins = performances.filter(p => p.status === "win").length;
+    const losses = performances.filter(p => p.status === "loss").length;
+    const breakeven = total - wins - losses;
+    const winRate = ((wins / total) * 100).toFixed(1);
+    const avgPnl = (performances.reduce((sum, p) => sum + (p.pnlPercent || 0), 0) / total).toFixed(2);
+    const avgRMultiple = (performances.reduce((sum, p) => sum + (p.rMultiple || 0), 0) / total).toFixed(2);
+
+    return { total, wins, losses, breakeven, winRate, avgPnl, avgRMultiple };
+  }, [performances]);
+
+  const grouped = React.useMemo(() => {
+    const groups = {};
+    
+    performances.forEach(p => {
+      const key = `${p.triggerType}|${p.timeframe}`;
+      if (!groups[key]) {
+        groups[key] = {
+          triggerType: p.triggerType,
+          timeframe: p.timeframe,
+          signals: [],
+        };
+      }
+      groups[key].signals.push(p);
+    });
+
+    return Object.values(groups).map(group => {
+      const total = group.signals.length;
+      const wins = group.signals.filter(s => s.status === "win").length;
+      const avgPnl = (group.signals.reduce((sum, s) => sum + (s.pnlPercent || 0), 0) / total).toFixed(2);
+      const avgRMultiple = (group.signals.reduce((sum, s) => sum + (s.rMultiple || 0), 0) / total).toFixed(2);
+      
+      return { ...group, total, wins, winRate: ((wins / total) * 100).toFixed(1), avgPnl, avgRMultiple };
+    });
+  }, [performances]);
+
   return (
     <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -185,7 +227,10 @@ export default function History() {
             <ArrowLeft className="w-4 h-4 text-white" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-white">{t('history.title')}</h1>
+            <div className="flex items-center gap-3 mb-2">
+              <BarChart3 className="w-6 h-6 md:w-8 md:h-8 text-emerald-400" />
+              <h1 className="text-2xl md:text-3xl font-bold text-white">{t('history.title')}</h1>
+            </div>
             <p className="text-slate-400 text-sm md:text-base">{t('history.subtitle')}</p>
           </div>
           <Button
