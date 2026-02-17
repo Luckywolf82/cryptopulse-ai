@@ -53,6 +53,11 @@ export default function Layout({ children, currentPageName }) {
       icon: Zap,
     },
     {
+      title: "Analyse",
+      url: createPageUrl("SignalAnalytics"),
+      icon: BarChart3,
+    },
+    {
       title: t('nav.history'),
       url: createPageUrl("History"),
       icon: History,
