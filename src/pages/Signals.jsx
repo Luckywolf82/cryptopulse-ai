@@ -52,6 +52,33 @@ export default function SignalsPage() {
     }
   };
 
+  const testWebhook = async () => {
+    try {
+      const result = await base44.functions.invoke('tradingview-webhook', {
+        symbol: "ETHUSDT",
+        exchange: "BINANCE",
+        timeframe: "1h",
+        triggerType: "MSS",
+        direction: "short",
+        price: 2350.75,
+        meta: {
+          volumeSpike: true,
+          htfAlign: true
+        }
+      });
+      
+      if (result.data.accepted) {
+        toast.success(`Webhook test successful! Score: ${result.data.score}`);
+        await loadSignals();
+      } else {
+        toast.error('Webhook rejected signal');
+      }
+    } catch (error) {
+      console.error('Webhook test failed:', error);
+      toast.error('Webhook test failed');
+    }
+  };
+
   const applyFilters = () => {
     let filtered = [...signals];
 
@@ -94,10 +121,18 @@ export default function SignalsPage() {
           <div className="flex gap-2">
             <Button
               onClick={createTestSignal}
+              variant="outline"
+              className="border-slate-600 hover:bg-slate-800"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Quick Test
+            </Button>
+            <Button
+              onClick={testWebhook}
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Create Test Signal
+              Test Webhook
             </Button>
             <Button
               onClick={loadSignals}
