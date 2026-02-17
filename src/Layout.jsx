@@ -1,14 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { TrendingUp, BarChart3, History, Building2 } from "lucide-react";
+import { TrendingUp, BarChart3, History, Building2, AlertTriangle, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { base44 } from "@/api/base44Client";
 import "@/components/lib/i18n";
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
   const { t } = useTranslation();
+  const [i18nIssues, setI18nIssues] = useState(null);
+  const [showBanner, setShowBanner] = useState(true);
+  const isDev = window.location.hostname === 'localhost' || window.location.hostname.includes('preview');
+
+  useEffect(() => {
+    if (isDev) {
+      loadLatestAudit();
+    }
+  }, [isDev]);
+
+  const loadLatestAudit = async () => {
+    try {
+      const results = await base44.entities.I18nAuditResult.list("-created_date", 1);
+      if (results.length > 0 && results[0].status === 'fail') {
+        setI18nIssues(results[0]);
+      }
+    } catch (error) {
+      console.error('Failed to load i18n audit:', error);
+    }
+  };
 
   const navigationItems = [
     {
@@ -79,8 +100,36 @@ export default function Layout({ children, currentPageName }) {
         `}
       </style>
 
+      {/* i18n Warning Banner (Dev Only) */}
+      {isDev && i18nIssues && showBanner && (
+        <div className="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-orange-600 to-red-600 text-white px-4 py-3 shadow-lg">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+              <div className="text-sm font-medium">
+                i18n Issues Detected: {i18nIssues.issuesCount} problem(s) found
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Link
+                to={createPageUrl("I18nAudit")}
+                className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded transition-colors"
+              >
+                View Details
+              </Link>
+              <button
+                onClick={() => setShowBanner(false)}
+                className="p-1 hover:bg-white/20 rounded transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile Header */}
-      <div className="md:hidden bg-slate-900/95 backdrop-blur-xl border-b border-slate-700 px-4 py-4 sticky top-0 z-50">
+      <div className="md:hidden bg-slate-900/95 backdrop-blur-xl border-b border-slate-700 px-4 py-4 sticky top-0 z-50" style={{ marginTop: isDev && i18nIssues && showBanner ? '52px' : '0' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-lg flex items-center justify-center">
@@ -102,7 +151,7 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:block fixed left-0 top-0 h-full w-64 bg-slate-900/50 backdrop-blur-xl border-r border-slate-800 z-40">
+      <div className="hidden md:block fixed left-0 h-full w-64 bg-slate-900/50 backdrop-blur-xl border-r border-slate-800 z-40" style={{ top: isDev && i18nIssues && showBanner ? '52px' : '0' }}>
         <div className="p-6 border-b border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
