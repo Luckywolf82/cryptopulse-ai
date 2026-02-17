@@ -8,19 +8,31 @@
 export default async function handler(request, context) {
   const { base44, secrets } = context;
 
-  // Validate webhook secret
-  const providedSecret = request.headers['x-signal-secret'];
-  const expectedSecret = secrets.SIGNAL_WEBHOOK_SECRET;
-
-  if (!providedSecret || providedSecret !== expectedSecret) {
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ error: 'Unauthorized: Invalid or missing secret' })
-    };
-  }
+  console.log('[TradingView Webhook] Request received');
 
   // Parse webhook payload
   const payload = JSON.parse(request.body);
+  
+  // Validate webhook secret from multiple sources
+  const providedSecret = 
+    request.headers['x-signal-secret'] || 
+    payload.secret || 
+    new URLSearchParams(request.url.split('?')[1] || '').get('secret');
+  
+  const expectedSecret = secrets.SIGNAL_WEBHOOK_SECRET;
+
+  if (!providedSecret || providedSecret !== expectedSecret) {
+    console.log('[TradingView Webhook] Auth failed - Invalid or missing secret');
+    return {
+      statusCode: 401,
+      body: JSON.stringify({ 
+        accepted: false, 
+        error: 'unauthorized' 
+      })
+    };
+  }
+
+  console.log('[TradingView Webhook] Auth successful');
   const {
     symbol,
     exchange,
@@ -64,12 +76,15 @@ export default async function handler(request, context) {
     payload
   });
 
+  console.log('[TradingView Webhook] Signal created:', signal.id, 'Score:', score);
+
   return {
     statusCode: 200,
     body: JSON.stringify({
       accepted: true,
+      createdSignalId: signal.id,
       score,
-      createdSignalId: signal.id
+      alertTriggered: true
     })
   };
 }

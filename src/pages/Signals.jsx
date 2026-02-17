@@ -32,11 +32,25 @@ export default function SignalsPage() {
     setIsLoading(true);
     try {
       const data = await base44.entities.Signal.list("-created_date", 100);
+      console.log('Loaded signals:', data.length);
       setSignals(data);
     } catch (error) {
       console.error("Failed to load signals:", error);
     }
     setIsLoading(false);
+  };
+
+  const createTestSignal = async () => {
+    try {
+      const response = await fetch('/api/signals/seed', {
+        method: 'POST'
+      });
+      const result = await response.json();
+      console.log('Test signal created:', result);
+      await loadSignals();
+    } catch (error) {
+      console.error('Failed to create test signal:', error);
+    }
   };
 
   const applyFilters = () => {
@@ -153,8 +167,16 @@ export default function SignalsPage() {
               <TrendingUp className="w-16 h-16 text-slate-600 mx-auto mb-4" />
               <p className="text-slate-400 text-lg">No signals found</p>
               <p className="text-slate-500 text-sm mt-2">
-                {signals.length > 0 ? "Try adjusting your filters" : "Waiting for incoming signals..."}
+                {signals.length > 0 ? "Try adjusting your filters" : "Waiting for incoming signals from TradingView webhook"}
               </p>
+              {signals.length === 0 && (
+                <Button
+                  onClick={createTestSignal}
+                  className="mt-6 bg-blue-600 hover:bg-blue-700"
+                >
+                  Create Test Signal
+                </Button>
+              )}
             </CardContent>
           </Card>
         ) : (

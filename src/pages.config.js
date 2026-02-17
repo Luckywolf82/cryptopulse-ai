@@ -50,10 +50,10 @@
 import Analyze from './pages/Analyze';
 import Dashboard from './pages/Dashboard';
 import History from './pages/History';
-import RecommendationDetail from './pages/RecommendationDetail';
-import StockAnalysis from './pages/StockAnalysis';
 import I18nAudit from './pages/I18nAudit';
+import RecommendationDetail from './pages/RecommendationDetail';
 import Signals from './pages/Signals';
+import StockAnalysis from './pages/StockAnalysis';
 import __Layout from './Layout.jsx';
 
 
@@ -61,10 +61,10 @@ export const PAGES = {
     "Analyze": Analyze,
     "Dashboard": Dashboard,
     "History": History,
-    "RecommendationDetail": RecommendationDetail,
-    "StockAnalysis": StockAnalysis,
     "I18nAudit": I18nAudit,
+    "RecommendationDetail": RecommendationDetail,
     "Signals": Signals,
+    "StockAnalysis": StockAnalysis,
 }
 
 export const pagesConfig = {
