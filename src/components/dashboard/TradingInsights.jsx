@@ -2,8 +2,10 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Target, Shield, Zap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function TradingInsights({ analyses }) {
+  const { t } = useTranslation();
   const getInsights = () => {
     if (analyses.length === 0) return {};
 
