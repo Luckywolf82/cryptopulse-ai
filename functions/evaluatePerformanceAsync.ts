@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    const signals = Object.values(deduped).slice(0, 10);
+    const signals = Object.values(deduped).slice(0, 50);
     
     // Process all signals without waiting
     const promises = signals.map(signal => 
