@@ -28,17 +28,14 @@ export default async function handler(request, context) {
     triggerType,
     direction,
     price,
-    volume,
-    liquidityScore,
-    htfBias,
     meta = {}
   } = payload;
 
   // Calculate base score by trigger type
   const baseScores = {
     'EMA_FLIP': 50,
-    'STRUCTURE_BREAK': 60,
-    'RSI_DIVERGENCE': 55
+    'MSS': 60,
+    'RSI_DIV': 55
   };
   let score = baseScores[triggerType] || 45;
 
@@ -55,9 +52,6 @@ export default async function handler(request, context) {
   // Clamp score to 0-100
   score = Math.max(0, Math.min(100, score));
 
-  // Determine if alert should be triggered
-  const alertTriggered = score >= 70;
-
   // Store signal in database
   const signal = await base44.entities.Signal.create({
     symbol,
@@ -67,25 +61,14 @@ export default async function handler(request, context) {
     direction,
     score,
     price: price || null,
-    volume: volume || null,
-    liquidityScore: liquidityScore || null,
-    htfBias: htfBias || null,
-    payloadJson: payload,
-    alertTriggered
+    payload
   });
-
-  // If high-quality signal, log notification placeholder
-  if (alertTriggered) {
-    // TODO: Implement Telegram notification
-    console.log(`🚨 HIGH QUALITY SIGNAL: ${symbol} ${direction.toUpperCase()} @ ${price} (Score: ${score})`);
-  }
 
   return {
     statusCode: 200,
     body: JSON.stringify({
       accepted: true,
       score,
-      alertTriggered,
       createdSignalId: signal.id
     })
   };
