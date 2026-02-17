@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     }, { status: 400 });
   }
   
-  // Validate webhook secret from multiple sources (case-insensitive header)
+  // Auth: Accept either webhook secret OR authenticated user (for testing)
   const headerSecret = Object.keys(req.headers).find(k => k.toLowerCase() === 'x-signal-secret');
   const providedSecret = 
     (headerSecret ? req.headers.get(headerSecret) : null) ||
@@ -27,9 +27,10 @@ Deno.serve(async (req) => {
     new URL(req.url).searchParams.get('secret');
   
   const expectedSecret = Deno.env.get('SIGNAL_WEBHOOK_SECRET');
+  const isAuthenticatedUser = await base44.auth.isAuthenticated();
 
-  if (!providedSecret || providedSecret !== expectedSecret) {
-    console.log('[TradingView Webhook] Auth failed - secret mismatch or missing');
+  if (!isAuthenticatedUser && (!providedSecret || providedSecret !== expectedSecret)) {
+    console.log('[TradingView Webhook] Auth failed - no valid secret or user session');
     return Response.json({ 
       accepted: false, 
       error: 'unauthorized' 
