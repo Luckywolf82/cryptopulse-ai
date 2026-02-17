@@ -27,6 +27,7 @@ export default function History() {
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [performances, setPerformances] = useState([]);
   const [hoursBack, setHoursBack] = useState(168);
+  const [activeTab, setActiveTab] = useState("history");
   const [filters, setFilters] = useState({
     tradingType: "all",
     riskLevel: "all", 
