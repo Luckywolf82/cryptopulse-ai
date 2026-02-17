@@ -1,49 +1,39 @@
-/**
- * TradingView Webhook Handler
- * POST /api/tradingview/webhook
- * 
- * Receives trading signals from TradingView alerts and scores them
- */
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-export default async function handler(request, context) {
-  const { base44, secrets } = context;
+Deno.serve(async (req) => {
+  const base44 = createClientFromRequest(req);
 
   console.log('[TradingView Webhook] Request received');
 
   // Parse webhook payload - handle string or object
   let payload;
   try {
-    payload = typeof request.body === 'string' ? JSON.parse(request.body) : request.body;
+    const body = await req.text();
+    payload = body ? JSON.parse(body) : {};
     console.log('[TradingView Webhook] Payload parsed successfully');
   } catch (error) {
     console.log('[TradingView Webhook] Invalid JSON payload');
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        accepted: false,
-        error: 'invalid_json'
-      })
-    };
+    return Response.json({
+      accepted: false,
+      error: 'invalid_json'
+    }, { status: 400 });
   }
   
   // Validate webhook secret from multiple sources (case-insensitive header)
-  const headerSecret = Object.keys(request.headers).find(k => k.toLowerCase() === 'x-signal-secret');
+  const headerSecret = Object.keys(req.headers).find(k => k.toLowerCase() === 'x-signal-secret');
   const providedSecret = 
-    (headerSecret ? request.headers[headerSecret] : null) ||
+    (headerSecret ? req.headers.get(headerSecret) : null) ||
     payload.secret || 
-    new URLSearchParams(request.url.split('?')[1] || '').get('secret');
+    new URL(req.url).searchParams.get('secret');
   
-  const expectedSecret = secrets.SIGNAL_WEBHOOK_SECRET;
+  const expectedSecret = Deno.env.get('SIGNAL_WEBHOOK_SECRET');
 
   if (!providedSecret || providedSecret !== expectedSecret) {
     console.log('[TradingView Webhook] Auth failed - secret mismatch or missing');
-    return {
-      statusCode: 401,
-      body: JSON.stringify({ 
-        accepted: false, 
-        error: 'unauthorized' 
-      })
-    };
+    return Response.json({ 
+      accepted: false, 
+      error: 'unauthorized' 
+    }, { status: 401 });
   }
 
   console.log('[TradingView Webhook] Auth passed');
@@ -53,14 +43,11 @@ export default async function handler(request, context) {
   const missing = requiredFields.filter(field => !payload[field]);
   
   if (missing.length > 0) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        accepted: false,
-        error: 'invalid_payload',
-        missing
-      })
-    };
+    return Response.json({
+      accepted: false,
+      error: 'invalid_payload',
+      missing
+    }, { status: 400 });
   }
 
   const {
@@ -98,7 +85,7 @@ export default async function handler(request, context) {
 
   // Store signal in database
   try {
-    const signal = await base44.entities.Signal.create({
+    const signal = await base44.asServiceRole.entities.Signal.create({
       symbol,
       exchange: exchange || 'UNKNOWN',
       timeframe,
@@ -110,29 +97,18 @@ export default async function handler(request, context) {
 
     console.log('[TradingView Webhook] Signal created successfully:', signal.id);
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        accepted: true,
-        score,
-        alertTriggered,
-        createdSignalId: signal.id
-      })
-    };
+    return Response.json({
+      accepted: true,
+      score,
+      alertTriggered,
+      createdSignalId: signal.id
+    }, { status: 200 });
   } catch (error) {
     console.log('[TradingView Webhook] DB create failed:', error.message);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        accepted: false,
-        error: 'db_create_failed',
-        message: error.message
-      })
-    };
+    return Response.json({
+      accepted: false,
+      error: 'db_create_failed',
+      message: error.message
+    }, { status: 500 });
   }
-}
-
-export const config = {
-  method: 'POST',
-  path: '/api/tradingview/webhook'
-};
+});

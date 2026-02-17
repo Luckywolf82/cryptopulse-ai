@@ -1,41 +1,31 @@
-/**
- * Seed Signal Data for Testing
- * POST /api/signals/seed
- */
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-export default async function handler(request, context) {
-  const { base44 } = context;
+Deno.serve(async (req) => {
+  const base44 = createClientFromRequest(req);
 
   try {
-    // Create test signal
-    const signal = await base44.entities.Signal.create({
-      symbol: "SOLUSDT",
-      exchange: "BINANCE",
-      timeframe: "1h",
-      triggerType: "EMA_FLIP",
-      direction: "long",
-      score: 78,
-      price: 152.44
+    const signal = await base44.asServiceRole.entities.Signal.create({
+      symbol: 'BTCUSDT',
+      exchange: 'BINANCE',
+      timeframe: '15m',
+      triggerType: 'EMA_FLIP',
+      direction: 'long',
+      score: 75,
+      price: 43250.50
     });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        createdSignalId: signal.id,
-        signal: signal
-      })
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        error: error.message
-      })
-    };
-  }
-}
+    console.log('[Seed] Test signal created:', signal.id);
 
-export const config = {
-  method: 'POST',
-  path: '/api/signals/seed'
-};
+    return Response.json({
+      success: true,
+      signalId: signal.id,
+      signal
+    }, { status: 200 });
+  } catch (error) {
+    console.log('[Seed] Failed to create signal:', error.message);
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
+  }
+});
