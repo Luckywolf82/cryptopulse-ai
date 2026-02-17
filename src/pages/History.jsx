@@ -94,20 +94,25 @@ export default function History() {
       
       while (batchCount < maxBatches) {
         const result = await base44.functions.invoke("evaluatePerformanceAsync", { hoursBack });
-        totalStarted += result.data.started || 0;
-        batchCount++;
-        
-        // If less than 50 signals were processed, we've reached the end
-        if ((result.data.started || 0) < 50) break;
-        
-        // Small delay between batches to avoid overwhelming the system
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-      
-      console.log(`Evaluation complete: processed ${totalStarted} signals in ${batchCount} batches`);
-      
-      // Reload after final delay to let the last batch process
-      setTimeout(loadPerformances, 2000);
+            totalStarted += result.data.started || 0;
+            batchCount++;
+
+            // Reload after each batch
+            await new Promise(resolve => setTimeout(resolve, 500));
+            loadPerformances();
+
+            // If less than 50 signals were processed, we've reached the end
+            if ((result.data.started || 0) < 50) break;
+
+            // Delay between batches
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
+            console.log(`Evaluation complete: processed ${totalStarted} signals in ${batchCount} batches`);
+
+            // Final reload after all batches complete
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            loadPerformances();
     } catch (error) {
       console.error("Error running evaluation:", error);
     } finally {
