@@ -418,13 +418,32 @@ Deno.serve(async (req) => {
         };
 
         await base44.entities.Signal.create(signalData);
-        results.signalsCreatedCount++;
-        results.created.push({
-          symbol,
-          triggerType,
-          direction,
-          score
-        });
+         results.signalsCreatedCount++;
+
+         // Track top candidates (sorted by score)
+         results.topCandidates.push({
+           symbol,
+           triggerType,
+           direction,
+           score,
+           volumeSpike,
+           htfAlign,
+           volatilityHealthy,
+           tooExtended,
+           isLowQuality
+         });
+
+         results.topCandidates.sort((a, b) => b.score - a.score);
+         if (results.topCandidates.length > 10) {
+           results.topCandidates = results.topCandidates.slice(0, 10);
+         }
+
+         results.created.push({
+           symbol,
+           triggerType,
+           direction,
+           score
+         });
 
         // Update lastScannedAt
         await base44.entities.Watchlist.update(watchItem.id, {
