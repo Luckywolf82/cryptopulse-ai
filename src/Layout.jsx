@@ -2,32 +2,36 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { TrendingUp, BarChart3, History, Building2 } from "lucide-react";
-
-const navigationItems = [
-  {
-    title: "Dashboard",
-    url: createPageUrl("Dashboard"),
-    icon: BarChart3,
-  },
-  {
-    title: "Crypto & Forex",
-    url: createPageUrl("Analyze"),
-    icon: TrendingUp,
-  },
-  {
-    title: "Stocks 🇮🇩",
-    url: createPageUrl("StockAnalysis"),
-    icon: Building2,
-  },
-  {
-    title: "History",
-    url: createPageUrl("History"),
-    icon: History,
-  },
-];
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import "@/lib/i18n";
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
+  const { t } = useTranslation();
+
+  const navigationItems = [
+    {
+      title: t('nav.dashboard'),
+      url: createPageUrl("Dashboard"),
+      icon: BarChart3,
+    },
+    {
+      title: t('nav.cryptoForex'),
+      url: createPageUrl("Analyze"),
+      icon: TrendingUp,
+    },
+    {
+      title: t('nav.stocks'),
+      url: createPageUrl("StockAnalysis"),
+      icon: Building2,
+    },
+    {
+      title: t('nav.history'),
+      url: createPageUrl("History"),
+      icon: History,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
@@ -83,14 +87,17 @@ export default function Layout({ children, currentPageName }) {
               <TrendingUp className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h1 className="font-bold text-white">TradingAI</h1>
-              <p className="text-xs text-slate-400">Professional Analysis</p>
+              <h1 className="font-bold text-white">{t('layout.title')}</h1>
+              <p className="text-xs text-slate-400">{t('layout.subtitle')}</p>
             </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-            <span className="text-xs text-slate-300">Live</span>
-          </div>
+            </div>
+            <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+              <span className="text-xs text-slate-300">{t('layout.live')}</span>
+            </div>
+            </div>
         </div>
       </div>
 
@@ -102,11 +109,12 @@ export default function Layout({ children, currentPageName }) {
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="font-bold text-xl text-white">TradingAI</h2>
-              <p className="text-xs text-slate-400">Professional Analyzer</p>
+              <h2 className="font-bold text-xl text-white">{t('layout.title')}</h2>
+              <p className="text-xs text-slate-400">{t('layout.subtitle')}</p>
             </div>
-          </div>
-        </div>
+            </div>
+            <LanguageSwitcher />
+            </div>
         
         <nav className="p-4 space-y-2">
           {navigationItems.map((item) => (
@@ -131,8 +139,8 @@ export default function Layout({ children, currentPageName }) {
               <span className="text-white font-bold text-sm">AI</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-white text-sm">AI Assistant</p>
-              <p className="text-xs text-slate-400">Ready to analyze</p>
+              <p className="font-semibold text-white text-sm">{t('layout.aiAssistant')}</p>
+              <p className="text-xs text-slate-400">{t('layout.aiReady')}</p>
             </div>
           </div>
         </div>
