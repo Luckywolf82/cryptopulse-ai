@@ -9,52 +9,30 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Fetch Binance 24hr tickers
-    const binanceResponse = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+    // Fetch top cryptos from CoinGecko (no geo-blocking)
+    const coingeckoResponse = await fetch(
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=100&sparkline=false'
+    );
     
-    if (!binanceResponse.ok) {
+    if (!coingeckoResponse.ok) {
       return Response.json({
-        error: 'Failed to fetch Binance data',
-        details: `HTTP ${binanceResponse.status}`
+        error: 'Failed to fetch CoinGecko data',
+        details: `HTTP ${coingeckoResponse.status}`
       }, { status: 500 });
     }
 
-    const tickers = await binanceResponse.json();
+    const coins = await coingeckoResponse.json();
 
-    // Stable coins and fiat currencies to exclude
-    const excludedBaseAssets = [
-      'USDT', 'USDC', 'BUSD', 'TUSD', 'DAI', 'FDUSD', 'USDP',
-      'EUR', 'TRY', 'BRL', 'GBP'
-    ];
+    // Stable coins to exclude
+    const excludedSymbols = ['usdt', 'usdc', 'busd', 'tusd', 'dai', 'fdusd', 'usdp'];
 
-    // Filter to USDT pairs only
-    const usdtPairs = tickers.filter(ticker => {
-      const symbol = ticker.symbol;
-      
-      // Must end with USDT
-      if (!symbol.endsWith('USDT')) return false;
-      
-      // Exclude leveraged tokens
-      if (symbol.endsWith('UPUSDT') || symbol.endsWith('DOWNUSDT') || 
-          symbol.endsWith('BULLUSDT') || symbol.endsWith('BEARUSDT')) {
-        return false;
-      }
-      
-      // Exclude stable-to-stable pairs
-      const baseAsset = symbol.replace('USDT', '');
-      if (excludedBaseAssets.includes(baseAsset)) {
-        return false;
-      }
-      
-      return true;
-    });
-
-    // Sort by quote volume descending
-    usdtPairs.sort((a, b) => {
-      const volA = parseFloat(a.quoteVolume) || 0;
-      const volB = parseFloat(b.quoteVolume) || 0;
-      return volB - volA;
-    });
+    // Convert to Binance USDT pair format and filter
+    const usdtPairs = coins
+      .filter(coin => !excludedSymbols.includes(coin.symbol.toLowerCase()))
+      .map(coin => ({
+        symbol: `${coin.symbol.toUpperCase()}USDT`,
+        quoteVolume: coin.total_volume || 0
+      }));
 
     // Select top 50
     const top50 = usdtPairs.slice(0, 50);
@@ -91,10 +69,10 @@ Deno.serve(async (req) => {
         }
 
         // Append notes if not already present
-        if (!existing.notes || !existing.notes.includes('Auto: Binance Top50 by quoteVolume')) {
+        if (!existing.notes || !existing.notes.includes('Auto: Top50 by volume')) {
           updateData.notes = existing.notes 
-            ? `${existing.notes}\nAuto: Binance Top50 by quoteVolume`
-            : 'Auto: Binance Top50 by quoteVolume';
+            ? `${existing.notes}\nAuto: Top50 by volume`
+            : 'Auto: Top50 by volume';
         }
 
         upsertPromises.push(
@@ -110,7 +88,7 @@ Deno.serve(async (req) => {
             scanEnabled: true,
             scanIntervalMinutes: 15,
             source: 'auto_top50',
-            notes: 'Auto: Binance Top50 by quoteVolume',
+            notes: 'Auto: Top50 by volume (CoinGecko)',
             min24hVolumeUsd: quoteVolume,
             lastAutoUpdatedAt: now
           })
