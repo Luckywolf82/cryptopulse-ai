@@ -3,12 +3,13 @@ import { Analysis } from "@/entities/Analysis";
 import { StockAnalysis } from "@/entities/StockAnalysis";
 import { TradeResult } from "@/entities/TradeResult";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Filter, Eye, RefreshCw } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Filter, Eye, RefreshCw, BarChart3, Zap, TrendingUp, TrendingDown, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import HistoryFilters from "../components/history/HistoryFilters";
 import AnalysisCard from "../components/history/AnalysisCard";
@@ -22,6 +23,9 @@ export default function History() {
   const [filteredAnalyses, setFilteredAnalyses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAnalysis, setSelectedAnalysis] = useState(null);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [performances, setPerformances] = useState([]);
+  const [hoursBack, setHoursBack] = useState(168);
   const [filters, setFilters] = useState({
     tradingType: "all",
     riskLevel: "all", 
