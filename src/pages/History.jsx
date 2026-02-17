@@ -87,8 +87,9 @@ export default function History() {
   const runEvaluation = async () => {
     setIsEvaluating(true);
     try {
-      await base44.functions.invoke("evaluatePerformance", { hoursBack });
-      await loadPerformances();
+      await base44.functions.invoke("evaluatePerformanceAsync", { hoursBack });
+      // Reload after a short delay to let the evaluation process
+      setTimeout(loadPerformances, 2000);
     } catch (error) {
       console.error("Error running evaluation:", error);
     } finally {
