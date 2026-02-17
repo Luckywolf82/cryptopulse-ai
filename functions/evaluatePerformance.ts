@@ -283,6 +283,13 @@ Deno.serve(async (req) => {
           if (pnlPercent > 0.5) status = 'win';
           else if (pnlPercent > -0.5) status = 'breakeven';
 
+          // Check if performance already exists for this signal
+          const existing = await base44.entities.SignalPerformance.filter({ signalId: signal.id });
+          
+          if (existing.length > 0) {
+            throw new Error('Performance already evaluated for this signal');
+          }
+
           // Create performance record
           const perfRecord = {
             signalId: signal.id,
