@@ -34,16 +34,16 @@ export default function Analyze() {
         setUploadedImage({ file, url: result.file_url });
         setStep(2);
       } else {
-        throw new Error("Upload result tidak memiliki file_url");
+        throw new Error("Upload result does not have file_url");
       }
     } catch (error) {
       console.error("Upload error details:", error);
       
       // If upload fails with payment error, provide workaround
       if (error.message.includes("402") || error.response?.status === 402) {
-        setError(`Upload service sedang bermasalah (Error 402). Sebagai workaround, silakan copy paste URL gambar yang sudah ter-upload ke browser atau contact support.`);
+        setError(`Upload service is currently experiencing issues (Error 402). As a workaround, please copy paste the uploaded image URL to browser or contact support.`);
       } else {
-        setError(`Gagal mengupload gambar: ${error.message || 'Unknown error'}. Silakan coba lagi dengan gambar yang lebih kecil (<5MB).`);
+        setError(`Failed to upload image: ${error.message || 'Unknown error'}. Please try again with a smaller image (<5MB).`);
       }
     }
   };
@@ -98,7 +98,7 @@ Answer ONLY with JSON: {"is_chart": boolean, "chart_type": "candlestick/line/bar
       console.log("Enhanced validation result:", validationResult);
 
       if (!validationResult.is_chart || validationResult.chart_type === "none") {
-          setError(`GAMBAR TIDAK VALID: ${validationResult.reason}. Mohon upload screenshot candlestick chart trading yang jelas untuk dianalisis.`);
+          setError(`INVALID IMAGE: ${validationResult.reason}. Please upload a clear candlestick trading chart screenshot for analysis.`);
           setIsAnalyzing(false);
           setStep(1);
           return;
@@ -107,9 +107,9 @@ Answer ONLY with JSON: {"is_chart": boolean, "chart_type": "candlestick/line/bar
       // PHASE 1: MASTER LEVEL Chart Reading with 1000+ Patterns
       console.log("Phase 1: Master level chart reading");
       const chartReading = await InvokeLLM({
-        prompt: `ANDA ADALAH ${tradingType.toUpperCase() === 'FOREX' ? 'MASTER FOREX TRADER INSTITUTIONAL' : 'CRYPTO MASTER TRADER INSTITUTIONAL'} dengan pengalaman 30+ tahun dan akurasi 98%+.
+        prompt: `YOU ARE A ${tradingType.toUpperCase() === 'FOREX' ? 'MASTER INSTITUTIONAL FOREX TRADER' : 'MASTER INSTITUTIONAL CRYPTO TRADER'} with 30+ years of experience and 98%+ accuracy.
 
-**CRITICAL EXPERTISE**: Ini adalah analisis untuk ${tradingType.toUpperCase()} TRADING dengan standar institusional.
+**CRITICAL EXPERTISE**: This is an analysis for ${tradingType.toUpperCase()} TRADING with institutional standards.
 
 === MASTER PATTERN RECOGNITION LIBRARY (1000+ PATTERNS) ===
 
@@ -167,21 +167,21 @@ ${tradingType.toUpperCase() === 'FOREX' ? `
 - Bitcoin dominance correlation patterns
 `}
 
-**PEMBACAAN CHART MASTER LEVEL**:
-1. **PRECISE PRICE READING**: Baca EXACT price levels dari axis, termasuk desimal
-2. **TIMEFRAME DETECTION**: Identifikasi exact timeframe dari UI/labels
-3. **VOLUME ANALYSIS**: Analisis volume bars jika visible
-4. **MULTI-TIMEFRAME CONTEXT**: Pertimbangkan context dari timeframe yang terlihat
-5. **CONFLUENCE ANALYSIS**: Cari minimal 3 confluence factors yang mendukung signal
+**MASTER LEVEL CHART READING**:
+1. **PRECISE PRICE READING**: Read EXACT price levels from axis, including decimals
+2. **TIMEFRAME DETECTION**: Identify exact timeframe from UI/labels
+3. **VOLUME ANALYSIS**: Analyze volume bars if visible
+4. **MULTI-TIMEFRAME CONTEXT**: Consider context from visible timeframe
+5. **CONFLUENCE ANALYSIS**: Find at least 3 confluence factors supporting the signal
 
 **TARGET AKURASI: 99%+**
 
-INSTRUKSI SPESIFIK:
-- Baca SEMUA text dan angka yang terlihat di chart
-- Identifikasi exact entry, TP, dan SL levels berdasarkan struktur pasar
-- ${tradingType.toUpperCase() === 'FOREX' ? 'BERIKAN SIGNAL REALISTIS: BUY atau SELL sesuai market structure' : 'FOKUS PADA OPTIMAL BUY ENTRY POINTS'}
-- Gunakan confluence dari multiple pattern dan indicator
-- Berikan reasoning yang detail dan spesifik`,
+SPECIFIC INSTRUCTIONS:
+- Read ALL visible text and numbers on the chart
+- Identify exact entry, TP, and SL levels based on market structure
+- ${tradingType.toUpperCase() === 'FOREX' ? 'PROVIDE REALISTIC SIGNAL: BUY or SELL according to market structure' : 'FOCUS ON OPTIMAL BUY ENTRY POINTS'}
+- Use confluence from multiple patterns and indicators
+- Provide detailed and specific reasoning`,
         file_urls: [uploadedImage.url],
         response_json_schema: {
           type: "object",
@@ -189,10 +189,10 @@ INSTRUKSI SPESIFIK:
             master_analysis: {
               type: "object",
               properties: {
-                chart_quality_score: { type: "number", description: "Kualitas chart 1-100" },
-                timeframe_detected: { type: "string", description: "Exact timeframe dari chart" },
-                asset_pair: { type: "string", description: "Exact pair dari chart (contoh: XAU/USD, BTC/USDT)" },
-                current_price: { type: "number", description: "Harga current yang terbaca" },
+                chart_quality_score: { type: "number", description: "Chart quality 1-100" },
+                timeframe_detected: { type: "string", description: "Exact timeframe from chart" },
+                asset_pair: { type: "string", description: "Exact pair from chart (example: XAU/USD, BTC/USDT)" },
+                current_price: { type: "number", description: "Current price read from chart" },
                 price_range_24h: { 
                   type: "object", 
                   properties: { 
@@ -203,7 +203,7 @@ INSTRUKSI SPESIFIK:
                 market_structure: {
                   type: "string",
                   enum: ["BULLISH_TREND", "BEARISH_TREND", "RANGE_BOUND", "BREAKOUT_PENDING"],
-                  description: "Struktur pasar utama"
+                  description: "Main market structure"
                 }
               },
               required: ["chart_quality_score", "timeframe_detected", "asset_pair", "current_price", "market_structure"]
@@ -211,22 +211,22 @@ INSTRUKSI SPESIFIK:
             pattern_analysis: {
               type: "object",
               properties: {
-                primary_pattern: { type: "string", description: "Pattern utama yang terdeteksi" },
+                primary_pattern: { type: "string", description: "Primary pattern detected" },
                 secondary_patterns: { 
                   type: "array",
                   items: { type: "string" },
-                  description: "Pattern pendukung lainnya"
+                  description: "Additional supporting patterns"
                 },
-                pattern_completion: { type: "number", description: "% completion pattern" },
+                pattern_completion: { type: "number", description: "Pattern % completion" },
                 pattern_reliability: {
                   type: "string",
                   enum: ["VERY_HIGH", "HIGH", "MODERATE", "LOW"],
-                  description: "Reliabilitas pattern berdasarkan historical data"
+                  description: "Pattern reliability based on historical data"
                 },
                 confluence_factors: {
                   type: "array",
                   items: { type: "string" },
-                  description: "Faktor confluence yang mendukung"
+                  description: "Supporting confluence factors"
                 }
               },
               required: ["primary_pattern", "pattern_completion", "pattern_reliability", "confluence_factors"]
@@ -237,23 +237,23 @@ INSTRUKSI SPESIFIK:
                 trend_indicators: {
                   type: "object",
                   properties: {
-                    moving_averages: { type: "string", description: "Status MA (20, 50, 200)" },
-                    trend_strength: { type: "string", description: "Kekuatan trend" }
+                    moving_averages: { type: "string", description: "MA status (20, 50, 200)" },
+                    trend_strength: { type: "string", description: "Trend strength" }
                   }
                 },
                 momentum_indicators: {
                   type: "object", 
                   properties: {
-                    rsi_analysis: { type: "string", description: "Analisis RSI" },
-                    macd_signal: { type: "string", description: "Signal MACD" },
-                    stochastic: { type: "string", description: "Kondisi Stochastic" }
+                    rsi_analysis: { type: "string", description: "RSI analysis" },
+                    macd_signal: { type: "string", description: "MACD signal" },
+                    stochastic: { type: "string", description: "Stochastic condition" }
                   }
                 },
                 volume_indicators: {
                   type: "object",
                   properties: {
-                    volume_trend: { type: "string", description: "Trend volume" },
-                    volume_confirmation: { type: "boolean", description: "Apakah volume mengkonfirmasi price action" }
+                    volume_trend: { type: "string", description: "Volume trend" },
+                    volume_confirmation: { type: "boolean", description: "Does volume confirm price action" }
                   }
                 }
               }
@@ -269,11 +269,11 @@ INSTRUKSI SPESIFIK:
                 signal_strength: {
                   type: "string",
                   enum: ["VERY_STRONG", "STRONG", "MODERATE", "WEAK"],
-                  description: "Kekuatan master signal"
+                  description: "Master signal strength"
                 },
-                entry_strategy: { type: "string", description: "Strategi entry yang optimal" },
-                risk_management: { type: "string", description: "Manajemen risiko yang tepat" },
-                master_reasoning: { type: "string", description: "Reasoning lengkap dari master trader" }
+                entry_strategy: { type: "string", description: "Optimal entry strategy" },
+                risk_management: { type: "string", description: "Proper risk management" },
+                master_reasoning: { type: "string", description: "Complete reasoning from master trader" }
               },
               required: ["signal_direction", "signal_strength", "entry_strategy", "master_reasoning"]
             },
@@ -347,7 +347,7 @@ INSTRUKSI SPESIFIK:
       setStep(4);
     } catch (error) {
       console.error("Master analysis error:", error);
-      setError(`Master analysis gagal: ${error.message}. Silakan pastikan gambar chart jernih dan coba lagi.`);
+      setError(`Master analysis failed: ${error.message}. Please ensure the chart image is clear and try again.`);
       setStep(1);
     } finally {
       setIsAnalyzing(false);
@@ -381,7 +381,7 @@ INSTRUKSI SPESIFIK:
           </Button>
           <div>
             <h1 className="text-3xl font-bold text-white">Professional AI Analyzer</h1>
-            <p className="text-slate-400">Master-level pattern recognition dengan akurasi 99%+</p>
+            <p className="text-slate-400">Master-level pattern recognition with 99%+ accuracy</p>
           </div>
         </motion.div>
 
@@ -407,7 +407,7 @@ INSTRUKSI SPESIFIK:
                         >
                           ⚡ Analyze XAU/USD Chart Directly
                         </Button>
-                        <p className="text-xs text-slate-400">Chart XAU/USD yang Anda upload akan dianalisis langsung</p>
+                        <p className="text-xs text-slate-400">Your uploaded XAU/USD chart will be analyzed directly</p>
                       </div>
                     )}
                   </div>
