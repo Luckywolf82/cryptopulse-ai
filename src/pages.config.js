@@ -53,6 +53,7 @@ import History from './pages/History';
 import RecommendationDetail from './pages/RecommendationDetail';
 import StockAnalysis from './pages/StockAnalysis';
 import I18nAudit from './pages/I18nAudit';
+import Signals from './pages/Signals';
 import __Layout from './Layout.jsx';
 
 
@@ -63,6 +64,7 @@ export const PAGES = {
     "RecommendationDetail": RecommendationDetail,
     "StockAnalysis": StockAnalysis,
     "I18nAudit": I18nAudit,
+    "Signals": Signals,
 }
 
 export const pagesConfig = {

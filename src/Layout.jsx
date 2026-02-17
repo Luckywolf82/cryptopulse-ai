@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { TrendingUp, BarChart3, History, Building2, AlertTriangle, X } from "lucide-react";
+import { TrendingUp, BarChart3, History, Building2, AlertTriangle, X, Zap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { base44 } from "@/api/base44Client";
@@ -46,6 +46,11 @@ export default function Layout({ children, currentPageName }) {
       title: t('nav.stocks'),
       url: createPageUrl("StockAnalysis"),
       icon: Building2,
+    },
+    {
+      title: "Signals",
+      url: createPageUrl("Signals"),
+      icon: Zap,
     },
     {
       title: t('nav.history'),
