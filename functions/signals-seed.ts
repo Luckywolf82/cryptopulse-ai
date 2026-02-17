@@ -15,7 +15,7 @@ export default async function handler(request, context) {
     direction: "long",
     score: 78,
     price: 152.44,
-    payload: { source: "seed" }
+    payloadJson: { source: "seed" }
   });
 
   return {

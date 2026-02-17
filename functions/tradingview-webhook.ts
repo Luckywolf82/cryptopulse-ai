@@ -10,8 +10,8 @@ export default async function handler(request, context) {
 
   console.log('[TradingView Webhook] Request received');
 
-  // Parse webhook payload
-  const payload = JSON.parse(request.body);
+  // Parse webhook payload - handle string or object
+  const payload = typeof request.body === 'string' ? JSON.parse(request.body) : request.body;
   
   // Validate webhook secret from multiple sources
   const providedSecret = 
@@ -80,6 +80,8 @@ export default async function handler(request, context) {
   // Clamp score to 0-100
   score = Math.max(0, Math.min(100, score));
 
+  const alertTriggered = score >= 70;
+
   // Store signal in database
   const signal = await base44.entities.Signal.create({
     symbol,
@@ -88,8 +90,11 @@ export default async function handler(request, context) {
     triggerType,
     direction,
     score,
-    price: price || null,
-    payload
+    price: price ?? null,
+    volume: payload.volume ?? null,
+    liquidityScore: payload.liquidityScore ?? null,
+    htfBias: payload.htfBias ?? null,
+    payloadJson: payload
   });
 
   console.log('[TradingView Webhook] Signal created:', signal.id);
@@ -99,7 +104,7 @@ export default async function handler(request, context) {
     body: JSON.stringify({
       accepted: true,
       score,
-      alertTriggered: true,
+      alertTriggered,
       createdSignalId: signal.id
     })
   };

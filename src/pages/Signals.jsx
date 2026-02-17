@@ -33,7 +33,7 @@ export default function SignalsPage() {
     setIsLoading(true);
     try {
       const data = await base44.entities.Signal.list("-created_date", 100);
-      console.log('Loaded signals:', data.length);
+      console.log('Loaded signals:', data.length, data);
       setSignals(data);
     } catch (error) {
       console.error("Failed to load signals:", error);
