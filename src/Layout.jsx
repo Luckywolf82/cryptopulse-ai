@@ -4,7 +4,7 @@ import { createPageUrl } from "@/utils";
 import { TrendingUp, BarChart3, History, Building2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import "@/lib/i18n";
+import "@/components/lib/i18n";
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
