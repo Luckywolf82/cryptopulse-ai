@@ -3,16 +3,29 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
 
-  console.log('[TradingView Webhook] Request received');
+  const requestId = crypto.randomUUID();
+  console.log(`[TradingView Webhook ${requestId}] Request received`);
 
   // Parse webhook payload - handle string or object
   let payload;
   try {
     const body = await req.text();
     payload = body ? JSON.parse(body) : {};
-    console.log('[TradingView Webhook] Payload parsed successfully');
+    console.log(`[TradingView Webhook ${requestId}] Payload parsed successfully`);
   } catch (error) {
-    console.log('[TradingView Webhook] Invalid JSON payload');
+    console.error(`[TradingView Webhook ${requestId}] Invalid JSON payload:`, error.message);
+    
+    // Alert admin of suspicious activity
+    try {
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: Deno.env.get('ADMIN_EMAIL') || 'admin@example.com',
+        subject: '⚠️ TradingView Webhook: Invalid JSON',
+        body: `Request ID: ${requestId}\nError: ${error.message}\nTimestamp: ${new Date().toISOString()}`
+      });
+    } catch (emailError) {
+      console.error(`[TradingView Webhook ${requestId}] Failed to send alert email:`, emailError.message);
+    }
+    
     return Response.json({
       accepted: false,
       error: 'invalid_json'
@@ -30,20 +43,33 @@ Deno.serve(async (req) => {
   const isAuthenticatedUser = await base44.auth.isAuthenticated();
 
   if (!isAuthenticatedUser && (!providedSecret || providedSecret !== expectedSecret)) {
-    console.log('[TradingView Webhook] Auth failed - no valid secret or user session');
+    console.error(`[TradingView Webhook ${requestId}] Auth failed - no valid secret or user session`);
+    
+    // Alert admin of potential security breach
+    try {
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: Deno.env.get('ADMIN_EMAIL') || 'admin@example.com',
+        subject: '🚨 TradingView Webhook: Unauthorized Access Attempt',
+        body: `Request ID: ${requestId}\nTimestamp: ${new Date().toISOString()}\nIP: ${req.headers.get('cf-connecting-ip') || 'unknown'}\nPayload: ${JSON.stringify(payload, null, 2)}`
+      });
+    } catch (emailError) {
+      console.error(`[TradingView Webhook ${requestId}] Failed to send security alert:`, emailError.message);
+    }
+    
     return Response.json({ 
       accepted: false, 
       error: 'unauthorized' 
     }, { status: 401 });
   }
 
-  console.log('[TradingView Webhook] Auth passed');
+  console.log(`[TradingView Webhook ${requestId}] Auth passed`);
 
   // Validate required fields
   const requiredFields = ['symbol', 'timeframe', 'triggerType', 'direction'];
   const missing = requiredFields.filter(field => !payload[field]);
   
   if (missing.length > 0) {
+    console.error(`[TradingView Webhook ${requestId}] Invalid payload - missing fields:`, missing);
     return Response.json({
       accepted: false,
       error: 'invalid_payload',
@@ -93,10 +119,24 @@ Deno.serve(async (req) => {
       triggerType,
       direction,
       score,
-      price: price ?? null
+      price: price ?? null,
+      payload
     });
 
-    console.log('[TradingView Webhook] Signal created successfully:', signal.id);
+    console.log(`[TradingView Webhook ${requestId}] Signal created successfully:`, signal.id, `Score: ${score}`);
+
+    // Alert admin of high-quality signals
+    if (alertTriggered) {
+      try {
+        await base44.asServiceRole.integrations.Core.SendEmail({
+          to: Deno.env.get('ADMIN_EMAIL') || 'admin@example.com',
+          subject: `🎯 High-Quality Signal: ${symbol} ${direction.toUpperCase()}`,
+          body: `Signal ID: ${signal.id}\nSymbol: ${symbol}\nDirection: ${direction.toUpperCase()}\nTimeframe: ${timeframe}\nTrigger: ${triggerType}\nScore: ${score}\nPrice: ${price || 'N/A'}\nTimestamp: ${new Date().toISOString()}`
+        });
+      } catch (emailError) {
+        console.error(`[TradingView Webhook ${requestId}] Failed to send signal alert:`, emailError.message);
+      }
+    }
 
     return Response.json({
       accepted: true,
@@ -105,7 +145,19 @@ Deno.serve(async (req) => {
       createdSignalId: signal.id
     }, { status: 200 });
   } catch (error) {
-    console.log('[TradingView Webhook] DB create failed:', error.message);
+    console.error(`[TradingView Webhook ${requestId}] DB create failed:`, error.message);
+    
+    // Alert admin of critical database error
+    try {
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: Deno.env.get('ADMIN_EMAIL') || 'admin@example.com',
+        subject: '❌ TradingView Webhook: Database Error',
+        body: `Request ID: ${requestId}\nError: ${error.message}\nPayload: ${JSON.stringify(payload, null, 2)}\nTimestamp: ${new Date().toISOString()}`
+      });
+    } catch (emailError) {
+      console.error(`[TradingView Webhook ${requestId}] Failed to send critical alert:`, emailError.message);
+    }
+    
     return Response.json({
       accepted: false,
       error: 'db_create_failed',

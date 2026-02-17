@@ -4,16 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowUpRight, ArrowDownRight, TrendingUp, RefreshCw, Plus } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, TrendingUp, RefreshCw, Plus, BarChart2, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import SignalDetailModal from "../components/signals/SignalDetailModal";
 
 export default function SignalsPage() {
   const [signals, setSignals] = useState([]);
   const [filteredSignals, setFilteredSignals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedSignal, setSelectedSignal] = useState(null);
   
   // Filters
   const [symbolFilter, setSymbolFilter] = useState("");
@@ -23,6 +25,20 @@ export default function SignalsPage() {
 
   useEffect(() => {
     loadSignals();
+    
+    // Real-time subscription to new signals
+    const unsubscribe = base44.entities.Signal.subscribe((event) => {
+      if (event.type === 'create') {
+        setSignals(prev => [event.data, ...prev]);
+        toast.success(`New signal: ${event.data.symbol} ${event.data.direction.toUpperCase()}`);
+      } else if (event.type === 'update') {
+        setSignals(prev => prev.map(s => s.id === event.id ? event.data : s));
+      } else if (event.type === 'delete') {
+        setSignals(prev => prev.filter(s => s.id !== event.id));
+      }
+    });
+    
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -108,6 +124,38 @@ export default function SignalsPage() {
     if (score >= 70) return "bg-green-500/20 text-green-400 border-green-500/50";
     if (score >= 50) return "bg-yellow-500/20 text-yellow-400 border-yellow-500/50";
     return "bg-red-500/20 text-red-400 border-red-500/50";
+  };
+
+  const createPaperTrade = async (signal) => {
+    try {
+      const entryPrice = signal.price || 0;
+      const stopDistance = entryPrice * 0.02; // 2% stop loss
+      const stopLoss = signal.direction === 'long' 
+        ? entryPrice - stopDistance 
+        : entryPrice + stopDistance;
+      
+      const targets = {
+        tp1: signal.direction === 'long' ? entryPrice * 1.015 : entryPrice * 0.985,
+        tp2: signal.direction === 'long' ? entryPrice * 1.03 : entryPrice * 0.97,
+        tp3: signal.direction === 'long' ? entryPrice * 1.05 : entryPrice * 0.95
+      };
+
+      const trade = await base44.entities.PaperTrade.create({
+        symbol: signal.symbol,
+        exchange: signal.exchange,
+        side: signal.direction,
+        entry: entryPrice,
+        stop: stopLoss,
+        targetsJson: targets,
+        sizeUsd: 1000,
+        openedAt: new Date().toISOString()
+      });
+
+      toast.success(`Paper trade created for ${signal.symbol}`);
+    } catch (error) {
+      console.error('Failed to create paper trade:', error);
+      toast.error('Failed to create paper trade');
+    }
   };
 
   return (
@@ -232,11 +280,11 @@ export default function SignalsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl hover:bg-slate-800/70 transition-all">
+                <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl hover:bg-slate-800/70 transition-all cursor-pointer">
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between flex-wrap gap-4">
                       {/* Symbol & Direction */}
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3" onClick={() => setSelectedSignal(signal)}>
                         <div className={`p-2 rounded-lg ${
                           signal.direction === 'long' 
                             ? 'bg-green-500/20' 
@@ -279,13 +327,38 @@ export default function SignalsPage() {
                           <div className="text-xs">Score</div>
                         </div>
 
+                        <div className="flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              createPaperTrade(signal);
+                            }}
+                            className="bg-emerald-600 hover:bg-emerald-700"
+                          >
+                            <BarChart2 className="w-4 h-4 mr-1" />
+                            Paper Trade
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedSignal(signal);
+                            }}
+                            className="border-slate-600 hover:bg-slate-800"
+                          >
+                            <Info className="w-4 h-4" />
+                          </Button>
+                        </div>
+
                         <div className="text-right text-slate-400 text-sm">
                           {format(new Date(signal.created_date), 'MMM d, HH:mm')}
                         </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                        </div>
+                        </div>
+                        </CardContent>
+                        </Card>
               </motion.div>
             ))}
           </div>
