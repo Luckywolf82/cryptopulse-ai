@@ -156,7 +156,7 @@ export default function History() {
           </Button>
           <div className="flex-1">
             <h1 className="text-2xl md:text-3xl font-bold text-white">Trading History</h1>
-            <p className="text-slate-400 text-sm md:text-base">Track performance dan hasil analisis AI</p>
+            <p className="text-slate-400 text-sm md:text-base">Track performance and AI analysis results</p>
           </div>
           <Button
             onClick={loadAnalyses}
@@ -180,7 +180,7 @@ export default function History() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div>
                   <div className="text-lg md:text-2xl font-bold text-white">{totalAnalysisCount}</div>
-                  <div className="text-slate-400 text-xs md:text-sm">Total Analisis</div>
+                  <div className="text-slate-400 text-xs md:text-sm">Total Analysis</div>
                 </div>
                 <div>
                   <div className="text-lg md:text-2xl font-bold text-emerald-400">{getSuccessRate().toFixed(1)}%</div>
@@ -242,23 +242,23 @@ export default function History() {
               <CardContent className="p-8 md:p-12 text-center">
                 <Eye className="w-12 h-12 md:w-16 md:h-16 text-slate-600 mx-auto mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-white mb-2">
-                  Belum Ada Analisis
+                  No Analysis Yet
                 </h3>
                 <p className="text-slate-400 mb-6">
-                  Belum ada analisis yang pernah dilakukan. Mulai dengan menganalisis chart pertama Anda.
+                  No analysis has been performed yet. Start by analyzing your first chart.
                 </p>
                 <div className="space-y-2">
                   <Button
                     onClick={() => navigate(createPageUrl("Analyze"))}
                     className="bg-blue-600 hover:bg-blue-700 mr-2"
                   >
-                    Analisis Crypto & Forex
+                    Analyze Crypto & Forex
                   </Button>
                   <Button
                     onClick={() => navigate(createPageUrl("StockAnalysis"))}
                     className="bg-red-600 hover:bg-red-700"
                   >
-                    Analisis Saham Indonesia
+                    Analyze Indonesian Stocks
                   </Button>
                 </div>
               </CardContent>
@@ -304,10 +304,10 @@ export default function History() {
               <CardContent className="p-8 md:p-12 text-center">
                 <Filter className="w-12 h-12 md:w-16 md:h-16 text-slate-600 mx-auto mb-4" />
                 <h3 className="text-lg md:text-xl font-semibold text-white mb-2">
-                  Tidak Ada Analisis Sesuai Filter
+                  No Analysis Matching Filter
                 </h3>
                 <p className="text-slate-400 mb-6">
-                  Tidak ada analisis yang sesuai dengan filter yang dipilih.
+                  No analysis matches the selected filters.
                 </p>
                 <Button
                   onClick={() => setFilters({ tradingType: "all", riskLevel: "all", dateRange: "all", resultStatus: "all" })}

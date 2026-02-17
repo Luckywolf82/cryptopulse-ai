@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { StockAnalysis } from "@/entities/StockAnalysis";
 import { UploadFile, InvokeLLM } from "@/integrations/Core";
@@ -34,11 +33,11 @@ export default function StockAnalysisPage() {
         setStep(2);
         startAnalysis(result.file_url);
       } else {
-        throw new Error("Upload result tidak memiliki file_url");
+        throw new Error("Upload result does not have file_url");
       }
     } catch (error) {
       console.error("Stock upload error details:", error);
-      setError(`Gagal mengupload gambar: ${error.message || 'Unknown error'}. Silakan coba lagi dengan gambar yang lebih kecil (<5MB).`);
+      setError(`Failed to upload image: ${error.message || 'Unknown error'}. Please try again with a smaller image (<5MB).`);
     }
   };
 
@@ -65,7 +64,7 @@ export default function StockAnalysisPage() {
       console.log("Stock validation result:", validationResult);
 
       if (!validationResult.is_chart) {
-          setError("GAMBAR TIDAK VALID: Gambar yang diupload bukan chart trading. Mohon upload screenshot candlestick chart saham yang jelas.");
+          setError("INVALID IMAGE: The uploaded image is not a trading chart. Please upload a clear stock candlestick chart screenshot.");
           setIsAnalyzing(false);
           setStep(1); // Go back to upload step
           return;
@@ -74,26 +73,26 @@ export default function StockAnalysisPage() {
       // PHASE 1: Technical Analysis of Indonesian Stock Chart
       console.log("Stock Phase 1: Technical analysis");
       const technicalAnalysis = await InvokeLLM({
-        prompt: `Anda adalah SENIOR EQUITY ANALYST Indonesia dengan pengalaman 15+ tahun di BEI (Bursa Efek Indonesia).
+        prompt: `You are a SENIOR EQUITY ANALYST in Indonesia with 15+ years of experience at IDX (Indonesia Stock Exchange).
 
-TUGAS ANALISIS SAHAM INDONESIA:
-Analisis gambar chart saham Indonesia ini dengan expertise pasar modal Indonesia.
+INDONESIAN STOCK ANALYSIS TASK:
+Analyze this Indonesian stock chart image with expertise in Indonesian capital market.
 
-INSTRUKSI PEMBACAAN CHART:
-1. **IDENTIFIKASI SAHAM**: Baca kode saham (BBCA, TLKM, GOTO, dll) dari chart
-2. **ANALISIS TEKNIKAL (1000+ PATTERN)**: Gunakan library pattern luas (Head & Shoulders, Triangles, Flags, Wedges, Doji, Hammer, Engulfing), plus indikator (RSI, MACD, MA, Bollinger Bands).
-3. **VOLUME ANALYSIS**: Analisis volume jika terlihat
-4. **TIMEFRAME**: Tentukan periode chart (1D, 1W, 1M, dll)
-5. **HARGA**: Baca harga current, high, low dari chart
+CHART READING INSTRUCTIONS:
+1. **STOCK IDENTIFICATION**: Read stock code (BBCA, TLKM, GOTO, etc) from chart
+2. **TECHNICAL ANALYSIS (1000+ PATTERNS)**: Use extensive pattern library (Head & Shoulders, Triangles, Flags, Wedges, Doji, Hammer, Engulfing), plus indicators (RSI, MACD, MA, Bollinger Bands).
+3. **VOLUME ANALYSIS**: Analyze volume if visible
+4. **TIMEFRAME**: Determine chart period (1D, 1W, 1M, etc)
+5. **PRICE**: Read current, high, low prices from chart
 
-KONTEKS PASAR INDONESIA:
-- Jam trading BEI: 09:00-16:00 WIB
-- Familiar dengan blue chips: BBCA, BMRI, TLKM, ASII, UNVR
-- Sektor unggulan: Banking, Mining, Consumer, Technology
-- Auto reject jika lot odd (minimal 1 lot = 100 saham)
-- Pertimbangkan foreign flow dan retail sentiment
+INDONESIAN MARKET CONTEXT:
+- IDX trading hours: 09:00-16:00 WIB
+- Familiar with blue chips: BBCA, BMRI, TLKM, ASII, UNVR
+- Key sectors: Banking, Mining, Consumer, Technology
+- Auto reject if odd lot (minimum 1 lot = 100 shares)
+- Consider foreign flow and retail sentiment
 
-Target akurasi: 95%+`,
+Target accuracy: 95%+`,
         file_urls: [imageUrl],
         response_json_schema: {
           type: "object",
@@ -101,12 +100,12 @@ Target akurasi: 95%+`,
             stock_identification: {
               type: "object",
               properties: {
-                stock_code: { type: "string", description: "Kode saham dari chart" },
-                stock_name: { type: "string", description: "Nama perusahaan jika dikenal" },
-                sector: { type: "string", description: "Sektor industri" },
-                current_price: { type: "number", description: "Harga saat ini" },
-                price_change: { type: "number", description: "Perubahan harga" },
-                price_change_percent: { type: "number", description: "Perubahan persen" }
+                stock_code: { type: "string", description: "Stock code from chart" },
+                stock_name: { type: "string", description: "Company name if known" },
+                sector: { type: "string", description: "Industry sector" },
+                current_price: { type: "number", description: "Current price" },
+                price_change: { type: "number", description: "Price change" },
+                price_change_percent: { type: "number", description: "Percentage change" }
               }
             },
             technical_analysis: {
@@ -142,26 +141,26 @@ Target akurasi: 95%+`,
       // PHASE 2: Get Real-time News and Fundamental Data
       console.log("Stock Phase 2: News and Fundamental data");
       const newsAndFundamental = await InvokeLLM({
-        prompt: `Anda adalah FUNDAMENTAL ANALYST & NEWS RESEARCHER untuk saham Indonesia.
+        prompt: `You are a FUNDAMENTAL ANALYST & NEWS RESEARCHER for Indonesian stocks.
 
-SAHAM YANG DIANALISIS: ${technicalAnalysis?.stock_identification?.stock_code || 'UNKNOWN'}
-PERUSAHAAN: ${technicalAnalysis?.stock_identification?.stock_name || 'Unknown Company'}
+STOCK BEING ANALYZED: ${technicalAnalysis?.stock_identification?.stock_code || 'UNKNOWN'}
+COMPANY: ${technicalAnalysis?.stock_identification?.stock_name || 'Unknown Company'}
 
-TUGAS RISET FUNDAMENTAL & NEWS:
-1. **BERITA TERKINI**: Cari berita 7 hari terakhir yang mempengaruhi saham ini
-2. **FUNDAMENTAL METRICS**: Estimasi PE, PBV, dividend yield berdasarkan knowledge
-3. **CATALYST ANALYSIS**: Faktor-faktor yang bisa menggerakkan harga
-4. **SECTOR OUTLOOK**: Prospek sektor industri
+FUNDAMENTAL & NEWS RESEARCH TASK:
+1. **LATEST NEWS**: Search for news from the last 7 days affecting this stock
+2. **FUNDAMENTAL METRICS**: Estimate PE, PBV, dividend yield based on knowledge
+3. **CATALYST ANALYSIS**: Factors that could move the price
+4. **SECTOR OUTLOOK**: Industry sector prospects
 
-KRITERIA BERITA PENTING:
-- Laporan keuangan/financial report
-- Akuisisi, ekspansi, merger
-- Regulasi pemerintah yang berdampak
+IMPORTANT NEWS CRITERIA:
+- Financial reports
+- Acquisitions, expansions, mergers
+- Impactful government regulations
 - Management changes
-- Dividend announcement
-- Stock split/rights issue
+- Dividend announcements
+- Stock splits/rights issues
 
-Gunakan knowledge terkini dan add_context_from_internet untuk data real-time.`,
+Use current knowledge and add_context_from_internet for real-time data.`,
         add_context_from_internet: true,
         response_json_schema: {
           type: "object",
@@ -195,7 +194,7 @@ Gunakan knowledge terkini dan add_context_from_internet untuk data real-time.`,
             key_catalysts: {
               type: "array",
               items: { type: "string" },
-              description: "Katalis utama yang mempengaruhi harga"
+              description: "Main catalysts affecting price"
             },
             sector_outlook: { type: "string" },
             market_sentiment: { 
@@ -210,30 +209,30 @@ Gunakan knowledge terkini dan add_context_from_internet untuk data real-time.`,
       // PHASE 3: Investment Recommendation
       console.log("Stock Phase 3: Investment Recommendation");
       const investmentRecommendation = await InvokeLLM({
-        prompt: `Anda adalah SENIOR PORTFOLIO MANAGER Indonesia dengan AUM Rp 5 Triliun.
+        prompt: `You are a SENIOR PORTFOLIO MANAGER in Indonesia with AUM Rp 5 Trillion.
 
 COMBINE ANALYSIS:
 Technical: ${JSON.stringify(technicalAnalysis, null, 2)}
 Fundamental & News: ${JSON.stringify(newsAndFundamental, null, 2)}
 
-TUGAS FINAL RECOMMENDATION:
-1. **BUY/SELL/HOLD DECISION**: Berdasarkan gabungan teknikal + fundamental
-2. **TARGET PRICE**: Hitung berdasarkan valuation dan technical target
-3. **TIMING STRATEGY**: Kapan waktu terbaik untuk entry
-4. **RISK ASSESSMENT**: Identifikasi risiko utama
-5. **PORTFOLIO ALLOCATION**: Berapa % yang disarankan
+FINAL RECOMMENDATION TASK:
+1. **BUY/SELL/HOLD DECISION**: Based on combined technical + fundamental
+2. **TARGET PRICE**: Calculate based on valuation and technical target
+3. **TIMING STRATEGY**: Best timing for entry
+4. **RISK ASSESSMENT**: Identify main risks
+5. **PORTFOLIO ALLOCATION**: Recommended % allocation
 
-KRITERIA REKOMENDASI:
+RECOMMENDATION CRITERIA:
 - STRONG_BUY: Technical bullish + fundamental excellent + positive news
 - BUY: Technical ok + fundamental good + neutral/positive news  
-- HOLD: Mixed signals, tunggu konfirmasi
+- HOLD: Mixed signals, wait for confirmation
 - SELL: Technical bearish + fundamental concerns
-- STRONG_SELL: Major red flags di teknikal dan fundamental
+- STRONG_SELL: Major red flags in technical and fundamental
 
-PERTIMBANGAN KHUSUS INDONESIA:
-- Likuiditas saham (average volume)
+INDONESIAN SPECIAL CONSIDERATIONS:
+- Stock liquidity (average volume)
 - Foreign ownership limits
-- Dividen track record
+- Dividend track record
 - Management quality
 - Regulatory environment`,
         response_json_schema: {
@@ -317,7 +316,7 @@ PERTIMBANGAN KHUSUS INDONESIA:
       setStep(3);
     } catch (error) {
       console.error("Stock analysis error:", error);
-      setError(`Gagal menganalisis saham: ${error.message}. Pastikan chart saham Indonesia yang jelas.`);
+      setError(`Failed to analyze stock: ${error.message}. Ensure a clear Indonesian stock chart.`);
       setStep(1);
     } finally {
       setIsAnalyzing(false);
@@ -354,7 +353,7 @@ PERTIMBANGAN KHUSUS INDONESIA:
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Indonesian Stock Analyzer</h1>
-              <p className="text-slate-400">Analisis saham BEI dengan AI + berita real-time</p>
+              <p className="text-slate-400">IDX stock analysis with AI + real-time news</p>
             </div>
           </div>
         </motion.div>
@@ -403,7 +402,7 @@ PERTIMBANGAN KHUSUS INDONESIA:
                     🇮🇩 Analyzing Indonesian Stock...
                   </h3>
                   <p className="text-slate-400 mb-6">
-                    Menggunakan AI expert untuk analisis teknikal + fundamental + berita terkini
+                    Using expert AI for technical + fundamental analysis + latest news
                   </p>
                   
                   <div className="space-y-3 mb-6">
@@ -442,7 +441,7 @@ PERTIMBANGAN KHUSUS INDONESIA:
                     />
                   </div>
                   <p className="text-sm text-slate-500">
-                    Comprehensive stock analysis membutuhkan 15-20 detik...
+                    Comprehensive stock analysis requires 15-20 seconds...
                   </p>
                 </CardContent>
               </Card>
