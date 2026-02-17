@@ -117,6 +117,8 @@ export default function History() {
         filtered = filtered.filter(a => a.trade_result);
       } else if (filters.resultStatus === "untracked") {
         filtered = filtered.filter(a => !a.trade_result);
+      } else if (["SUCCESS", "FAILED", "ONGOING"].includes(filters.resultStatus)) {
+        filtered = filtered.filter(a => a.trade_result?.result_status === filters.resultStatus);
       }
     }
 

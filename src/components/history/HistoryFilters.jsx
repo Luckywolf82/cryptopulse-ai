@@ -63,6 +63,9 @@ export default function HistoryFilters({ filters, onFiltersChange }) {
               <SelectItem value="all">All</SelectItem>
               <SelectItem value="tracked">Tracked</SelectItem>
               <SelectItem value="untracked">Untracked</SelectItem>
+              <SelectItem value="SUCCESS">Success</SelectItem>
+              <SelectItem value="FAILED">Failed</SelectItem>
+              <SelectItem value="ONGOING">Ongoing</SelectItem>
             </SelectContent>
           </Select>
 
