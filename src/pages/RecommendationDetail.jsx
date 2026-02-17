@@ -7,11 +7,13 @@ import { ArrowLeft, Building2, TrendingUp, Zap, Newspaper, Target, Shield, Calcu
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 import DCACalculator from "../components/investment/DCACalculator";
 import TradeResultTracker from "../components/investment/TradeResultTracker";
 
 export default function RecommendationDetail() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [recommendation, setRecommendation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -73,9 +75,9 @@ export default function RecommendationDetail() {
         <div className="max-w-4xl mx-auto text-center">
           <Card className="glass-effect border-slate-700">
             <CardContent className="p-8">
-              <h2 className="text-xl font-bold text-white mb-4">Recommendation Not Found</h2>
+              <h2 className="text-xl font-bold text-white mb-4">{t('recommendations.notFound')}</h2>
               <Button onClick={() => navigate(createPageUrl("Dashboard"))}>
-                Back to Dashboard
+                {t('common.backToDashboard')}
               </Button>
             </CardContent>
           </Card>
@@ -134,14 +136,14 @@ export default function RecommendationDetail() {
                       {recommendation.recommendation_action}
                     </div>
                   </div>
-                  <p className="text-slate-400 text-sm">AI Recommendation</p>
+                  <p className="text-slate-400 text-sm">{t('recommendations.aiRecommendation')}</p>
                 </div>
                 
                 <div className="text-center">
                   <div className="text-xl md:text-2xl font-bold text-white mb-1">
                     +{recommendation.expected_return_percent?.toFixed(1) || 0}%
                   </div>
-                  <p className="text-emerald-400 text-sm">Expected Return</p>
+                  <p className="text-emerald-400 text-sm">{t('recommendations.expectedReturn')}</p>
                   <p className="text-slate-500 text-xs mt-1">{recommendation.time_horizon}</p>
                 </div>
                 
@@ -149,7 +151,7 @@ export default function RecommendationDetail() {
                   <div className="text-xl md:text-2xl font-bold text-blue-400 mb-1">
                     {recommendation.confidence_score || 90}%
                   </div>
-                  <p className="text-slate-400 text-sm">AI Confidence</p>
+                  <p className="text-slate-400 text-sm">{t('recommendations.aiConfidence')}</p>
                 </div>
               </div>
             </CardContent>
@@ -160,7 +162,7 @@ export default function RecommendationDetail() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <Card className="glass-effect border-slate-700">
             <CardContent className="p-4 text-center">
-              <div className="text-slate-400 text-sm mb-1">Current Price</div>
+              <div className="text-slate-400 text-sm mb-1">{t('recommendations.currentPrice')}</div>
               <div className="text-lg md:text-xl font-bold text-white">
                 {recommendation.recommendation_type === 'stock' ? 'Rp ' : '$'}
                 {recommendation.current_price?.toLocaleString() || '-'}
@@ -171,7 +173,7 @@ export default function RecommendationDetail() {
           <Card className="glass-effect border-slate-700">
             <CardContent className="p-4 text-center">
               <Target className="w-5 h-5 text-green-400 mx-auto mb-1" />
-              <div className="text-slate-400 text-sm mb-1">Target Price</div>
+              <div className="text-slate-400 text-sm mb-1">{t('recommendations.targetPrice')}</div>
               <div className="text-lg md:text-xl font-bold text-green-400">
                 {recommendation.recommendation_type === 'stock' ? 'Rp ' : '$'}
                 {recommendation.target_price?.toLocaleString() || '-'}
@@ -182,7 +184,7 @@ export default function RecommendationDetail() {
           <Card className="glass-effect border-slate-700">
             <CardContent className="p-4 text-center">
               <Shield className="w-5 h-5 text-red-400 mx-auto mb-1" />
-              <div className="text-slate-400 text-sm mb-1">Stop Loss</div>
+              <div className="text-slate-400 text-sm mb-1">{t('recommendations.stopLoss')}</div>
               <div className="text-lg md:text-xl font-bold text-red-400">
                 {recommendation.recommendation_type === 'stock' ? 'Rp ' : '$'}
                 {recommendation.stop_loss?.toLocaleString() || '-'}
@@ -196,12 +198,12 @@ export default function RecommendationDetail() {
           <Card className="glass-effect border-slate-700">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                📈 Technical Analysis
+                📈 {t('recommendations.technicalAnalysis')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-slate-300 text-sm leading-relaxed">
-                {recommendation.technical_reason || 'Technical analysis not available'}
+                {recommendation.technical_reason || t('recommendations.technicalNotAvailable')}
               </p>
             </CardContent>
           </Card>
@@ -210,16 +212,16 @@ export default function RecommendationDetail() {
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Newspaper className="w-5 h-5" />
-                Fundamental News
+                {t('recommendations.fundamentalNews')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-slate-300 text-sm leading-relaxed mb-3">
-                {recommendation.fundamental_reason || 'Fundamental analysis not available'}
+                {recommendation.fundamental_reason || t('recommendations.fundamentalNotAvailable')}
               </p>
               {recommendation.news_catalyst && recommendation.news_catalyst.length > 0 && (
                 <div className="space-y-2">
-                  <h5 className="text-xs font-semibold text-slate-400">Key News:</h5>
+                  <h5 className="text-xs font-semibold text-slate-400">{t('recommendations.keyNews')}:</h5>
                   {recommendation.news_catalyst.slice(0, 2).map((news, i) => (
                     <div key={i} className="p-2 rounded bg-slate-800/50 text-xs text-slate-300">
                       • {news}
@@ -242,25 +244,25 @@ export default function RecommendationDetail() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <Calculator className="w-5 h-5" />
-                  Investment Calculator - Cicilan Saham
+                  {t('recommendations.investmentCalculator')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-3 gap-4 mb-4">
                   <div className="text-center p-3 rounded-lg bg-emerald-500/10">
-                    <div className="text-slate-400 text-sm">Cicilan Bulanan</div>
+                    <div className="text-slate-400 text-sm">{t('recommendations.monthlyInstallment')}</div>
                     <div className="text-lg font-bold text-emerald-400">
                       Rp {recommendation.dca_recommendation.monthly_amount?.toLocaleString('id-ID') || '1,000,000'}
                     </div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-blue-500/10">
-                    <div className="text-slate-400 text-sm">Durasi</div>
+                    <div className="text-slate-400 text-sm">{t('recommendations.duration')}</div>
                     <div className="text-lg font-bold text-blue-400">
-                      {recommendation.dca_recommendation.duration_months || 12} Bulan
+                      {recommendation.dca_recommendation.duration_months || 12} {t('recommendations.months')}
                     </div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-purple-500/10">
-                    <div className="text-slate-400 text-sm">Total Investasi</div>
+                    <div className="text-slate-400 text-sm">{t('recommendations.totalInvestment')}</div>
                     <div className="text-lg font-bold text-purple-400">
                       Rp {recommendation.dca_recommendation.total_investment?.toLocaleString('id-ID') || '12,000,000'}
                     </div>
@@ -273,7 +275,7 @@ export default function RecommendationDetail() {
                   className="w-full border-slate-600 hover:bg-slate-800"
                 >
                   <Calculator className="w-4 h-4 mr-2" />
-                  {showCalculator ? 'Tutup' : 'Buka'} Kalkulator DCA
+                  {showCalculator ? t('recommendations.close') : t('recommendations.open')} {t('recommendations.dcaCalculator')}
                 </Button>
                 
                 {showCalculator && (
