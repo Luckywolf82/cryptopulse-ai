@@ -23,12 +23,18 @@ Deno.serve(async (req) => {
 
     const coins = await coingeckoResponse.json();
 
-    // Stable coins to exclude
-    const excludedSymbols = ['usdt', 'usdc', 'busd', 'tusd', 'dai', 'fdusd', 'usdp'];
+    // Stable coins and uncommon tokens to exclude
+    const excludedSymbols = ['usdt', 'usdc', 'busd', 'tusd', 'dai', 'fdusd', 'usdp', 'usd1', 'pyusd', 'zama', 'rlust', 'stable', 'usde'];
+    
+    // Only include well-known cryptos that CryptoCompare supports
+    const knownSymbols = ['btc', 'eth', 'bnb', 'sol', 'xrp', 'ada', 'doge', 'avax', 'dot', 'matic', 'ltc', 'trx', 'link', 'atom', 'xlm', 'etc', 'bch', 'near', 'algo', 'vet', 'icp', 'apt', 'arb', 'op', 'fil', 'ldo', 'grt', 'aave', 'uni', 'mkr', 'snx', 'crv', 'hbar', 'qnt', 'imx', 'axs', 'sand', 'mana', 'enj', 'gala'];
 
     // Convert to Binance USDT pair format and filter
     const usdtPairs = coins
-      .filter(coin => !excludedSymbols.includes(coin.symbol.toLowerCase()))
+      .filter(coin => 
+        !excludedSymbols.includes(coin.symbol.toLowerCase()) &&
+        knownSymbols.includes(coin.symbol.toLowerCase())
+      )
       .map(coin => ({
         symbol: `${coin.symbol.toUpperCase()}USDT`,
         quoteVolume: coin.total_volume || 0
