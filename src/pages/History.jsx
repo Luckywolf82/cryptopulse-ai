@@ -14,6 +14,7 @@ import AnalysisCard from "../components/history/AnalysisCard";
 import AnalysisModal from "../components/history/AnalysisModal";
 
 export default function History() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [allAnalyses, setAllAnalyses] = useState([]);
   const [tradeResults, setTradeResults] = useState([]);

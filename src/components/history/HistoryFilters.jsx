@@ -1,10 +1,11 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Filter } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function HistoryFilters({ filters, onFiltersChange }) {
+  const { t } = useTranslation();
   const handleFilterChange = (key, value) => {
     onFiltersChange(prev => ({
       ...prev,
