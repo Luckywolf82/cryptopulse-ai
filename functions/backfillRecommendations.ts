@@ -28,56 +28,56 @@ Deno.serve(async (req) => {
       try {
         results.processed++;
 
-        // Check if recommendation already exists for this signal
-        const existingRecs = await base44.asServiceRole.entities.TradingRecommendation.filter({
-          asset_symbol: signal.symbol
-        });
+        // Check if recommendation already exists for this specific signal
+         const existingRecs = await base44.asServiceRole.entities.TradingRecommendation.filter({
+           signalId: signal.id
+         });
 
-        // Simple check: if a recommendation for this symbol exists with similar timing, skip
-        const recent = existingRecs.filter(r => {
-          const recDate = new Date(r.created_date);
-          const sigDate = new Date(signal.created_date);
-          const diffMs = Math.abs(recDate - sigDate);
-          return diffMs < 3600000; // Within 1 hour
-        });
+         if (existingRecs.length > 0) {
+           results.skipped++;
+           results.details.push({
+             symbol: signal.symbol,
+             status: 'skipped',
+             reason: 'Recommendation already exists for this signal'
+           });
+           continue;
+         }
 
-        if (recent.length > 0) {
-          results.skipped++;
-          results.details.push({
-            symbol: signal.symbol,
-            status: 'skipped',
-            reason: 'Recommendation already exists'
-          });
-          continue;
-        }
+         // Validate target price will be positive
+         const currentPrice = signal.price || 1;
 
         // Generate AI recommendation
         const prompt = `
-You are a professional trading analyst. Based on the following signal, generate a detailed trading recommendation.
+        You are a professional trading analyst. Based on the following signal, generate a detailed trading recommendation.
 
-**Signal Details:**
-- Symbol: ${signal.symbol}
-- Exchange: ${signal.exchange}
-- Direction: ${signal.direction.toUpperCase()}
-- Timeframe: ${signal.timeframe}
-- Trigger Type: ${signal.triggerType}
-- Signal Score: ${signal.score}/100
-- Entry Price: $${signal.price}
+        **Signal Details:**
+        - Symbol: ${signal.symbol}
+        - Exchange: ${signal.exchange}
+        - Direction: ${signal.direction.toUpperCase()}
+        - Timeframe: ${signal.timeframe}
+        - Trigger Type: ${signal.triggerType}
+        - Signal Score: ${signal.score}/100
+        - Entry Price: $${signal.price}
 
-**Your response should be a JSON object with:**
-{
-  "recommendation_action": "STRONG_BUY" | "BUY" | "HOLD",
-  "target_price": number,
-  "stop_loss": number,
-  "expected_return_percent": number,
-  "confidence_score": number (0-100),
-  "time_horizon": "short_term" | "medium_term" | "long_term",
-  "technical_reason": "string",
-  "risk_factors": ["string1", "string2"]
-}
+        **CRITICAL REQUIREMENTS:**
+        - target_price MUST be a positive number (> 0), NEVER 0 or null
+        - If direction is LONG, target_price should be 10-30% above entry price
+        - If direction is SHORT, target_price should be 10-30% below entry price
 
-Base your recommendation on the signal strength and technical trigger.
-`;
+        **Your response should be a JSON object with:**
+        {
+        "recommendation_action": "STRONG_BUY" | "BUY" | "HOLD" | "SELL" | "STRONG_SELL",
+        "target_price": number (MUST be positive and calculated as described above),
+        "stop_loss": number,
+        "expected_return_percent": number,
+        "confidence_score": number (0-100),
+        "time_horizon": "short_term" | "medium_term" | "long_term",
+        "technical_reason": "string",
+        "risk_factors": ["string1", "string2"]
+        }
+
+        Base your recommendation on the signal strength and technical trigger.
+        `;
 
         const response = await base44.integrations.Core.InvokeLLM({
           prompt,
@@ -100,9 +100,21 @@ Base your recommendation on the signal strength and technical trigger.
           }
         });
 
+        // Validate target price
+        if (!response.target_price || response.target_price <= 0) {
+          results.errors++;
+          results.details.push({
+            symbol: signal.symbol,
+            status: 'error',
+            reason: 'Invalid target price from LLM'
+          });
+          continue;
+        }
+
         const assetType = signal.exchange === 'BINANCE' ? 'crypto' : 'forex';
 
         await base44.asServiceRole.entities.TradingRecommendation.create({
+          signalId: signal.id,
           recommendation_type: assetType,
           asset_symbol: signal.symbol,
           asset_name: `${signal.symbol} - ${signal.direction.toUpperCase()} Signal`,
