@@ -1,8 +1,10 @@
 import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { useTranslation } from "react-i18next";
 
 export default function ScoreDistribution({ signals, groupBy = "symbol" }) {
+  const { t } = useTranslation();
   const chartData = useMemo(() => {
     const groups = new Map();
 
@@ -35,8 +37,8 @@ export default function ScoreDistribution({ signals, groupBy = "symbol" }) {
   }, [signals, groupBy]);
 
   const title = groupBy === "symbol" 
-    ? "Gjennomsnittlig score per symbol (top 10)" 
-    : "Gjennomsnittlig score per tidshorisont";
+    ? t('analytics.avgScorePerSymbol')
+    : t('analytics.avgScorePerTimeframe');
 
   return (
     <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl">
@@ -67,13 +69,13 @@ export default function ScoreDistribution({ signals, groupBy = "symbol" }) {
             <Bar 
               dataKey="avgScore" 
               fill="#3b82f6" 
-              name="Gj.snitt score"
+              name={t('analytics.avgScore')}
               radius={[8, 8, 0, 0]}
             />
             <Bar 
               dataKey="count" 
               fill="#10b981" 
-              name="Antall signaler"
+              name={t('analytics.numSignals')}
               radius={[8, 8, 0, 0]}
             />
           </BarChart>

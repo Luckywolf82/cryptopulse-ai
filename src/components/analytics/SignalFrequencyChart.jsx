@@ -2,8 +2,10 @@ import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { format, parseISO, startOfDay, subDays } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 export default function SignalFrequencyChart({ signals }) {
+  const { t } = useTranslation();
   const chartData = useMemo(() => {
     // Group signals by day for the last 30 days
     const days = 30;
@@ -46,7 +48,7 @@ export default function SignalFrequencyChart({ signals }) {
   return (
     <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl">
       <CardHeader>
-        <CardTitle className="text-white">Signalfrekvens siste 30 dager</CardTitle>
+        <CardTitle className="text-white">{t('analytics.frequencyLast30')}</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -73,28 +75,28 @@ export default function SignalFrequencyChart({ signals }) {
               type="monotone" 
               dataKey="total" 
               stroke="#3b82f6" 
-              name="Totalt"
+              name={t('analytics.total')}
               strokeWidth={2}
             />
             <Line 
               type="monotone" 
               dataKey="long" 
               stroke="#10b981" 
-              name="Long"
+              name={t('analytics.long')}
               strokeWidth={2}
             />
             <Line 
               type="monotone" 
               dataKey="short" 
               stroke="#ef4444" 
-              name="Short"
+              name={t('analytics.short')}
               strokeWidth={2}
             />
             <Line 
               type="monotone" 
               dataKey="highQuality" 
               stroke="#a855f7" 
-              name="Høykvalitet (70+)"
+              name={t('analytics.highQuality70')}
               strokeWidth={2}
             />
           </LineChart>

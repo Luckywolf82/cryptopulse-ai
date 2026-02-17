@@ -1,8 +1,10 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, Target, Activity } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function StatsCards({ signals, paperTrades }) {
+  const { t } = useTranslation();
   const totalSignals = signals.length;
   const averageScore = signals.length > 0 
     ? (signals.reduce((sum, s) => sum + s.score, 0) / signals.length).toFixed(1)
@@ -21,28 +23,28 @@ export default function StatsCards({ signals, paperTrades }) {
 
   const stats = [
     {
-      title: "Totalt signaler",
+      title: t('analytics.totalSignals'),
       value: totalSignals,
       icon: Activity,
       color: "text-blue-400"
     },
     {
-      title: "Gjennomsnittlig score",
+      title: t('analytics.avgScore'),
       value: averageScore,
       icon: Target,
       color: "text-purple-400"
     },
     {
-      title: "Høykvalitetssignaler",
+      title: t('analytics.highQualitySignals'),
       value: `${highQualityPercent}%`,
-      subtitle: `${highQualitySignals} av ${totalSignals}`,
+      subtitle: `${highQualitySignals} ${t('analytics.of')} ${totalSignals}`,
       icon: TrendingUp,
       color: "text-green-400"
     },
     {
-      title: "Vinnerrate",
+      title: t('analytics.winRate'),
       value: closedTrades.length > 0 ? `${winRate}%` : "N/A",
-      subtitle: `${profitableTrades} av ${closedTrades.length} handler`,
+      subtitle: `${profitableTrades} ${t('analytics.of')} ${closedTrades.length} ${t('analytics.trades')}`,
       icon: TrendingDown,
       color: winRate >= 50 ? "text-green-400" : "text-red-400"
     }

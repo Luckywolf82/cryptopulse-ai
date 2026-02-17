@@ -2,8 +2,10 @@ import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function PerformanceMetrics({ signals, paperTrades }) {
+  const { t } = useTranslation();
   const performanceByTrigger = useMemo(() => {
     const triggerTypes = ['EMA_FLIP', 'MSS', 'RSI_DIV'];
     
@@ -41,9 +43,9 @@ export default function PerformanceMetrics({ signals, paperTrades }) {
 
   const getTriggerLabel = (type) => {
     switch(type) {
-      case 'EMA_FLIP': return 'EMA Crossover';
-      case 'MSS': return 'Market Structure Shift';
-      case 'RSI_DIV': return 'RSI Divergence';
+      case 'EMA_FLIP': return t('analytics.emaFlip');
+      case 'MSS': return t('analytics.mss');
+      case 'RSI_DIV': return t('analytics.rsiDiv');
       default: return type;
     }
   };
@@ -51,7 +53,7 @@ export default function PerformanceMetrics({ signals, paperTrades }) {
   return (
     <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl">
       <CardHeader>
-        <CardTitle className="text-white">Ytelse per signaltype</CardTitle>
+        <CardTitle className="text-white">{t('analytics.performancePerType')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -61,7 +63,7 @@ export default function PerformanceMetrics({ signals, paperTrades }) {
                 <div>
                   <h3 className="text-lg font-semibold text-white">{getTriggerLabel(metric.triggerType)}</h3>
                   <p className="text-sm text-slate-400">
-                    {metric.signalCount} signaler • Gj.snitt score: {metric.avgScore}
+                    {metric.signalCount} {t('analytics.signals')} • {t('analytics.avgScore')}: {metric.avgScore}
                   </p>
                 </div>
                 <Badge className={`${
@@ -69,24 +71,24 @@ export default function PerformanceMetrics({ signals, paperTrades }) {
                     ? "bg-green-500/20 text-green-400" 
                     : "bg-red-500/20 text-red-400"
                 }`}>
-                  {metric.winRate}% vinnerrate
+                  {metric.winRate}% {t('analytics.winRate')}
                 </Badge>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <p className="text-xs text-slate-400 mb-1">Papirhandler</p>
+                  <p className="text-xs text-slate-400 mb-1">{t('analytics.paperTrades')}</p>
                   <p className="text-lg font-bold text-white">{metric.totalTrades}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 mb-1">Vinnende</p>
+                  <p className="text-xs text-slate-400 mb-1">{t('analytics.winning')}</p>
                   <div className="flex items-center gap-1">
                     <TrendingUp className="w-4 h-4 text-green-400" />
                     <p className="text-lg font-bold text-green-400">{metric.profitable}</p>
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 mb-1">Gj.snitt P/L</p>
+                  <p className="text-xs text-slate-400 mb-1">{t('analytics.avgPL')}</p>
                   <div className="flex items-center gap-1">
                     {metric.avgPnl >= 0 ? (
                       <>
