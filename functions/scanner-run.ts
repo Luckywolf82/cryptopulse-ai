@@ -26,7 +26,7 @@ async function fetchWithRetry(url, retries = 1) {
   }
 }
 
-// Helper: Process klines data
+// Helper: Process klines data (Binance format)
 function parseKlines(klines) {
   return {
     openTime: klines.map(k => k[0]),
@@ -36,6 +36,19 @@ function parseKlines(klines) {
     close: klines.map(k => parseFloat(k[4])),
     volume: klines.map(k => parseFloat(k[5])),
     closeTime: klines.map(k => k[6])
+  };
+}
+
+// Helper: Process CryptoCompare OHLCV data
+function parseCryptoCompare(data) {
+  return {
+    openTime: data.map(d => d.time * 1000),
+    open: data.map(d => d.open),
+    high: data.map(d => d.high),
+    low: data.map(d => d.low),
+    close: data.map(d => d.close),
+    volume: data.map(d => d.volumeto),
+    closeTime: data.map(d => d.time * 1000 + 3600000)
   };
 }
 
@@ -106,21 +119,28 @@ Deno.serve(async (req) => {
         const symbol = watchItem.symbol;
         results.scannedCount++;
 
-        // Fetch klines for both timeframes
-        const [klines1hRes, klines4hRes] = await Promise.all([
-          fetchWithRetry(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${timeframeSignal}&limit=${lookback}`),
-          fetchWithRetry(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${timeframeBias}&limit=${lookback}`)
+        // Convert symbol format for CryptoCompare (BTCUSDT -> BTC)
+        const fsym = symbol.replace('USDT', '');
+        
+        // Fetch historical data from CryptoCompare
+        const [data1hRes, data4hRes] = await Promise.all([
+          fetchWithRetry(`https://min-api.cryptocompare.com/data/v2/histohour?fsym=${fsym}&tsym=USD&limit=${lookback}`),
+          fetchWithRetry(`https://min-api.cryptocompare.com/data/v2/histohour?fsym=${fsym}&tsym=USD&limit=${lookback}&aggregate=4`)
         ]);
 
-        if (!klines1hRes.ok || !klines4hRes.ok) {
-          throw new Error(`HTTP ${klines1hRes.status} / ${klines4hRes.status}`);
+        if (!data1hRes.ok || !data4hRes.ok) {
+          throw new Error(`HTTP ${data1hRes.status} / ${data4hRes.status}`);
         }
 
-        const klines1h = await klines1hRes.json();
-        const klines4h = await klines4hRes.json();
+        const json1h = await data1hRes.json();
+        const json4h = await data4hRes.json();
 
-        const data1h = parseKlines(klines1h);
-        const data4h = parseKlines(klines4h);
+        if (json1h.Response === 'Error' || json4h.Response === 'Error') {
+          throw new Error('CryptoCompare API error');
+        }
+
+        const data1h = parseCryptoCompare(json1h.Data.Data);
+        const data4h = parseCryptoCompare(json4h.Data.Data);
 
         // Use last closed candle
         const lastClosedIndex = data1h.close.length - 2;
