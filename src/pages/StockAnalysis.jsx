@@ -7,11 +7,13 @@ import { ArrowLeft, TrendingUp, Building2, Newspaper } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 import StockUploadArea from "../components/stock/StockUploadArea";
 import StockAnalysisResult from "../components/stock/StockAnalysisResult";
 
 export default function StockAnalysisPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState(1); // 1: upload, 2: analyzing, 3: results
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -37,7 +39,7 @@ export default function StockAnalysisPage() {
       }
     } catch (error) {
       console.error("Stock upload error details:", error);
-      setError(`Failed to upload image: ${error.message || 'Unknown error'}. Please try again with a smaller image (<5MB).`);
+      setError(t('errors.uploadFailed', { message: error.message || t('errors.unknown') }));
     }
   };
 
@@ -64,9 +66,9 @@ export default function StockAnalysisPage() {
       console.log("Stock validation result:", validationResult);
 
       if (!validationResult.is_chart) {
-          setError("INVALID IMAGE: The uploaded image is not a trading chart. Please upload a clear stock candlestick chart screenshot.");
+          setError(t('errors.invalidChart'));
           setIsAnalyzing(false);
-          setStep(1); // Go back to upload step
+          setStep(1);
           return;
       }
 
@@ -316,7 +318,7 @@ INDONESIAN SPECIAL CONSIDERATIONS:
       setStep(3);
     } catch (error) {
       console.error("Stock analysis error:", error);
-      setError(`Failed to analyze stock: ${error.message}. Ensure a clear Indonesian stock chart.`);
+      setError(t('errors.analysisFailed', { message: error.message }));
       setStep(1);
     } finally {
       setIsAnalyzing(false);
@@ -352,8 +354,8 @@ INDONESIAN SPECIAL CONSIDERATIONS:
               <Building2 className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Indonesian Stock Analyzer</h1>
-              <p className="text-slate-400">IDX stock analysis with AI + real-time news</p>
+              <h1 className="text-3xl font-bold text-white">{t('stock.title')}</h1>
+              <p className="text-slate-400">{t('stock.subtitle')}</p>
             </div>
           </div>
         </motion.div>
@@ -399,10 +401,10 @@ INDONESIAN SPECIAL CONSIDERATIONS:
                     <TrendingUp className="w-12 h-12 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2">
-                    🇮🇩 Analyzing Indonesian Stock...
+                    🇮🇩 {t('stock.analyzing.title')}
                   </h3>
                   <p className="text-slate-400 mb-6">
-                    Using expert AI for technical + fundamental analysis + latest news
+                    {t('stock.analyzing.subtitle')}
                   </p>
                   
                   <div className="space-y-3 mb-6">
@@ -410,25 +412,25 @@ INDONESIAN SPECIAL CONSIDERATIONS:
                       <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                         <span className="text-white font-bold">1</span>
                       </div>
-                      <span className="text-slate-300">Technical analysis BEI standards...</span>
+                      <span className="text-slate-300">{t('stock.analyzing.step1')}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                         <Newspaper className="w-3 h-3 text-white" />
                       </div>
-                      <span className="text-slate-300">Fetching real-time news & data...</span>
+                      <span className="text-slate-300">{t('stock.analyzing.step2')}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
                         <Building2 className="w-3 h-3 text-white" />
                       </div>
-                      <span className="text-slate-300">Fundamental analysis & valuation...</span>
+                      <span className="text-slate-300">{t('stock.analyzing.step3')}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
                         <span className="text-white font-bold">4</span>
                       </div>
-                      <span className="text-slate-300">Investment recommendation...</span>
+                      <span className="text-slate-300">{t('stock.analyzing.step4')}</span>
                     </div>
                   </div>
                   
@@ -441,7 +443,7 @@ INDONESIAN SPECIAL CONSIDERATIONS:
                     />
                   </div>
                   <p className="text-sm text-slate-500">
-                    Comprehensive stock analysis requires 15-20 seconds...
+                    {t('stock.analyzing.wait')}
                   </p>
                 </CardContent>
               </Card>

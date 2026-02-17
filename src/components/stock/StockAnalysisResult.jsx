@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, TrendingUp, Building2, Newspaper, Target, Shield, Clock, ArrowUp, ArrowDown, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 const actionColors = {
   STRONG_BUY: "text-green-400 bg-green-500/10 border-green-500/20",
@@ -27,6 +28,7 @@ const sentimentColors = {
 };
 
 export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnalysis }) {
+  const { t } = useTranslation();
   const actionColor = actionColors[analysis.investment_recommendation?.action] || actionColors.HOLD;
   
   return (
@@ -53,9 +55,9 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                   <Building2 className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white">{analysis.stock_code || 'STOCK'}</h2>
+                  <h2 className="text-2xl font-bold text-white">{analysis.stock_code || t('stock.defaultCode')}</h2>
                   <p className="text-slate-400">
-                    {analysis.stock_name || 'Indonesian Stock'} • {analysis.sector || 'Various Sector'}
+                    {analysis.stock_name || t('stock.defaultName')} • {analysis.sector || t('stock.defaultSector')}
                   </p>
                 </div>
               </div>
@@ -63,7 +65,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
               {/* Current Price Info */}
               <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-slate-400">Current Price</span>
+                  <span className="text-slate-400">{t('stock.currentPrice')}</span>
                   <div className="flex items-center gap-2">
                     {analysis.price_change_percent > 0 ? 
                       <ArrowUp className="w-4 h-4 text-green-400" /> : 
@@ -89,7 +91,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                     {analysis.investment_recommendation?.action || 'HOLD'}
                   </div>
                   <div className="text-sm opacity-80">
-                    Investment Recommendation
+                    {t('stock.investmentRecommendation')}
                   </div>
                 </div>
               </div>
@@ -97,7 +99,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
             
             <div className="flex flex-col justify-center">
               <div className="text-center">
-                <div className="text-sm text-slate-400 mb-2">AI Confidence</div>
+                <div className="text-sm text-slate-400 mb-2">{t('stock.aiConfidence')}</div>
                 <div className="relative w-28 h-28 mx-auto">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                     <path
@@ -123,7 +125,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                   </div>
                 </div>
                 <div className="mt-2 font-bold text-sm text-orange-400">
-                  HIGH CONFIDENCE
+                  {t('stock.highConfidence')}
                 </div>
               </div>
             </div>
@@ -137,13 +139,13 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <TrendingUp className="w-5 h-5" />
-              Technical Analysis
+              {t('stock.technicalAnalysis')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="p-3 rounded-lg bg-slate-800/50">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-slate-400">Trend Direction</span>
+                <span className="text-slate-400">{t('stock.trendDirection')}</span>
                 <Badge className={
                   analysis.technical_analysis?.trend_direction === 'bullish' ? 'bg-green-500/20 text-green-400' :
                   analysis.technical_analysis?.trend_direction === 'bearish' ? 'bg-red-500/20 text-red-400' : 
@@ -153,22 +155,22 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                 </Badge>
               </div>
               <p className="text-white font-semibold">
-                {analysis.technical_analysis?.pattern_detected || 'No clear pattern'}
+                {analysis.technical_analysis?.pattern_detected || t('stock.noClearPattern')}
               </p>
             </div>
 
             {/* Support/Resistance Levels */}
             <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-slate-300">Key Levels</h4>
+              <h4 className="text-sm font-semibold text-slate-300">{t('stock.keyLevels')}</h4>
               {analysis.technical_analysis?.resistance_levels?.slice(0, 2).map((level, i) => (
                 <div key={i} className="flex items-center justify-between p-2 rounded bg-red-500/10">
-                  <span className="text-red-300 text-sm">Resistance {i + 1}</span>
+                  <span className="text-red-300 text-sm">{t('stock.resistance')} {i + 1}</span>
                   <span className="text-white font-semibold">Rp {level?.toLocaleString('id-ID')}</span>
                 </div>
               ))}
               {analysis.technical_analysis?.support_levels?.slice(0, 2).map((level, i) => (
                 <div key={i} className="flex items-center justify-between p-2 rounded bg-green-500/10">
-                  <span className="text-green-300 text-sm">Support {i + 1}</span>
+                  <span className="text-green-300 text-sm">{t('stock.support')} {i + 1}</span>
                   <span className="text-white font-semibold">Rp {level?.toLocaleString('id-ID')}</span>
                 </div>
               ))}
@@ -180,7 +182,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <DollarSign className="w-5 h-5" />
-              Fundamental Metrics
+              {t('stock.fundamentalMetrics')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -202,7 +204,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
       <Card className="glass-effect border-slate-700">
         <CardHeader>
           <CardTitle className="text-white text-xl flex items-center gap-2">
-            🎯 Investment Plan
+            🎯 {t('stock.investmentPlan')}
             <Badge className={actionColor}>
               {analysis.investment_recommendation?.action || 'HOLD'}
             </Badge>
@@ -216,12 +218,12 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                 <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2">
                   <Target className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="font-semibold text-white mb-1">TARGET PRICE</h4>
+                <h4 className="font-semibold text-white mb-1">{t('stock.targetPrice')}</h4>
                 <p className="text-xl font-bold text-green-400">
                   Rp {analysis.investment_recommendation?.target_price?.toLocaleString('id-ID') || '-'}
                 </p>
                 <p className="text-xs text-slate-400">
-                  {analysis.investment_recommendation?.time_horizon || 'Medium term'}
+                  {analysis.investment_recommendation?.time_horizon || t('stock.mediumTerm')}
                 </p>
               </div>
             </motion.div>
@@ -232,11 +234,11 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                 <div className="w-10 h-10 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-2">
                   <Shield className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="font-semibold text-white mb-1">STOP LOSS</h4>
+                <h4 className="font-semibold text-white mb-1">{t('stock.stopLoss')}</h4>
                 <p className="text-xl font-bold text-red-400">
                   Rp {analysis.investment_recommendation?.stop_loss?.toLocaleString('id-ID') || '-'}
                 </p>
-                <p className="text-xs text-slate-400">Risk Protection</p>
+                <p className="text-xs text-slate-400">{t('stock.riskProtection')}</p>
               </div>
             </motion.div>
 
@@ -246,9 +248,9 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-2">
                   <Clock className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="font-semibold text-white mb-1">ENTRY TIMING</h4>
+                <h4 className="font-semibold text-white mb-1">{t('stock.entryTiming')}</h4>
                 <p className="text-sm font-bold text-blue-400 px-2">
-                  {analysis.investment_recommendation?.entry_timing || 'Wait for confirmation'}
+                  {analysis.investment_recommendation?.entry_timing || t('stock.waitConfirmation')}
                 </p>
               </div>
             </motion.div>
@@ -259,7 +261,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                 <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-2">
                   <Shield className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="font-semibold text-white mb-1">RISK LEVEL</h4>
+                <h4 className="font-semibold text-white mb-1">{t('stock.riskLevel')}</h4>
                 <p className={`text-xl font-bold ${riskColors[analysis.investment_recommendation?.risk_level] || 'text-yellow-400'}`}>
                   {analysis.investment_recommendation?.risk_level?.toUpperCase() || 'MEDIUM'}
                 </p>
@@ -272,9 +274,9 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
             <div className="flex items-start gap-3">
               <Building2 className="w-5 h-5 text-purple-400 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-purple-300 mb-2">Investment Analysis Summary</h4>
+                <h4 className="font-semibold text-purple-300 mb-2">{t('stock.analysisSummary')}</h4>
                 <p className="text-slate-300 text-sm leading-relaxed">
-                  {analysis.analysis_summary || 'Analysis summary not available'}
+                  {analysis.analysis_summary || t('stock.summaryNotAvailable')}
                 </p>
               </div>
             </div>
@@ -288,7 +290,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Newspaper className="w-5 h-5" />
-              Latest News Analysis
+              {t('stock.latestNews')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -303,22 +305,22 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                 >
                   <div className="flex items-start justify-between mb-2">
                     <h5 className="font-semibold text-white text-sm leading-relaxed flex-1">
-                      {news.headline || 'News headline'}
+                      {news.headline || t('stock.newsHeadline')}
                     </h5>
                     <div className="flex items-center gap-2 ml-4">
                       <Badge className={sentimentColors[news.sentiment] ? `border-${news.sentiment === 'positive' ? 'green' : news.sentiment === 'negative' ? 'red' : 'gray'}-500/30 ${sentimentColors[news.sentiment]}` : 'border-gray-500/30 text-gray-400'}>
                         {news.sentiment?.toUpperCase() || 'NEUTRAL'}
                       </Badge>
                       <span className="text-xs text-slate-500">
-                        Impact: {news.impact_score || 5}/10
+                        {t('stock.impact')}: {news.impact_score || 5}/10
                       </span>
                     </div>
                   </div>
                   <p className="text-slate-400 text-sm mb-2">
-                    {news.summary || 'News summary not available'}
+                    {news.summary || t('stock.newsSummaryNotAvailable')}
                   </p>
                   <div className="flex items-center justify-between text-xs text-slate-500">
-                    <span>{news.source || 'Unknown source'}</span>
+                    <span>{news.source || t('stock.unknownSource')}</span>
                     <span>{news.date || format(new Date(), 'dd MMM yyyy')}</span>
                   </div>
                 </motion.div>
@@ -333,7 +335,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
         <Card className="glass-effect border-slate-700">
           <CardHeader>
             <CardTitle className="text-green-400 flex items-center gap-2">
-              📈 Key Catalysts
+              📈 {t('stock.keyCatalysts')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -345,7 +347,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                 </div>
               ))}
               {(!analysis.key_catalysts || analysis.key_catalysts.length === 0) && (
-                <p className="text-slate-400 text-sm">No key catalysts identified</p>
+                <p className="text-slate-400 text-sm">{t('stock.noCatalysts')}</p>
               )}
             </div>
           </CardContent>
@@ -354,7 +356,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
         <Card className="glass-effect border-slate-700">
           <CardHeader>
             <CardTitle className="text-red-400 flex items-center gap-2">
-              ⚠️ Risk Factors
+              ⚠️ {t('stock.riskFactors')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -366,7 +368,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
                 </div>
               ))}
               {(!analysis.risk_factors || analysis.risk_factors.length === 0) && (
-                <p className="text-slate-400 text-sm">No major risk factors identified</p>
+                <p className="text-slate-400 text-sm">{t('stock.noRiskFactors')}</p>
               )}
             </div>
           </CardContent>
@@ -380,7 +382,7 @@ export default function StockAnalysisResult({ analysis, uploadedImage, onNewAnal
           className="bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-semibold px-8 py-3"
         >
           <Plus className="w-5 h-5 mr-2" />
-          Analisis Saham Lain
+          {t('stock.analyzeAnother')}
         </Button>
       </div>
     </motion.div>
