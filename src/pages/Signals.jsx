@@ -128,6 +128,26 @@ export default function SignalsPage() {
     return "bg-red-500/20 text-red-400 border-red-500/50";
   };
 
+  const runScanner = async () => {
+    try {
+      setIsLoading(true);
+      const result = await base44.functions.invoke('scanner-run', {});
+      
+      toast.success(
+        `Scanner completed: ${result.data.signalsCreatedCount} signals created, ` +
+        `${result.data.skippedCooldown} skipped (cooldown), ` +
+        `${result.data.errorsCount} errors`
+      );
+      
+      await loadSignals();
+    } catch (error) {
+      console.error('Scanner failed:', error);
+      toast.error('Scanner failed: ' + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const createPaperTrade = async (signal) => {
     try {
       const entryPrice = signal.price || 0;
@@ -170,6 +190,14 @@ export default function SignalsPage() {
             <p className="text-slate-300">{t('signals.subtitle')}</p>
           </div>
           <div className="flex gap-2">
+            <Button
+              onClick={runScanner}
+              disabled={isLoading}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              <BarChart2 className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+              Run scanner now
+            </Button>
             <Button
               onClick={createTestSignal}
               variant="outline"

@@ -51,11 +51,11 @@ import Analyze from './pages/Analyze';
 import Dashboard from './pages/Dashboard';
 import History from './pages/History';
 import I18nAudit from './pages/I18nAudit';
+import I18nManager from './pages/I18nManager';
 import RecommendationDetail from './pages/RecommendationDetail';
+import SignalAnalytics from './pages/SignalAnalytics';
 import Signals from './pages/Signals';
 import StockAnalysis from './pages/StockAnalysis';
-import SignalAnalytics from './pages/SignalAnalytics';
-import I18nManager from './pages/I18nManager';
 import __Layout from './Layout.jsx';
 
 
@@ -64,11 +64,11 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "History": History,
     "I18nAudit": I18nAudit,
+    "I18nManager": I18nManager,
     "RecommendationDetail": RecommendationDetail,
+    "SignalAnalytics": SignalAnalytics,
     "Signals": Signals,
     "StockAnalysis": StockAnalysis,
-    "SignalAnalytics": SignalAnalytics,
-    "I18nManager": I18nManager,
 }
 
 export const pagesConfig = {
