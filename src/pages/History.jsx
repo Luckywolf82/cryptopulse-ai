@@ -35,6 +35,7 @@ export default function History() {
 
   useEffect(() => {
     loadAnalyses();
+    loadPerformances();
   }, []);
 
   useEffect(() => {
@@ -69,6 +70,27 @@ export default function History() {
     } catch (error) {
       console.error("Error loading analyses:", error);
       setIsLoading(false);
+    }
+  };
+
+  const loadPerformances = async () => {
+    try {
+      const perf = await base44.entities.SignalPerformance.list("-created_date", 100);
+      setPerformances(perf);
+    } catch (error) {
+      console.error("Error loading performances:", error);
+    }
+  };
+
+  const runEvaluation = async () => {
+    setIsEvaluating(true);
+    try {
+      await base44.functions.invoke("evaluatePerformance", { hoursBack });
+      await loadPerformances();
+    } catch (error) {
+      console.error("Error running evaluation:", error);
+    } finally {
+      setIsEvaluating(false);
     }
   };
 
