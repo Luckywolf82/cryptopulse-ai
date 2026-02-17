@@ -283,7 +283,8 @@ Deno.serve(async (req) => {
 
     // Load recent signals
     const cutoffTime = new Date(Date.now() - hoursBack * 60 * 60 * 1000).toISOString();
-    const signals = await base44.entities.Signal.filter({ created_date: { $gte: cutoffTime } });
+    const allSignals = await base44.entities.Signal.list("-created_date", 10000);
+    const signals = allSignals.filter(s => new Date(s.created_date) >= new Date(cutoffTime));
 
     if (signals.length === 0) {
       return Response.json({ message: 'No signals to evaluate', evaluated: 0, errors: 0, created: [] });
