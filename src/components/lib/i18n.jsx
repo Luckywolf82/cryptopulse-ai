@@ -104,8 +104,13 @@ const translations = {
           "aiOptDesc": "Trading type selection will optimize our AI analysis algorithm. Each trading type has different risk management and pattern recognition parameters to provide the most accurate analysis results according to your trading strategy."
         },
         "analyzing": {
-          "title": "AI Expert Analysis",
-          "subtitle": "Using expert AI for technical + fundamental analysis + latest news",
+          "title": "Master {{type}} AI Analyzing...",
+          "subtitle": "Using institutional {{type}} trading methodology for 99%+ accuracy",
+          "step1": "Enhanced chart validation...",
+          "step2": "Master pattern recognition (1000+ patterns)...",
+          "step3": "Institutional confluence analysis...",
+          "step4": "Master quality control...",
+          "wait": "Master-level analysis requires 15-20 seconds for maximum precision...",
           "comprehensive": "Comprehensive stock analysis requires 15-20 seconds..."
         }
       },
@@ -240,8 +245,13 @@ const translations = {
           "aiOptDesc": "Valg av trading type vil optimalisere vår AI-analyse-algoritme. Hver trading type har forskjellige risikostyring og mønstergjenkjennings-parametere for å gi de mest nøyaktige analyseresultatene i henhold til din trading-strategi."
         },
         "analyzing": {
-          "title": "AI Ekspert Analyse",
-          "subtitle": "Bruker ekspert AI for teknisk + fundamental analyse + siste nyheter",
+          "title": "Master {{type}} AI analyserer...",
+          "subtitle": "Bruker institusjonell {{type}} handelsmetodikk for 99%+ nøyaktighet",
+          "step1": "Forbedret kartvalidering...",
+          "step2": "Mønstergjenkjenning på masternivå (1000+ mønstre)...",
+          "step3": "Institusjonell sammenflytningsanalyse...",
+          "step4": "Kvalitetskontroll på masternivå...",
+          "wait": "Analyse på masternivå krever 15-20 sekunder for maksimal presisjon...",
           "comprehensive": "Omfattende aksjeanalyse krever 15-20 sekunder..."
         }
       },
