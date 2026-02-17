@@ -243,50 +243,257 @@ export default function History() {
           </Button>
         </motion.div>
 
-        {/* Success Rate Summary */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6"
-        >
-          <Card className="glass-effect border-slate-700">
-            <CardContent className="p-4">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div>
-                  <div className="text-lg md:text-2xl font-bold text-white">{totalAnalysisCount}</div>
-                  <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.totalAnalysis')}</div>
-                </div>
-                <div>
-                  <div className="text-lg md:text-2xl font-bold text-emerald-400">{getSuccessRate().toFixed(1)}%</div>
-                  <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.successRate')}</div>
-                </div>
-                <div>
-                  <div className="text-lg md:text-2xl font-bold text-blue-400">
-                    {profitableCount}
-                  </div>
-                  <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.profitable')}</div>
-                </div>
-                <div>
-                  <div className="text-lg md:text-2xl font-bold text-red-400">
-                    {lossCount}
-                  </div>
-                  <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.losses')}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        {/* Tabs for History and Performance */}
+        <Tabs value="history" onValueChange={() => {}} className="mb-6">
+          <TabsList className="grid w-full max-w-md grid-cols-2 bg-slate-800/50 border border-slate-700">
+            <TabsTrigger value="history" className="text-slate-300 data-[state=active]:text-white">History</TabsTrigger>
+            <TabsTrigger value="performance" className="text-slate-300 data-[state=active]:text-white">Performance</TabsTrigger>
+          </TabsList>
 
-        {/* Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-6"
-        >
-          <HistoryFilters filters={filters} onFiltersChange={setFilters} />
-        </motion.div>
+          {/* History Tab */}
+          <TabsContent value="history" className="space-y-6">
+            {/* Success Rate Summary */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <Card className="glass-effect border-slate-700">
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div>
+                      <div className="text-lg md:text-2xl font-bold text-white">{totalAnalysisCount}</div>
+                      <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.totalAnalysis')}</div>
+                    </div>
+                    <div>
+                      <div className="text-lg md:text-2xl font-bold text-emerald-400">{getSuccessRate().toFixed(1)}%</div>
+                      <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.successRate')}</div>
+                    </div>
+                    <div>
+                      <div className="text-lg md:text-2xl font-bold text-blue-400">
+                        {profitableCount}
+                      </div>
+                      <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.profitable')}</div>
+                    </div>
+                    <div>
+                      <div className="text-lg md:text-2xl font-bold text-red-400">
+                        {lossCount}
+                      </div>
+                      <div className="text-slate-400 text-xs md:text-sm">{t('history.stats.losses')}</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Filters */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <HistoryFilters filters={filters} onFiltersChange={setFilters} />
+            </motion.div>
+          </TabsContent>
+
+          {/* Performance Tab */}
+          <TabsContent value="performance" className="space-y-6">
+            {/* Evaluation Controls */}
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Run Evaluation</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <label className="block text-sm text-slate-300 mb-2">Hours Lookback</label>
+                    <select
+                      value={hoursBack}
+                      onChange={(e) => setHoursBack(parseInt(e.target.value))}
+                      className="bg-slate-700 text-white rounded-lg px-3 py-2 border border-slate-600"
+                    >
+                      <option value={24}>24 hours</option>
+                      <option value={168}>1 week</option>
+                      <option value={720}>1 month</option>
+                      <option value={8760}>1 year</option>
+                    </select>
+                  </div>
+                  <Button
+                    onClick={runEvaluation}
+                    disabled={isEvaluating}
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white mt-6"
+                  >
+                    {isEvaluating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Evaluating...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-4 h-4 mr-2" />
+                        Run Evaluation
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Summary Stats */}
+            {performances.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <Card className="bg-slate-800/50 border-slate-700">
+                  <CardContent className="pt-6">
+                    <div className="text-center">
+                      <p className="text-slate-400 text-sm mb-1">Total Trades</p>
+                      <p className="text-2xl font-bold text-white">{stats.total}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-slate-800/50 border-slate-700">
+                  <CardContent className="pt-6">
+                    <div className="text-center">
+                      <p className="text-slate-400 text-sm mb-1">Wins</p>
+                      <p className="text-2xl font-bold text-emerald-400">{stats.wins}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-slate-800/50 border-slate-700">
+                  <CardContent className="pt-6">
+                    <div className="text-center">
+                      <p className="text-slate-400 text-sm mb-1">Losses</p>
+                      <p className="text-2xl font-bold text-red-400">{stats.losses}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-slate-800/50 border-slate-700">
+                  <CardContent className="pt-6">
+                    <div className="text-center">
+                      <p className="text-slate-400 text-sm mb-1">Win Rate</p>
+                      <p className="text-2xl font-bold text-blue-400">{stats.winRate}%</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-slate-800/50 border-slate-700">
+                  <CardContent className="pt-6">
+                    <div className="text-center">
+                      <p className="text-slate-400 text-sm mb-1">Avg P/L %</p>
+                      <p className={`text-2xl font-bold ${parseFloat(stats.avgPnl) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                        {stats.avgPnl}%
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-slate-800/50 border-slate-700">
+                  <CardContent className="pt-6">
+                    <div className="text-center">
+                      <p className="text-slate-400 text-sm mb-1">Avg R:Multiple</p>
+                      <p className="text-2xl font-bold text-purple-400">{stats.avgRMultiple}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Grouped Statistics */}
+            {grouped.length > 0 && (
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="text-white">Performance by Trigger Type & Timeframe</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="text-slate-300 border-b border-slate-700">
+                        <tr>
+                          <th className="text-left py-3 px-4">Trigger Type</th>
+                          <th className="text-left py-3 px-4">Timeframe</th>
+                          <th className="text-center py-3 px-4">Signals</th>
+                          <th className="text-center py-3 px-4">Wins</th>
+                          <th className="text-center py-3 px-4">Win Rate</th>
+                          <th className="text-center py-3 px-4">Avg P/L %</th>
+                          <th className="text-center py-3 px-4">Avg R:Multiple</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {grouped.map((group, idx) => (
+                          <tr key={idx} className="border-b border-slate-700 hover:bg-slate-700/30">
+                            <td className="py-3 px-4 text-white font-medium">{group.triggerType}</td>
+                            <td className="py-3 px-4 text-slate-300">{group.timeframe}</td>
+                            <td className="py-3 px-4 text-center text-slate-300">{group.total}</td>
+                            <td className="py-3 px-4 text-center text-emerald-400 font-medium">{group.wins}</td>
+                            <td className="py-3 px-4 text-center text-blue-400">{group.winRate}%</td>
+                            <td className={`py-3 px-4 text-center font-medium ${parseFloat(group.avgPnl) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                              {group.avgPnl}%
+                            </td>
+                            <td className="py-3 px-4 text-center text-purple-400">{group.avgRMultiple}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Recent Performances */}
+            {performances.length > 0 && (
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="text-white">Recent Trade Evaluations</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {performances.slice(0, 20).map((perf) => (
+                      <div key={perf.id} className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
+                        <div className="flex items-center gap-4 flex-1">
+                          <div>
+                            <p className="text-white font-medium">{perf.symbol}</p>
+                            <p className="text-xs text-slate-400">{perf.triggerType} • {perf.timeframe}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-6">
+                          <div className="text-right">
+                            <p className={`font-bold ${perf.status === "win" ? "text-emerald-400" : perf.status === "loss" ? "text-red-400" : "text-slate-300"}`}>
+                              {perf.pnlPercent > 0 ? "+" : ""}{perf.pnlPercent}%
+                            </p>
+                            <p className="text-xs text-slate-400">R:{perf.rMultiple}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs text-slate-400">{perf.holdingHours}h</p>
+                            <p className={`text-xs font-medium ${perf.status === "win" ? "text-emerald-400" : perf.status === "loss" ? "text-red-400" : "text-slate-300"}`}>
+                              {perf.exitReason}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {performances.length === 0 && (
+              <Card className="bg-slate-800/50 border-slate-700 text-center py-12">
+                <CardContent>
+                  <p className="text-slate-400 mb-4">No performance data yet. Run an evaluation to get started.</p>
+                  <Button
+                    onClick={runEvaluation}
+                    disabled={isEvaluating}
+                    className="bg-emerald-500 hover:bg-emerald-600"
+                  >
+                    Run Evaluation
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
 
         {/* Debug Info */}
         <div className="mb-4 p-2 bg-slate-800/50 rounded text-xs text-slate-400">
