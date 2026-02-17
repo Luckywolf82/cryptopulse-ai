@@ -58,6 +58,11 @@ export default function Layout({ children, currentPageName }) {
       icon: BarChart3,
     },
     {
+      title: "Performance",
+      url: createPageUrl("Performance"),
+      icon: TrendingUp,
+    },
+    {
       title: t('nav.history'),
       url: createPageUrl("History"),
       icon: History,
