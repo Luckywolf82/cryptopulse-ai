@@ -14,7 +14,7 @@ const translations = {
       "nav": {
         "dashboard": "Dashboard",
         "cryptoForex": "Crypto & Forex",
-        "stocks": "Stocks 🇮🇩",
+        "stocks": "Stocks",
         "history": "History"
       },
       "dashboard": {
@@ -24,10 +24,10 @@ const translations = {
         "marketLive": "Market Live",
         "stats": {
           "totalAnalysis": "Total Analysis",
-          "stocks": "Stocks 🇮🇩",
+          "stocks": "Stocks",
           "aiAccuracy": "AI Accuracy",
           "successRate": "Success Rate",
-          "idxAnalysis": "IDX analysis",
+          "stockAnalysis": "Stock analysis",
           "institutionalGrade": "Institutional grade",
           "profitable": "profitable",
           "thisWeek": "+12% this week"
@@ -35,8 +35,8 @@ const translations = {
         "quickActions": {
           "cryptoForex": "Crypto & Forex",
           "cryptoDesc": "Technical analysis crypto and forex",
-          "stocksTitle": "Indonesian Stocks 🇮🇩",
-          "stocksDesc": "IDX stock analysis + fundamental news",
+          "stocksTitle": "Stocks",
+          "stocksDesc": "Stock analysis + fundamental news",
           "trackResults": "Track Results",
           "trackDesc": "Monitor trading performance"
         },
@@ -58,12 +58,12 @@ const translations = {
         },
         "recommendations": {
           "title": "Smart AI Recommendations",
-          "subtitle": "Today's best recommendations - All Indonesian stock price categories",
+          "subtitle": "Today's best recommendations based on real-time market data",
           "generate": "Generate Recommendations",
           "generateDesc": "AI will generate best recommendations based on real-time analysis",
           "affordable": "Affordable",
           "premium": "Premium",
-          "stockCategories": "🇮🇩 Indonesian Stock Categories",
+          "stockCategories": "Stock Price Categories",
           "showMore": "Show More Recommendations",
           "showLess": "Show Less"
         }
@@ -121,8 +121,8 @@ const translations = {
         }
       },
       "stocks": {
-        "title": "Indonesian Stock Analysis 🇮🇩",
-        "subtitle": "IDX stock analysis with AI + real-time news"
+        "title": "Stock Analysis",
+        "subtitle": "Stock analysis with AI + real-time news"
       },
       "history": {
         "title": "Analysis History",
@@ -136,7 +136,7 @@ const translations = {
         "noAnalysis": "No Analysis Yet",
         "noAnalysisDesc": "No analysis has been performed yet. Start by analyzing your first chart.",
         "analyzeCrypto": "Analyze Crypto & Forex",
-        "analyzeStocks": "Analyze Indonesian Stocks",
+        "analyzeStocks": "Analyze Stocks",
         "noMatch": "No Analysis Matching Filter",
         "noMatchDesc": "No analysis matches the selected filters."
       },
@@ -234,10 +234,10 @@ const translations = {
         "newAnalysis": "Analyze New Chart"
       },
       "stock": {
-        "title": "Indonesian Stock Analyzer",
-        "subtitle": "IDX stock analysis with AI + real-time news",
+        "title": "Stock Analyzer",
+        "subtitle": "Stock analysis with AI + real-time news",
         "defaultCode": "STOCK",
-        "defaultName": "Indonesian Stock",
+        "defaultName": "Stock",
         "defaultSector": "Various Sector",
         "currentPrice": "Current Price",
         "investmentRecommendation": "Investment Recommendation",
@@ -271,39 +271,39 @@ const translations = {
         "noRiskFactors": "No major risk factors identified",
         "analyzeAnother": "Analyze Another Stock",
         "analyzing": {
-          "title": "Analyzing Indonesian Stock...",
+          "title": "Analyzing Stock...",
           "subtitle": "Using expert AI for technical + fundamental analysis + latest news",
-          "step1": "Technical analysis BEI standards...",
+          "step1": "Technical analysis with market standards...",
           "step2": "Fetching real-time news & data...",
           "step3": "Fundamental analysis & valuation...",
           "step4": "Investment recommendation...",
           "wait": "Comprehensive stock analysis requires 15-20 seconds..."
         },
         "upload": {
-          "title": "Indonesian Stock Chart Analyzer",
-          "subtitle": "AI + Real-time news for BEI stock analysis",
-          "uploadTitle": "Upload Indonesian Stock Chart",
-          "description": "Drag & drop BEI stock chart image or click button below. AI will perform comprehensive analysis with fundamental data and real-time news.",
+          "title": "Stock Chart Analyzer",
+          "subtitle": "AI + Real-time news for stock analysis",
+          "uploadTitle": "Upload Stock Chart",
+          "description": "Drag & drop stock chart image or click button below. AI will perform comprehensive analysis with fundamental data and real-time news.",
           "selectChart": "Select Stock Chart",
           "screenshotChart": "Screenshot Chart",
           "feature1Title": "Technical Analysis",
-          "feature1Desc": "Pattern + indicator BEI standards",
+          "feature1Desc": "Pattern + technical indicators",
           "feature2Title": "Real-time News",
           "feature2Desc": "Fundamental news analysis",
           "feature3Title": "Investment Advice",
           "feature3Desc": "BUY/SELL recommendation",
-          "supportedStocks": "🇮🇩 Supported Indonesian Stocks",
-          "moreStocks": "+ 700+ other BEI stocks",
+          "supportedStocks": "Supported Stocks",
+          "moreStocks": "+ Global stock markets",
           "supportedFormats": "Supported formats",
           "bestResults": "Best results",
-          "bestResultsDesc": "Screenshot from Indonesian broker/trading platform"
+          "bestResultsDesc": "Screenshot from broker/trading platform"
         }
       },
       "errors": {
         "uploadFailed": "Failed to upload image: {{message}}. Please try again with a smaller image (<5MB).",
         "unknown": "Unknown error",
         "invalidChart": "INVALID IMAGE: The uploaded image is not a trading chart. Please upload a clear stock candlestick chart screenshot.",
-        "analysisFailed": "Failed to analyze stock: {{message}}. Ensure a clear Indonesian stock chart."
+        "analysisFailed": "Failed to analyze stock: {{message}}. Ensure a clear stock chart."
       },
       "recommendations": {
         "notFound": "Recommendation Not Found",
@@ -341,7 +341,7 @@ const translations = {
       "nav": {
         "dashboard": "Dashbord",
         "cryptoForex": "Crypto & Forex",
-        "stocks": "Aksjer 🇮🇩",
+        "stocks": "Aksjer",
         "history": "Historikk"
       },
       "dashboard": {
@@ -351,10 +351,10 @@ const translations = {
         "marketLive": "Marked Live",
         "stats": {
           "totalAnalysis": "Totalt Analyser",
-          "stocks": "Aksjer 🇮🇩",
+          "stocks": "Aksjer",
           "aiAccuracy": "AI Nøyaktighet",
           "successRate": "Suksessrate",
-          "idxAnalysis": "IDX analyse",
+          "stockAnalysis": "Aksjeanalyse",
           "institutionalGrade": "Institusjonell kvalitet",
           "profitable": "lønnsomme",
           "thisWeek": "+12% denne uken"
@@ -362,8 +362,8 @@ const translations = {
         "quickActions": {
           "cryptoForex": "Crypto & Forex",
           "cryptoDesc": "Teknisk analyse av crypto og forex",
-          "stocksTitle": "Indonesiske Aksjer 🇮🇩",
-          "stocksDesc": "IDX aksjeanalyse + fundamentale nyheter",
+          "stocksTitle": "Aksjer",
+          "stocksDesc": "Aksjeanalyse + fundamentale nyheter",
           "trackResults": "Spor Resultater",
           "trackDesc": "Overvåk handelsresultater"
         },
@@ -385,12 +385,12 @@ const translations = {
         },
         "recommendations": {
           "title": "Smarte AI Anbefalinger",
-          "subtitle": "Dagens beste anbefalinger - Alle indonesiske aksjepris-kategorier",
+          "subtitle": "Dagens beste anbefalinger basert på sanntids markedsdata",
           "generate": "Generer Anbefalinger",
           "generateDesc": "AI vil generere beste anbefalinger basert på sanntidsanalyse",
           "affordable": "Rimelig",
           "premium": "Premium",
-          "stockCategories": "🇮🇩 Indonesiske Aksje-kategorier",
+          "stockCategories": "Aksjepris-kategorier",
           "showMore": "Vis Flere Anbefalinger",
           "showLess": "Vis Færre"
         }
@@ -448,8 +448,8 @@ const translations = {
         }
       },
       "stocks": {
-        "title": "Indonesisk Aksjeanalyse 🇮🇩",
-        "subtitle": "IDX aksjeanalyse med AI + sanntidsnyheter"
+        "title": "Aksjeanalyse",
+        "subtitle": "Aksjeanalyse med AI + sanntidsnyheter"
       },
       "history": {
         "title": "Analyse Historikk",
@@ -463,7 +463,7 @@ const translations = {
         "noAnalysis": "Ingen Analyser Ennå",
         "noAnalysisDesc": "Ingen analyser har blitt utført ennå. Start med å analysere ditt første chart.",
         "analyzeCrypto": "Analyser Crypto & Forex",
-        "analyzeStocks": "Analyser Indonesiske Aksjer",
+        "analyzeStocks": "Analyser Aksjer",
         "noMatch": "Ingen Analyser Matcher Filter",
         "noMatchDesc": "Ingen analyser matcher de valgte filtrene."
       },
@@ -561,10 +561,10 @@ const translations = {
         "newAnalysis": "Analyser Nytt Chart"
       },
       "stock": {
-        "title": "Indonesisk Aksjeanalysator",
-        "subtitle": "IDX aksjeanalyse med AI + sanntidsnyheter",
+        "title": "Aksjeanalysator",
+        "subtitle": "Aksjeanalyse med AI + sanntidsnyheter",
         "defaultCode": "AKSJE",
-        "defaultName": "Indonesisk Aksje",
+        "defaultName": "Aksje",
         "defaultSector": "Diverse Sektor",
         "currentPrice": "Nåværende Pris",
         "investmentRecommendation": "Investeringsanbefaling",
@@ -598,39 +598,39 @@ const translations = {
         "noRiskFactors": "Ingen store risikofaktorer identifisert",
         "analyzeAnother": "Analyser Annen Aksje",
         "analyzing": {
-          "title": "Analyserer Indonesisk Aksje...",
+          "title": "Analyserer Aksje...",
           "subtitle": "Bruker ekspert AI for teknisk + fundamental analyse + siste nyheter",
-          "step1": "Teknisk analyse BEI standarder...",
+          "step1": "Teknisk analyse med markedsstandarder...",
           "step2": "Henter sanntidsnyheter & data...",
           "step3": "Fundamental analyse & verdivurdering...",
           "step4": "Investeringsanbefaling...",
           "wait": "Omfattende aksjeanalyse krever 15-20 sekunder..."
         },
         "upload": {
-          "title": "Indonesisk Aksje Chart Analysator",
-          "subtitle": "AI + Sanntidsnyheter for BEI aksjeanalyse",
-          "uploadTitle": "Last opp Indonesisk Aksje Chart",
-          "description": "Dra og slipp BEI aksje chart-bilde eller klikk knappen under. AI vil utføre omfattende analyse med fundamental data og sanntidsnyheter.",
+          "title": "Aksje Chart Analysator",
+          "subtitle": "AI + Sanntidsnyheter for aksjeanalyse",
+          "uploadTitle": "Last opp Aksje Chart",
+          "description": "Dra og slipp aksje chart-bilde eller klikk knappen under. AI vil utføre omfattende analyse med fundamental data og sanntidsnyheter.",
           "selectChart": "Velg Aksje Chart",
           "screenshotChart": "Ta Skjermbilde av Chart",
           "feature1Title": "Teknisk Analyse",
-          "feature1Desc": "Mønster + indikator BEI standarder",
+          "feature1Desc": "Mønster + tekniske indikatorer",
           "feature2Title": "Sanntidsnyheter",
           "feature2Desc": "Fundamental nyhetsanalyse",
           "feature3Title": "Investeringsråd",
           "feature3Desc": "KJØP/SELG anbefaling",
-          "supportedStocks": "🇮🇩 Støttede Indonesiske Aksjer",
-          "moreStocks": "+ 700+ andre BEI aksjer",
+          "supportedStocks": "Støttede Aksjer",
+          "moreStocks": "+ Globale aksjemarkeder",
           "supportedFormats": "Støttede formater",
           "bestResults": "Beste resultater",
-          "bestResultsDesc": "Skjermbilde fra indonesisk megler/handelsplattform"
+          "bestResultsDesc": "Skjermbilde fra megler/handelsplattform"
         }
       },
       "errors": {
         "uploadFailed": "Kunne ikke laste opp bilde: {{message}}. Prøv igjen med et mindre bilde (<5MB).",
         "unknown": "Ukjent feil",
         "invalidChart": "UGYLDIG BILDE: Det opplastede bildet er ikke et trading chart. Vennligst last opp et tydelig aksje candlestick chart skjermbilde.",
-        "analysisFailed": "Kunne ikke analysere aksje: {{message}}. Sørg for et tydelig indonesisk aksje chart."
+        "analysisFailed": "Kunne ikke analysere aksje: {{message}}. Sørg for et tydelig aksje chart."
       },
       "recommendations": {
         "notFound": "Anbefaling Ikke Funnet",
@@ -668,7 +668,7 @@ const translations = {
       "nav": {
         "dashboard": "Dasbor",
         "cryptoForex": "Crypto & Forex",
-        "stocks": "Saham 🇮🇩",
+        "stocks": "Saham",
         "history": "Riwayat"
       },
       "dashboard": {
@@ -678,10 +678,10 @@ const translations = {
         "marketLive": "Market Live",
         "stats": {
           "totalAnalysis": "Total Analisis",
-          "stocks": "Saham 🇮🇩",
+          "stocks": "Saham",
           "aiAccuracy": "Akurasi AI",
           "successRate": "Tingkat Sukses",
-          "idxAnalysis": "Analisis IDX",
+          "stockAnalysis": "Analisis saham",
           "institutionalGrade": "Kelas institusional",
           "profitable": "menguntungkan",
           "thisWeek": "+12% minggu ini"
@@ -689,8 +689,8 @@ const translations = {
         "quickActions": {
           "cryptoForex": "Crypto & Forex",
           "cryptoDesc": "Analisis teknikal crypto dan forex",
-          "stocksTitle": "Saham Indonesia 🇮🇩",
-          "stocksDesc": "Analisis saham IDX + berita fundamental",
+          "stocksTitle": "Saham",
+          "stocksDesc": "Analisis saham + berita fundamental",
           "trackResults": "Lacak Hasil",
           "trackDesc": "Pantau performa trading"
         },
@@ -712,12 +712,12 @@ const translations = {
         },
         "recommendations": {
           "title": "Rekomendasi AI Cerdas",
-          "subtitle": "Rekomendasi terbaik hari ini - Semua kategori harga saham Indonesia",
+          "subtitle": "Rekomendasi terbaik hari ini berdasarkan data pasar real-time",
           "generate": "Generate Rekomendasi",
           "generateDesc": "AI akan generate rekomendasi terbaik berdasarkan analisis real-time",
           "affordable": "Terjangkau",
           "premium": "Premium",
-          "stockCategories": "🇮🇩 Kategori Saham Indonesia",
+          "stockCategories": "Kategori Harga Saham",
           "showMore": "Tampilkan Lebih Banyak Rekomendasi",
           "showLess": "Tampilkan Lebih Sedikit"
         }
@@ -775,8 +775,8 @@ const translations = {
         }
       },
       "stocks": {
-        "title": "Analisis Saham Indonesia 🇮🇩",
-        "subtitle": "Analisis saham IDX dengan AI + berita real-time"
+        "title": "Analisis Saham",
+        "subtitle": "Analisis saham dengan AI + berita real-time"
       },
       "history": {
         "title": "Riwayat Analisis",
@@ -790,7 +790,7 @@ const translations = {
         "noAnalysis": "Belum Ada Analisis",
         "noAnalysisDesc": "Belum ada analisis yang dilakukan. Mulai dengan menganalisis chart pertama Anda.",
         "analyzeCrypto": "Analisis Crypto & Forex",
-        "analyzeStocks": "Analisis Saham Indonesia",
+        "analyzeStocks": "Analisis Saham",
         "noMatch": "Tidak Ada Analisis yang Cocok dengan Filter",
         "noMatchDesc": "Tidak ada analisis yang cocok dengan filter yang dipilih."
       },
@@ -888,10 +888,10 @@ const translations = {
         "newAnalysis": "Analisis Chart Baru"
       },
       "stock": {
-        "title": "Analis Saham Indonesia",
-        "subtitle": "Analisis saham IDX dengan AI + berita real-time",
+        "title": "Analis Saham",
+        "subtitle": "Analisis saham dengan AI + berita real-time",
         "defaultCode": "SAHAM",
-        "defaultName": "Saham Indonesia",
+        "defaultName": "Saham",
         "defaultSector": "Sektor Beragam",
         "currentPrice": "Harga Saat Ini",
         "investmentRecommendation": "Rekomendasi Investasi",
@@ -925,39 +925,39 @@ const translations = {
         "noRiskFactors": "Tidak ada faktor risiko utama yang teridentifikasi",
         "analyzeAnother": "Analisis Saham Lain",
         "analyzing": {
-          "title": "Menganalisis Saham Indonesia...",
+          "title": "Menganalisis Saham...",
           "subtitle": "Menggunakan AI ahli untuk analisis teknikal + fundamental + berita terkini",
-          "step1": "Analisis teknikal standar BEI...",
+          "step1": "Analisis teknikal dengan standar pasar...",
           "step2": "Mengambil berita & data real-time...",
           "step3": "Analisis fundamental & valuasi...",
           "step4": "Rekomendasi investasi...",
           "wait": "Analisis saham komprehensif memerlukan 15-20 detik..."
         },
         "upload": {
-          "title": "Analis Chart Saham Indonesia",
-          "subtitle": "AI + Berita real-time untuk analisis saham BEI",
-          "uploadTitle": "Upload Chart Saham Indonesia",
-          "description": "Drag & drop gambar chart saham BEI atau klik tombol di bawah. AI akan melakukan analisis komprehensif dengan data fundamental dan berita real-time.",
+          "title": "Analis Chart Saham",
+          "subtitle": "AI + Berita real-time untuk analisis saham",
+          "uploadTitle": "Upload Chart Saham",
+          "description": "Drag & drop gambar chart saham atau klik tombol di bawah. AI akan melakukan analisis komprehensif dengan data fundamental dan berita real-time.",
           "selectChart": "Pilih Chart Saham",
           "screenshotChart": "Screenshot Chart",
           "feature1Title": "Analisis Teknikal",
-          "feature1Desc": "Pattern + indikator standar BEI",
+          "feature1Desc": "Pattern + indikator teknikal",
           "feature2Title": "Berita Real-time",
           "feature2Desc": "Analisis berita fundamental",
           "feature3Title": "Saran Investasi",
           "feature3Desc": "Rekomendasi BUY/SELL",
-          "supportedStocks": "🇮🇩 Saham Indonesia yang Didukung",
-          "moreStocks": "+ 700+ saham BEI lainnya",
+          "supportedStocks": "Saham yang Didukung",
+          "moreStocks": "+ Pasar saham global",
           "supportedFormats": "Format yang didukung",
           "bestResults": "Hasil terbaik",
-          "bestResultsDesc": "Screenshot dari broker/platform trading Indonesia"
+          "bestResultsDesc": "Screenshot dari broker/platform trading"
         }
       },
       "errors": {
         "uploadFailed": "Gagal mengupload gambar: {{message}}. Silakan coba lagi dengan gambar yang lebih kecil (<5MB).",
         "unknown": "Kesalahan tidak diketahui",
         "invalidChart": "GAMBAR TIDAK VALID: Gambar yang diupload bukan chart trading. Silakan upload screenshot chart candlestick saham yang jelas.",
-        "analysisFailed": "Gagal menganalisis saham: {{message}}. Pastikan chart saham Indonesia yang jelas."
+        "analysisFailed": "Gagal menganalisis saham: {{message}}. Pastikan chart saham yang jelas."
       },
       "recommendations": {
         "notFound": "Rekomendasi Tidak Ditemukan",
