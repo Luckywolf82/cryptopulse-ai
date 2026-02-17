@@ -217,67 +217,120 @@ Deno.serve(async (req) => {
           throw new Error('Insufficient data');
         }
 
-        // Calculate EMAs
-        const ema20_1h = calculateEMA(data1h.close, 20);
-        const ema50_1h = calculateEMA(data1h.close, 50);
-        const ema50_4h = calculateEMA(data4h.close, 50);
+        // Calculate EMAs and RSI
+         const ema20_1h = calculateEMA(data1h.close, 20);
+         const ema50_1h = calculateEMA(data1h.close, 50);
+         const ema50_4h = calculateEMA(data4h.close, 50);
+         const rsi14 = calculateRSI(data1h.close, 14);
 
-        // Detect EMA_FLIP
-        let emaFlipDirection = null;
-        const prevEma20 = ema20_1h[lastClosedIndex - 1];
-        const prevEma50 = ema50_1h[lastClosedIndex - 1];
-        const currEma20 = ema20_1h[lastClosedIndex];
-        const currEma50 = ema50_1h[lastClosedIndex];
+         const prevEma20 = ema20_1h[lastClosedIndex - 1];
+         const prevEma50 = ema50_1h[lastClosedIndex - 1];
+         const currEma20 = ema20_1h[lastClosedIndex];
+         const currEma50 = ema50_1h[lastClosedIndex];
+         const currRsi14 = rsi14[rsi14.length - 1];
 
-        if (prevEma20 <= prevEma50 && currEma20 > currEma50) {
-          emaFlipDirection = 'long';
-        } else if (prevEma20 >= prevEma50 && currEma20 < currEma50) {
-          emaFlipDirection = 'short';
-        }
+         // Detect EMA_FLIP
+         let emaFlipDirection = null;
+         if (prevEma20 <= prevEma50 && currEma20 > currEma50) {
+           emaFlipDirection = 'long';
+         } else if (prevEma20 >= prevEma50 && currEma20 < currEma50) {
+           emaFlipDirection = 'short';
+         }
 
-        // Detect MSS
-        let mssDirection = null;
-        const N = 20;
-        const sliceStart = Math.max(0, lastClosedIndex - N);
-        const highSlice = data1h.high.slice(sliceStart, lastClosedIndex);
-        const lowSlice = data1h.low.slice(sliceStart, lastClosedIndex);
-        
-        const maxHigh = Math.max(...highSlice);
-        const minLow = Math.min(...lowSlice);
-        
-        const breakUp = data1h.close[lastClosedIndex] > maxHigh;
-        const breakDown = data1h.close[lastClosedIndex] < minLow;
+         // Detect MSS
+         let mssDirection = null;
+         const N = 20;
+         const sliceStart = Math.max(0, lastClosedIndex - N);
+         const highSlice = data1h.high.slice(sliceStart, lastClosedIndex);
+         const lowSlice = data1h.low.slice(sliceStart, lastClosedIndex);
 
-        // Structure proxies
-        const recent20Low = Math.min(...data1h.low.slice(lastClosedIndex - 20, lastClosedIndex - 10));
-        const older40Low = Math.min(...data1h.low.slice(lastClosedIndex - 40, lastClosedIndex - 30));
-        const higherLow = recent20Low > older40Low;
+         const maxHigh = Math.max(...highSlice);
+         const minLow = Math.min(...lowSlice);
 
-        const recent20High = Math.max(...data1h.high.slice(lastClosedIndex - 20, lastClosedIndex - 10));
-        const older40High = Math.max(...data1h.high.slice(lastClosedIndex - 40, lastClosedIndex - 30));
-        const lowerHigh = recent20High < older40High;
+         const breakUp = data1h.close[lastClosedIndex] > maxHigh;
+         const breakDown = data1h.close[lastClosedIndex] < minLow;
 
-        if (breakUp && higherLow) {
-          mssDirection = 'long';
-        } else if (breakDown && lowerHigh) {
-          mssDirection = 'short';
-        }
+         const recent20Low = Math.min(...data1h.low.slice(lastClosedIndex - 20, lastClosedIndex - 10));
+         const older40Low = Math.min(...data1h.low.slice(lastClosedIndex - 40, lastClosedIndex - 30));
+         const higherLow = recent20Low > older40Low;
 
-        // Determine trigger and direction
-        let triggerType = null;
-        let direction = null;
+         const recent20High = Math.max(...data1h.high.slice(lastClosedIndex - 20, lastClosedIndex - 10));
+         const older40High = Math.max(...data1h.high.slice(lastClosedIndex - 40, lastClosedIndex - 30));
+         const lowerHigh = recent20High < older40High;
 
-        if (mssDirection) {
-          triggerType = 'MSS';
-          direction = mssDirection;
-        } else if (emaFlipDirection) {
-          triggerType = 'EMA_FLIP';
-          direction = emaFlipDirection;
-        }
+         if (breakUp && higherLow) {
+           mssDirection = 'long';
+         } else if (breakDown && lowerHigh) {
+           mssDirection = 'short';
+         }
 
-        if (!triggerType) {
-          return; // No signal
-        }
+         // Detect PULLBACK_RETEST
+         let pullbackDirection = null;
+         const closeLong = data1h.close[lastClosedIndex] > currEma50;
+         const lowRetestLong = data1h.low[lastClosedIndex] <= currEma50 * 1.005;
+         const closeAboveLong = data1h.close[lastClosedIndex] >= currEma50;
+
+         const closeShort = data1h.close[lastClosedIndex] < currEma50;
+         const highRetestShort = data1h.high[lastClosedIndex] >= currEma50 * 0.995;
+         const closeBelowShort = data1h.close[lastClosedIndex] <= currEma50;
+
+         if (closeLong && lowRetestLong && closeAboveLong) {
+           pullbackDirection = 'long';
+         } else if (closeShort && highRetestShort && closeBelowShort) {
+           pullbackDirection = 'short';
+         }
+
+         // Detect RSI_REVERSAL
+         let rsiDirection = null;
+         if (currRsi14 < 35) {
+           rsiDirection = 'long';
+         } else if (currRsi14 > 65) {
+           rsiDirection = 'short';
+         }
+
+         // Calculate HTF alignment
+         const close4h = data4h.close[lastClosedIndex4h];
+         const ema50_4hValue = ema50_4h[lastClosedIndex4h];
+         const htfAlign = (emaFlipDirection === 'long' && close4h > ema50_4hValue) ||
+                          (emaFlipDirection === 'short' && close4h < ema50_4hValue) ||
+                          (mssDirection === 'long' && close4h > ema50_4hValue) ||
+                          (mssDirection === 'short' && close4h < ema50_4hValue) ||
+                          (pullbackDirection === 'long' && close4h > ema50_4hValue) ||
+                          (pullbackDirection === 'short' && close4h < ema50_4hValue) ||
+                          (rsiDirection === 'long' && close4h > ema50_4hValue) ||
+                          (rsiDirection === 'short' && close4h < ema50_4hValue);
+
+         // Determine trigger type with priority: MSS > EMA_FLIP > PULLBACK_RETEST > RSI_REVERSAL
+         let triggerType = null;
+         let direction = null;
+         let baseTriggerType = null;
+
+         if (mssDirection) {
+           triggerType = 'MSS';
+           direction = mssDirection;
+           baseTriggerType = 'MSS';
+         } else if (emaFlipDirection) {
+           triggerType = 'EMA_FLIP';
+           direction = emaFlipDirection;
+           baseTriggerType = 'EMA_FLIP';
+         } else if (pullbackDirection && htfAlign) {
+           triggerType = 'PULLBACK_RETEST';
+           direction = pullbackDirection;
+           baseTriggerType = 'PULLBACK_RETEST';
+         } else if (rsiDirection && htfAlign) {
+           triggerType = 'RSI_REVERSAL';
+           direction = rsiDirection;
+           baseTriggerType = 'RSI_REVERSAL';
+         }
+
+         // Count triggers found (before cooldown)
+         if (triggerType || mssDirection || emaFlipDirection || pullbackDirection || rsiDirection) {
+           results.triggersFoundCount++;
+         }
+
+         if (!triggerType) {
+           return; // No signal
+         }
 
         // Calculate indicators
         const lastVol = data1h.volume[lastClosedIndex];
