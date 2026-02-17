@@ -12,6 +12,51 @@ function calculateEMA(data, period) {
   return emaArray;
 }
 
+// Helper: Calculate RSI with Wilder smoothing
+function calculateRSI(data, period = 14) {
+  if (data.length < period + 1) {
+    return [];
+  }
+
+  const gains = [];
+  const losses = [];
+  
+  for (let i = 1; i < data.length; i++) {
+    const change = data[i] - data[i - 1];
+    gains.push(Math.max(0, change));
+    losses.push(Math.max(0, -change));
+  }
+
+  // Initial average gain/loss over first period
+  let avgGain = gains.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  let avgLoss = losses.slice(0, period).reduce((a, b) => a + b, 0) / period;
+
+  const rsiArray = [];
+  
+  // First RSI value
+  if (avgLoss === 0) {
+    rsiArray.push(avgGain > 0 ? 100 : 50);
+  } else {
+    const rs = avgGain / avgLoss;
+    rsiArray.push(100 - (100 / (1 + rs)));
+  }
+
+  // Wilder smoothing for subsequent values
+  for (let i = period; i < gains.length; i++) {
+    avgGain = (avgGain * (period - 1) + gains[i]) / period;
+    avgLoss = (avgLoss * (period - 1) + losses[i]) / period;
+
+    if (avgLoss === 0) {
+      rsiArray.push(avgGain > 0 ? 100 : 50);
+    } else {
+      const rs = avgGain / avgLoss;
+      rsiArray.push(100 - (100 / (1 + rs)));
+    }
+  }
+  
+  return rsiArray;
+}
+
 // Helper: Fetch with retry on 429
 async function fetchWithRetry(url, retries = 1) {
   try {
