@@ -56,6 +56,7 @@ import RecommendationDetail from './pages/RecommendationDetail';
 import SignalAnalytics from './pages/SignalAnalytics';
 import Signals from './pages/Signals';
 import StockAnalysis from './pages/StockAnalysis';
+import Performance from './pages/Performance';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "SignalAnalytics": SignalAnalytics,
     "Signals": Signals,
     "StockAnalysis": StockAnalysis,
+    "Performance": Performance,
 }
 
 export const pagesConfig = {
