@@ -363,6 +363,13 @@ export default function SignalsPage() {
             ))}
           </div>
         )}
+
+        {/* Signal Detail Modal */}
+        <SignalDetailModal
+          signal={selectedSignal}
+          onClose={() => setSelectedSignal(null)}
+          onCreatePaperTrade={createPaperTrade}
+        />
       </div>
     </div>
   );
