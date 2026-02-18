@@ -92,6 +92,7 @@ Deno.serve(async (req) => {
     const days = body.days || 30;
     const timeframe = body.timeframe || '1h';
     const limitSymbols = body.limitSymbols || 50;
+    const delayMs = body.delayMs || 300; // Delay between symbols to avoid rate limiting
 
     // Load watchlist
     const watchlist = await base44.asServiceRole.entities.Watchlist.filter({
@@ -101,7 +102,7 @@ Deno.serve(async (req) => {
     });
 
     const symbolsToScan = watchlist.slice(0, limitSymbols);
-    const hoursToFetch = days * 24;
+    const hoursToFetch = Math.min(days * 24, 2000); // CryptoCompare max limit is 2000
 
     const results = {
       symbolsProcessed: 0,
