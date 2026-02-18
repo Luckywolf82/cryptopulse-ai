@@ -366,6 +366,11 @@ Deno.serve(async (req) => {
           error: error.message
         });
       }
+      
+      // Delay between symbols to avoid rate limiting
+      if (delayMs > 0) {
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+      }
     }
 
     return Response.json({
