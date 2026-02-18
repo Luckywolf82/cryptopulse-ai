@@ -426,6 +426,7 @@ Deno.serve(async (req) => {
           score,
           price: data1h.close[lastClosedIndex],
           volume: lastVol,
+          ruleVersion: 'v2',
           payloadJson: {
             closeTime: data1h.closeTime[lastClosedIndex],
             ema20: currEma20,
