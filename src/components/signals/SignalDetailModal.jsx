@@ -16,7 +16,10 @@ export default function SignalDetailModal({ signal, onClose, onCreatePaperTrade 
   
   useEffect(() => {
     if (signal) {
+      setRecommendation(null); // Reset first to avoid showing old data
       loadRecommendation();
+    } else {
+      setRecommendation(null); // Clear when closing modal
     }
   }, [signal?.id]);
   
