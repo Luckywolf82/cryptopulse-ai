@@ -110,7 +110,7 @@ Deno.serve(async (req) => {
     const days = body.days || 30;
     const timeframe = body.timeframe || '1h';
     const limitSymbols = body.limitSymbols || 50;
-    const delayMs = body.delayMs || 300; // Delay between symbols to avoid rate limiting
+    const delayMs = body.delayMs || 1000; // Delay between symbols to avoid rate limiting
 
     // Load watchlist
     const watchlist = await base44.asServiceRole.entities.Watchlist.filter({
