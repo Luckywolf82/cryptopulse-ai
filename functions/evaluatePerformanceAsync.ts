@@ -62,9 +62,11 @@ Deno.serve(async (req) => {
     
     const signals = unevaluatedSignals.slice(0, 50);
     
-    // Process all signals without waiting
-    const promises = signals.map(signal => 
+    // Process signals with delay to avoid rate limit
+    const promises = signals.map((signal, index) => 
       (async () => {
+        // Add progressive delay to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, index * 2000));
         try {
           const fsym = signal.symbol.replace('USDT', '');
           const endpoint = `https://min-api.cryptocompare.com/data/v2/histohour?fsym=${fsym}&tsym=USD&limit=200`;
