@@ -130,7 +130,12 @@ Deno.serve(async (req) => {
         }
 
         const json1h = await data1hRes.json();
-        if (json1h.Response === 'Error') continue;
+        if (json1h.Response === 'Error') {
+          results.debug.push(`CryptoCompare error for ${symbol}: ${json1h.Message || 'Unknown'}`);
+          continue;
+        }
+        
+        results.debug.push(`Fetched ${json1h.Data.Data.length} candles for ${symbol}`);
 
         const data1h = parseCryptoCompare(json1h.Data.Data);
 
