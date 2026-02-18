@@ -35,14 +35,12 @@ export default function PerformancePage() {
     mutationFn: async () => {
       setIsEvaluating(true);
       console.log(`🚀 Starting evaluation for ${hoursBack} hours back, ruleVersion: v2`);
-      const res = await base44.functions.invoke("evaluatePerformanceAsync", { hoursBack, ruleVersion: 'v2' });
+      const res = await base44.functions.invoke("evaluatePerformance", { hoursBack, maxSignals: 5 });
       console.log(`✅ Evaluation response:`, res.data);
       return res.data;
     },
-    onSuccess: async (data) => {
-      console.log(`📈 Started evaluation for ${data.started} signals`);
-      // Wait a bit for async processing to complete
-      await new Promise(resolve => setTimeout(resolve, 5000));
+    onSuccess: (data) => {
+      console.log(`📈 Evaluated ${data.evaluated} signals, errors: ${data.errors}`);
       console.log(`🔄 Refetching performances...`);
       queryClient.invalidateQueries({ queryKey: ["signalPerformances"] });
       setIsEvaluating(false);

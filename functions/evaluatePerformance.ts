@@ -25,14 +25,19 @@ function parseCryptoCompare(data) {
   };
 }
 
-async function fetchWithRetry(url, retries = 2) {
+async function fetchWithRetry(url, retries = 3) {
   const response = await fetch(url);
   if (response.status === 429 && retries > 0) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
     return fetchWithRetry(url, retries - 1);
   }
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return response;
+  const json = await response.json();
+  if (json.Response === 'Error' && json.Message && json.Message.includes('rate limit') && retries > 0) {
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    return fetchWithRetry(url, retries - 1);
+  }
+  return { ok: true, json: () => Promise.resolve(json) };
 }
 
 Deno.serve(async (req) => {
@@ -66,6 +71,9 @@ Deno.serve(async (req) => {
 
     for (const signal of signals) {
       try {
+        // Add delay between signals to avoid rate limit
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
         const fsym = signal.symbol.replace('USDT', '');
         const endpoint = `https://min-api.cryptocompare.com/data/v2/histohour?fsym=${fsym}&tsym=USD&limit=200`;
         
