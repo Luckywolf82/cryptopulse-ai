@@ -378,8 +378,6 @@ Deno.serve(async (req) => {
           recentSignals.set(cooldownKey, currentTime);
         }
 
-        results.symbolsProcessed++;
-
       } catch (error) {
         results.errors.push({
           symbol: watchItem.symbol,
