@@ -155,7 +155,7 @@ Deno.serve(async (req) => {
           const existing = await base44.entities.SignalPerformance.filter({ signalId: signal.id });
           if (existing.length > 0) return;
 
-          await base44.entities.SignalPerformance.create({
+          const created = await base44.entities.SignalPerformance.create({
             signalId: signal.id,
             symbol: signal.symbol,
             timeframe: signal.timeframe,
@@ -178,8 +178,9 @@ Deno.serve(async (req) => {
             evaluatedAt: new Date().toISOString(),
             status
           });
+          console.log(`✅ Created performance for ${signal.symbol} - ${status} (${pnlPercent.toFixed(2)}%)`);
         } catch (e) {
-          // Silently fail
+          console.error(`❌ Failed to evaluate ${signal.symbol}:`, e.message);
         }
       })()
     );

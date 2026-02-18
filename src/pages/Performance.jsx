@@ -13,12 +13,17 @@ export default function PerformancePage() {
 
   const { data: performances = [], refetch } = useQuery({
     queryKey: ["signalPerformances"],
-    queryFn: () => base44.entities.SignalPerformance.list("-created_date", 5000),
+    queryFn: async () => {
+      const data = await base44.entities.SignalPerformance.list("-created_date", 5000);
+      console.log(`📊 Fetched ${data.length} performances:`, data.slice(0, 3));
+      return data;
+    },
   });
 
   // Real-time subscription to auto-update when new performances are created
   useEffect(() => {
     const unsubscribe = base44.entities.SignalPerformance.subscribe((event) => {
+      console.log(`🔔 SignalPerformance event:`, event.type, event.data?.symbol);
       if (event.type === 'create') {
         refetch();
       }
@@ -29,17 +34,21 @@ export default function PerformancePage() {
   const evaluateMutation = useMutation({
     mutationFn: async () => {
       setIsEvaluating(true);
+      console.log(`🚀 Starting evaluation for ${hoursBack} hours back, ruleVersion: v2`);
       const res = await base44.functions.invoke("evaluatePerformanceAsync", { hoursBack, ruleVersion: 'v2' });
+      console.log(`✅ Evaluation response:`, res.data);
       return res.data;
     },
     onSuccess: async (data) => {
-      console.log(`Started evaluation for ${data.started} signals`);
+      console.log(`📈 Started evaluation for ${data.started} signals`);
       // Wait a bit for async processing to complete
       await new Promise(resolve => setTimeout(resolve, 5000));
+      console.log(`🔄 Refetching performances...`);
       queryClient.invalidateQueries({ queryKey: ["signalPerformances"] });
       setIsEvaluating(false);
     },
-    onError: () => {
+    onError: (error) => {
+      console.error(`❌ Evaluation error:`, error);
       setIsEvaluating(false);
     },
   });
