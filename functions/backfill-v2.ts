@@ -53,15 +53,33 @@ function calculateRSI(data, period = 14) {
 }
 
 // Helper: Fetch with retry
-async function fetchWithRetry(url, retries = 1) {
+async function fetchWithRetry(url, retries = 2) {
   try {
     const response = await fetch(url);
+    
+    // Check HTTP status
     if (response.status === 429 && retries > 0) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       return fetchWithRetry(url, retries - 1);
     }
+    
+    // Check JSON response for rate limit errors
+    if (response.ok) {
+      const json = await response.json();
+      if (json.Response === 'Error' && json.Message && json.Message.includes('rate limit') && retries > 0) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return fetchWithRetry(url, retries - 1);
+      }
+      // Return response with parsed JSON
+      return { ok: true, json: () => Promise.resolve(json), status: response.status };
+    }
+    
     return response;
   } catch (error) {
+    if (retries > 0) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return fetchWithRetry(url, retries - 1);
+    }
     throw error;
   }
 }
