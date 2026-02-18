@@ -137,6 +137,7 @@ Deno.serve(async (req) => {
     const timeframeBias = body.timeframeBias || '4h';
     const lookback = body.lookback || 120;
     const cooldownHours = body.cooldownHours || 6;
+    const cooldownHoursPullback = 12; // 12 hour cooldown for PULLBACK_RETEST
     const maxConcurrency = body.maxConcurrency || 6;
     const minScore = body.minScore || 70;
 
@@ -264,19 +265,35 @@ Deno.serve(async (req) => {
            mssDirection = 'short';
          }
 
-         // Detect PULLBACK_RETEST
+         // Detect PULLBACK_RETEST (strict confirmation)
          let pullbackDirection = null;
-         const closeLong = data1h.close[lastClosedIndex] > currEma50;
-         const lowRetestLong = data1h.low[lastClosedIndex] <= currEma50 * 1.005;
-         const closeAboveLong = data1h.close[lastClosedIndex] >= currEma50;
-
-         const closeShort = data1h.close[lastClosedIndex] < currEma50;
-         const highRetestShort = data1h.high[lastClosedIndex] >= currEma50 * 0.995;
-         const closeBelowShort = data1h.close[lastClosedIndex] <= currEma50;
-
-         if (closeLong && lowRetestLong && closeAboveLong) {
+         
+         // Calculate ATR for retest confirmation
+         const atrPeriod = 14;
+         const atrValues = [];
+         for (let i = lastClosedIndex - atrPeriod; i < lastClosedIndex; i++) {
+           const tr = Math.max(
+             data1h.high[i] - data1h.low[i],
+             Math.abs(data1h.high[i] - data1h.close[i - 1]),
+             Math.abs(data1h.low[i] - data1h.close[i - 1])
+           );
+           atrValues.push(tr);
+         }
+         const atr = atrValues.reduce((a, b) => a + b, 0) / atrPeriod;
+         
+         // For LONG: trend above EMA50, retest within 0.5*ATR of EMA20, close back above
+         const trendAboveEma50 = data1h.close[lastClosedIndex] > currEma50;
+         const retestEma20Long = Math.abs(data1h.low[lastClosedIndex] - currEma20) <= 0.5 * atr;
+         const closeBackAbove = data1h.close[lastClosedIndex] > currEma20;
+         
+         // For SHORT: trend below EMA50, retest within 0.5*ATR of EMA20, close back below
+         const trendBelowEma50 = data1h.close[lastClosedIndex] < currEma50;
+         const retestEma20Short = Math.abs(data1h.high[lastClosedIndex] - currEma20) <= 0.5 * atr;
+         const closeBackBelow = data1h.close[lastClosedIndex] < currEma20;
+         
+         if (trendAboveEma50 && retestEma20Long && closeBackAbove) {
            pullbackDirection = 'long';
-         } else if (closeShort && highRetestShort && closeBelowShort) {
+         } else if (trendBelowEma50 && retestEma20Short && closeBackBelow) {
            pullbackDirection = 'short';
          }
 
@@ -313,7 +330,8 @@ Deno.serve(async (req) => {
            triggerType = 'EMA_FLIP';
            direction = emaFlipDirection;
            baseTriggerType = 'EMA_FLIP';
-         } else if (pullbackDirection && htfAlign) {
+         } else if (pullbackDirection && htfAlign && volatilityHealthy && volumeSpike) {
+           // PULLBACK_RETEST requires all confirmations
            triggerType = 'PULLBACK_RETEST';
            direction = pullbackDirection;
            baseTriggerType = 'PULLBACK_RETEST';
@@ -351,7 +369,10 @@ Deno.serve(async (req) => {
         const volatilityHealthy = avgRange20 > avgRange120 * 0.7;
 
         const distFromEma50 = Math.abs(data1h.close[lastClosedIndex] - currEma50) / currEma50;
-        const tooExtended = distFromEma50 > 0.06;
+        // Stricter tooExtended filter for PULLBACK_RETEST
+        const tooExtended = triggerType === 'PULLBACK_RETEST' 
+          ? distFromEma50 > 0.04 
+          : distFromEma50 > 0.06;
 
         // Check symbol quality
         const isLowQuality = watchItem.min24hVolumeUsd && watchItem.min24hVolumeUsd < 5000000;
@@ -360,7 +381,7 @@ Deno.serve(async (req) => {
         let score = 0;
         if (triggerType === 'MSS') score = 60;
         else if (triggerType === 'EMA_FLIP') score = 50;
-        else if (triggerType === 'PULLBACK_RETEST') score = 45;
+        else if (triggerType === 'PULLBACK_RETEST') score = 65; // Higher base score with strict confirmations
         else if (triggerType === 'RSI_REVERSAL') score = 40;
         else score = 35;
 
@@ -375,8 +396,9 @@ Deno.serve(async (req) => {
 
         score = Math.max(0, Math.min(100, score));
 
-        // Check cooldown
-        const cooldownTime = new Date(Date.now() - cooldownHours * 60 * 60 * 1000).toISOString();
+        // Check cooldown (12h for PULLBACK_RETEST, 6h for others)
+        const cooldownToUse = triggerType === 'PULLBACK_RETEST' ? cooldownHoursPullback : cooldownHours;
+        const cooldownTime = new Date(Date.now() - cooldownToUse * 60 * 60 * 1000).toISOString();
         const recentSignals = await base44.entities.Signal.filter({
           symbol,
           exchange: 'BINANCE',
