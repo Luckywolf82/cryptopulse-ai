@@ -11,10 +11,20 @@ export default function PerformancePage() {
 
   const queryClient = useQueryClient();
 
-  const { data: performances = [] } = useQuery({
+  const { data: performances = [], refetch } = useQuery({
     queryKey: ["signalPerformances"],
-    queryFn: () => base44.entities.SignalPerformance.list("-created_date", 100),
+    queryFn: () => base44.entities.SignalPerformance.list("-created_date", 5000),
   });
+
+  // Real-time subscription to auto-update when new performances are created
+  useEffect(() => {
+    const unsubscribe = base44.entities.SignalPerformance.subscribe((event) => {
+      if (event.type === 'create') {
+        refetch();
+      }
+    });
+    return unsubscribe;
+  }, [refetch]);
 
   const evaluateMutation = useMutation({
     mutationFn: async () => {
