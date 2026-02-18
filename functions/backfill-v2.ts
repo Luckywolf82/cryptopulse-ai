@@ -107,7 +107,8 @@ Deno.serve(async (req) => {
       symbolsProcessed: 0,
       candlesAnalyzed: 0,
       signalsCreated: 0,
-      errors: []
+      errors: [],
+      debug: []
     };
 
     // Process each symbol
@@ -116,12 +117,17 @@ Deno.serve(async (req) => {
         const symbol = watchItem.symbol;
         const fsym = symbol.replace('USDT', '');
 
+        results.debug.push(`Processing ${symbol} (${fsym})`);
+
         // Fetch historical data
         const data1hRes = await fetchWithRetry(
           `https://min-api.cryptocompare.com/data/v2/histohour?fsym=${fsym}&tsym=USD&limit=${hoursToFetch + 120}`
         );
 
-        if (!data1hRes.ok) continue;
+        if (!data1hRes.ok) {
+          results.debug.push(`HTTP error for ${symbol}: ${data1hRes.status}`);
+          continue;
+        }
 
         const json1h = await data1hRes.json();
         if (json1h.Response === 'Error') continue;
