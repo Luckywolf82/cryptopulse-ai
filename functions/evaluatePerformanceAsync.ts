@@ -43,10 +43,14 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const hoursBack = body.hoursBack || 168;
+    const ruleVersion = body.ruleVersion || 'v2';
 
     const cutoffTime = new Date(Date.now() - hoursBack * 60 * 60 * 1000).toISOString();
     const allSignals = await base44.entities.Signal.list("-created_date", 5000);
-    const recentSignals = allSignals.filter(s => new Date(s.created_date) >= new Date(cutoffTime));
+    const recentSignals = allSignals.filter(s => 
+      new Date(s.created_date) >= new Date(cutoffTime) &&
+      s.ruleVersion === ruleVersion
+    );
 
     if (recentSignals.length === 0) {
       return Response.json({ started: 0 });
