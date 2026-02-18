@@ -132,6 +132,8 @@ Deno.serve(async (req) => {
 
     // Process each symbol
     for (const watchItem of symbolsToScan) {
+      results.symbolsProcessed++;
+      
       try {
         const symbol = watchItem.symbol;
         const fsym = symbol.replace('USDT', '');
@@ -145,13 +147,13 @@ Deno.serve(async (req) => {
 
         if (!data1hRes.ok) {
           results.debug.push(`HTTP error for ${symbol}: ${data1hRes.status}`);
-          continue;
+          throw new Error(`HTTP ${data1hRes.status}`);
         }
 
         const json1h = await data1hRes.json();
         if (json1h.Response === 'Error') {
           results.debug.push(`CryptoCompare error for ${symbol}: ${json1h.Message || 'Unknown'}`);
-          continue;
+          throw new Error(json1h.Message || 'Unknown error');
         }
         
         results.debug.push(`Fetched ${json1h.Data.Data.length} candles for ${symbol}`);
