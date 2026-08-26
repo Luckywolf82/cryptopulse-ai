@@ -1,0 +1,38 @@
+{
+  "name": "NotificationLog",
+  "type": "object",
+  "properties": {
+    "signalId": {
+      "type": "string",
+      "description": "Reference to the Signal that triggered this notification"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "telegram",
+        "email",
+        "inapp"
+      ],
+      "description": "Notification delivery channel"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "sent",
+        "failed"
+      ],
+      "default": "queued",
+      "description": "Delivery status"
+    },
+    "error": {
+      "type": "string",
+      "description": "Error message if delivery failed"
+    }
+  },
+  "required": [
+    "signalId",
+    "channel",
+    "status"
+  ]
+}

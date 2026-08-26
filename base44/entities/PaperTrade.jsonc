@@ -1,0 +1,68 @@
+{
+  "name": "PaperTrade",
+  "type": "object",
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "description": "Trading symbol"
+    },
+    "exchange": {
+      "type": "string",
+      "description": "Exchange name"
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "long",
+        "short"
+      ],
+      "description": "Trade side"
+    },
+    "entry": {
+      "type": "number",
+      "description": "Entry price"
+    },
+    "stop": {
+      "type": "number",
+      "description": "Stop loss price"
+    },
+    "targetsJson": {
+      "type": "object",
+      "description": "Take profit targets as JSON"
+    },
+    "sizeUsd": {
+      "type": "number",
+      "description": "Position size in USD"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "closed",
+        "cancelled"
+      ],
+      "default": "open",
+      "description": "Trade status"
+    },
+    "pnlUsd": {
+      "type": "number",
+      "description": "Profit/Loss in USD"
+    },
+    "openedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When trade was opened"
+    },
+    "closedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When trade was closed"
+    }
+  },
+  "required": [
+    "symbol",
+    "exchange",
+    "side",
+    "entry"
+  ]
+}

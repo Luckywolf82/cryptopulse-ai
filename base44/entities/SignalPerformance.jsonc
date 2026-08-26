@@ -1,0 +1,112 @@
+{
+  "name": "SignalPerformance",
+  "type": "object",
+  "properties": {
+    "signalId": {
+      "type": "string",
+      "description": "Reference to the original Signal"
+    },
+    "symbol": {
+      "type": "string",
+      "description": "Trading symbol (e.g., SOLUSDT)"
+    },
+    "timeframe": {
+      "type": "string",
+      "description": "Chart timeframe (e.g., 1h, 4h)"
+    },
+    "triggerType": {
+      "type": "string",
+      "description": "Type of signal trigger (e.g., EMA_FLIP, MSS)"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "long",
+        "short"
+      ],
+      "description": "Trade direction"
+    },
+    "signalScore": {
+      "type": "number",
+      "description": "Original signal score"
+    },
+    "entryPrice": {
+      "type": "number",
+      "description": "Entry price at signal trigger"
+    },
+    "exitPrice": {
+      "type": "number",
+      "description": "Exit price where trade was closed"
+    },
+    "exitReason": {
+      "type": "string",
+      "description": "Reason for exit (SL, TP1, TP2, TP3, timeout)"
+    },
+    "stopLossPrice": {
+      "type": "number",
+      "description": "Stop loss level"
+    },
+    "takeProfitPrices": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Take profit targets [TP1, TP2, TP3]"
+    },
+    "pnlPercent": {
+      "type": "number",
+      "description": "Profit/Loss percentage"
+    },
+    "pnlUsd": {
+      "type": "number",
+      "description": "Profit/Loss in USD (per 1 USD risk)"
+    },
+    "rMultiple": {
+      "type": "number",
+      "description": "Risk multiple (pnl / risk)"
+    },
+    "mfePercent": {
+      "type": "number",
+      "description": "Max Favorable Excursion %"
+    },
+    "maePercent": {
+      "type": "number",
+      "description": "Max Adverse Excursion %"
+    },
+    "holdingCandles": {
+      "type": "number",
+      "description": "Number of candles held"
+    },
+    "holdingHours": {
+      "type": "number",
+      "description": "Hours held"
+    },
+    "atrValue": {
+      "type": "number",
+      "description": "ATR value used for SL/TP calculation"
+    },
+    "evaluatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this performance was evaluated"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "win",
+        "loss",
+        "breakeven"
+      ],
+      "description": "Trade outcome"
+    }
+  },
+  "required": [
+    "signalId",
+    "symbol",
+    "timeframe",
+    "triggerType",
+    "direction",
+    "signalScore",
+    "entryPrice"
+  ]
+}

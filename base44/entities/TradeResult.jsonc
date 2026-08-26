@@ -1,0 +1,56 @@
+{
+  "name": "TradeResult",
+  "type": "object",
+  "properties": {
+    "analysis_id": {
+      "type": "string",
+      "description": "ID analisis yang di-follow"
+    },
+    "asset_symbol": {
+      "type": "string",
+      "description": "Symbol aset yang di-trade"
+    },
+    "recommendation_action": {
+      "type": "string",
+      "description": "Rekomendasi yang diikuti"
+    },
+    "entry_price": {
+      "type": "number",
+      "description": "Harga entry actual"
+    },
+    "exit_price": {
+      "type": "number",
+      "description": "Harga exit actual"
+    },
+    "result_status": {
+      "type": "string",
+      "enum": [
+        "SUCCESS",
+        "FAILED",
+        "ONGOING"
+      ],
+      "description": "Status hasil trading"
+    },
+    "profit_loss_percent": {
+      "type": "number",
+      "description": "Profit/Loss dalam persen"
+    },
+    "profit_loss_amount": {
+      "type": "number",
+      "description": "Profit/Loss dalam rupiah"
+    },
+    "holding_period_days": {
+      "type": "number",
+      "description": "Berapa hari di-hold"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Catatan user tentang hasil trading"
+    }
+  },
+  "required": [
+    "analysis_id",
+    "asset_symbol",
+    "result_status"
+  ]
+}

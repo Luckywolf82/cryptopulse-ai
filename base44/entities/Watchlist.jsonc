@@ -1,0 +1,65 @@
+{
+  "name": "Watchlist",
+  "type": "object",
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "description": "Trading symbol (e.g., SOLUSDT)"
+    },
+    "exchange": {
+      "type": "string",
+      "description": "Exchange name (e.g., BINANCE)"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this watchlist item is active"
+    },
+    "scanEnabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to scan this symbol for signals"
+    },
+    "scanIntervalMinutes": {
+      "type": "number",
+      "default": 15,
+      "description": "How often to scan this symbol (in minutes)"
+    },
+    "min24hVolumeUsd": {
+      "type": "number",
+      "default": 1000000,
+      "description": "Minimum 24h volume in USD"
+    },
+    "minLiquidityUsd": {
+      "type": "number",
+      "default": 200000,
+      "description": "Minimum liquidity requirement in USD"
+    },
+    "maxFdvUsd": {
+      "type": "number",
+      "description": "Maximum fully diluted valuation in USD"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about this watchlist item"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source of this watchlist entry (e.g., auto_top50, manual)"
+    },
+    "lastAutoUpdatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time this was auto-updated"
+    },
+    "lastScannedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time this symbol was scanned for signals"
+    }
+  },
+  "required": [
+    "symbol",
+    "exchange"
+  ]
+}

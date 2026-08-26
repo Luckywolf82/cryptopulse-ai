@@ -1,0 +1,40 @@
+{
+  "name": "I18nAuditResult",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail"
+      ],
+      "description": "Overall audit status"
+    },
+    "missingKeys": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Translation keys used in code but missing from translation files"
+    },
+    "hardcodedStrings": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Likely hardcoded strings found in source files"
+    },
+    "scannedFilesCount": {
+      "type": "number",
+      "description": "Number of files scanned"
+    },
+    "issuesCount": {
+      "type": "number",
+      "description": "Total number of issues found"
+    }
+  },
+  "required": [
+    "status",
+    "scannedFilesCount"
+  ]
+}

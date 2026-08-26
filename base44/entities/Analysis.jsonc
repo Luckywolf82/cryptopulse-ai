@@ -1,0 +1,181 @@
+{
+  "name": "Analysis",
+  "type": "object",
+  "properties": {
+    "image_url": {
+      "type": "string",
+      "description": "URL gambar candlestick chart yang diupload"
+    },
+    "trading_type": {
+      "type": "string",
+      "enum": [
+        "spot",
+        "forex"
+      ],
+      "description": "Jenis trading: Spot atau Forex"
+    },
+    "timeframe": {
+      "type": "string",
+      "enum": [
+        "1m",
+        "5m",
+        "15m",
+        "1h",
+        "4h",
+        "1d"
+      ],
+      "description": "Time frame chart yang dianalisis"
+    },
+    "strategy_type": {
+      "type": "string",
+      "enum": [
+        "scalping",
+        "swing",
+        "position"
+      ],
+      "description": "Jenis strategi trading berdasarkan timeframe"
+    },
+    "trading_direction": {
+      "type": "string",
+      "enum": [
+        "BUY",
+        "SELL"
+      ],
+      "description": "Arah trading yang JELAS: BUY atau SELL"
+    },
+    "entry_action": {
+      "type": "string",
+      "description": "Instruksi entry yang jelas (misal: BUY LIMIT, SELL MARKET, dll)"
+    },
+    "crypto_pair": {
+      "type": "string",
+      "description": "Pasangan crypto yang dianalisis (misal: BTC/USDT)"
+    },
+    "pattern_detected": {
+      "type": "string",
+      "description": "Pattern candlestick yang terdeteksi"
+    },
+    "pattern_description": {
+      "type": "string",
+      "description": "Penjelasan detail tentang pattern yang terdeteksi"
+    },
+    "pattern_image_url": {
+      "type": "string",
+      "description": "URL gambar pattern yang dihasilkan AI untuk referensi"
+    },
+    "market_condition": {
+      "type": "string",
+      "enum": [
+        "bullish",
+        "bearish",
+        "sideways"
+      ],
+      "description": "Kondisi pasar saat ini"
+    },
+    "entry_price": {
+      "type": "number",
+      "description": "Harga entry yang disarankan"
+    },
+    "take_profit_1": {
+      "type": "number",
+      "description": "Target take profit pertama"
+    },
+    "take_profit_2": {
+      "type": "number",
+      "description": "Target take profit kedua"
+    },
+    "take_profit_3": {
+      "type": "number",
+      "description": "Target take profit ketiga"
+    },
+    "stop_loss": {
+      "type": "number",
+      "description": "Level stop loss"
+    },
+    "estimated_time_tp1": {
+      "type": "string",
+      "description": "Estimasi waktu mencapai TP1"
+    },
+    "estimated_time_tp2": {
+      "type": "string",
+      "description": "Estimasi waktu mencapai TP2"
+    },
+    "estimated_time_tp3": {
+      "type": "string",
+      "description": "Estimasi waktu mencapai TP3"
+    },
+    "risk_reward_ratio": {
+      "type": "string",
+      "description": "Risk reward ratio"
+    },
+    "confidence_score": {
+      "type": "number",
+      "description": "Tingkat kepercayaan AI terhadap analisis (0-100)"
+    },
+    "analysis_notes": {
+      "type": "string",
+      "description": "Catatan tambahan dari AI tentang analisis"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "description": "Level risiko trading"
+    },
+    "volume_confirmation": {
+      "type": "boolean",
+      "description": "Apakah ada konfirmasi volume"
+    },
+    "technical_indicators": {
+      "type": "object",
+      "description": "Indikator teknikal yang mendukung",
+      "properties": {
+        "rsi": {
+          "type": "string"
+        },
+        "macd": {
+          "type": "string"
+        },
+        "bollinger_bands": {
+          "type": "string"
+        },
+        "moving_averages": {
+          "type": "string"
+        }
+      }
+    },
+    "key_levels": {
+      "type": "array",
+      "description": "Level-level penting (support/resistance)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "strength": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "expert_reasoning": {
+      "type": "string",
+      "description": "Penjelasan mendalam mengapa ini adalah setup yang akurat"
+    },
+    "potential_risks": {
+      "type": "string",
+      "description": "Potensi risiko dan alasan mengapa trade bisa gagal"
+    }
+  },
+  "required": [
+    "image_url",
+    "trading_type"
+  ]
+}

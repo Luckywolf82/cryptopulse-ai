@@ -1,0 +1,235 @@
+{
+  "name": "StockAnalysis",
+  "type": "object",
+  "properties": {
+    "image_url": {
+      "type": "string",
+      "description": "URL gambar chart saham yang diupload"
+    },
+    "stock_code": {
+      "type": "string",
+      "description": "Kode saham Indonesia (misal: BBCA, TLKM, GOTO)"
+    },
+    "stock_name": {
+      "type": "string",
+      "description": "Nama lengkap perusahaan"
+    },
+    "sector": {
+      "type": "string",
+      "description": "Sektor industri (Banking, Technology, Consumer, dll)"
+    },
+    "current_price": {
+      "type": "number",
+      "description": "Harga saham saat ini"
+    },
+    "price_change": {
+      "type": "number",
+      "description": "Perubahan harga (absolut)"
+    },
+    "price_change_percent": {
+      "type": "number",
+      "description": "Perubahan harga dalam persen"
+    },
+    "timeframe": {
+      "type": "string",
+      "enum": [
+        "1D",
+        "1W",
+        "1M",
+        "3M",
+        "6M",
+        "1Y"
+      ],
+      "description": "Timeframe chart yang dianalisis"
+    },
+    "technical_analysis": {
+      "type": "object",
+      "description": "Analisis teknikal",
+      "properties": {
+        "trend_direction": {
+          "type": "string",
+          "enum": [
+            "bullish",
+            "bearish",
+            "sideways"
+          ],
+          "description": "Arah trend"
+        },
+        "support_levels": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Level support"
+        },
+        "resistance_levels": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Level resistance"
+        },
+        "pattern_detected": {
+          "type": "string",
+          "description": "Pattern yang terdeteksi"
+        },
+        "technical_indicators": {
+          "type": "object",
+          "properties": {
+            "rsi": {
+              "type": "string"
+            },
+            "macd": {
+              "type": "string"
+            },
+            "moving_average": {
+              "type": "string"
+            },
+            "bollinger_bands": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "fundamental_analysis": {
+      "type": "object",
+      "description": "Analisis fundamental",
+      "properties": {
+        "pe_ratio": {
+          "type": "number",
+          "description": "Price to Earnings Ratio"
+        },
+        "pbv_ratio": {
+          "type": "number",
+          "description": "Price to Book Value"
+        },
+        "dividend_yield": {
+          "type": "number",
+          "description": "Dividen yield %"
+        },
+        "market_cap": {
+          "type": "string",
+          "description": "Market capitalization"
+        },
+        "revenue_growth": {
+          "type": "string",
+          "description": "Pertumbuhan pendapatan"
+        },
+        "profit_margin": {
+          "type": "string",
+          "description": "Margin keuntungan"
+        },
+        "debt_to_equity": {
+          "type": "number",
+          "description": "Rasio hutang terhadap ekuitas"
+        }
+      }
+    },
+    "news_analysis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "headline": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "sentiment": {
+            "type": "string",
+            "enum": [
+              "positive",
+              "negative",
+              "neutral"
+            ]
+          },
+          "impact_score": {
+            "type": "number",
+            "description": "Skor dampak berita 1-10"
+          },
+          "source": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Analisis berita terkini"
+    },
+    "investment_recommendation": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "STRONG_BUY",
+            "BUY",
+            "HOLD",
+            "SELL",
+            "STRONG_SELL"
+          ],
+          "description": "Rekomendasi investasi"
+        },
+        "target_price": {
+          "type": "number",
+          "description": "Harga target"
+        },
+        "stop_loss": {
+          "type": "number",
+          "description": "Stop loss level"
+        },
+        "time_horizon": {
+          "type": "string",
+          "enum": [
+            "short_term",
+            "medium_term",
+            "long_term"
+          ],
+          "description": "Horizon waktu investasi"
+        },
+        "entry_timing": {
+          "type": "string",
+          "description": "Timing entry yang disarankan"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "description": "Level risiko"
+        }
+      }
+    },
+    "confidence_score": {
+      "type": "number",
+      "description": "Skor kepercayaan analisis AI (0-100)"
+    },
+    "analysis_summary": {
+      "type": "string",
+      "description": "Ringkasan analisis lengkap"
+    },
+    "key_catalysts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Katalis utama yang mempengaruhi harga"
+    },
+    "risk_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Faktor risiko yang perlu diperhatikan"
+    }
+  },
+  "required": [
+    "image_url",
+    "stock_code"
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "name": "TradingRecommendation",
+  "type": "object",
+  "properties": {
+    "signalId": {
+      "type": "string",
+      "description": "Reference to the Signal that triggered this recommendation"
+    },
+    "recommendation_type": {
+      "type": "string",
+      "enum": [
+        "stock",
+        "crypto",
+        "forex"
+      ],
+      "description": "Jenis rekomendasi trading"
+    },
+    "asset_symbol": {
+      "type": "string",
+      "description": "Symbol aset (BBCA, BTC/USDT, EUR/USD)"
+    },
+    "asset_name": {
+      "type": "string",
+      "description": "Nama lengkap aset"
+    },
+    "recommendation_action": {
+      "type": "string",
+      "enum": [
+        "STRONG_BUY",
+        "BUY",
+        "HOLD",
+        "SELL",
+        "STRONG_SELL"
+      ],
+      "description": "Aksi rekomendasi"
+    },
+    "current_price": {
+      "type": "number",
+      "description": "Harga saat ini"
+    },
+    "target_price": {
+      "type": "number",
+      "description": "Target harga"
+    },
+    "stop_loss": {
+      "type": "number",
+      "description": "Stop loss level"
+    },
+    "confidence_score": {
+      "type": "number",
+      "description": "Skor kepercayaan AI"
+    },
+    "time_horizon": {
+      "type": "string",
+      "enum": [
+        "short_term",
+        "medium_term",
+        "long_term"
+      ],
+      "description": "Horizon waktu investasi"
+    },
+    "news_catalyst": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Berita-berita yang mendukung rekomendasi"
+    },
+    "technical_reason": {
+      "type": "string",
+      "description": "Alasan teknikal"
+    },
+    "fundamental_reason": {
+      "type": "string",
+      "description": "Alasan fundamental"
+    },
+    "risk_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Faktor risiko"
+    },
+    "expected_return_percent": {
+      "type": "number",
+      "description": "Expected return dalam persen"
+    },
+    "dca_recommendation": {
+      "type": "object",
+      "description": "Rekomendasi Dollar Cost Averaging",
+      "properties": {
+        "monthly_amount": {
+          "type": "number"
+        },
+        "duration_months": {
+          "type": "number"
+        },
+        "total_investment": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "required": [
+    "recommendation_type",
+    "asset_symbol",
+    "recommendation_action",
+    "current_price"
+  ]
+}

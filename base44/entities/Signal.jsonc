@@ -1,0 +1,68 @@
+{
+  "name": "Signal",
+  "type": "object",
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "description": "Trading symbol"
+    },
+    "exchange": {
+      "type": "string",
+      "description": "Exchange name"
+    },
+    "timeframe": {
+      "type": "string",
+      "description": "Chart timeframe (e.g., 15m, 1h, 4h)"
+    },
+    "triggerType": {
+      "type": "string",
+      "description": "Type of signal trigger (e.g., EMA_FLIP, MSS, RSI_DIV)"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "long",
+        "short"
+      ],
+      "description": "Trade direction"
+    },
+    "score": {
+      "type": "number",
+      "description": "Signal quality score"
+    },
+    "price": {
+      "type": "number",
+      "description": "Price at signal trigger"
+    },
+    "volume": {
+      "type": "number",
+      "description": "Volume at signal trigger"
+    },
+    "payloadJson": {
+      "type": "object",
+      "description": "Additional signal metadata and indicators"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Raw incoming signal data (legacy)"
+    },
+    "ruleVersion": {
+      "type": "string",
+      "description": "Version of the ruleset used to generate this signal (e.g., v1, v2)",
+      "default": "v1"
+    },
+    "excluded": {
+      "type": "boolean",
+      "description": "Whether this signal should be excluded from analysis",
+      "default": false
+    }
+  },
+  "required": [
+    "symbol",
+    "exchange",
+    "timeframe",
+    "triggerType",
+    "direction",
+    "score"
+  ]
+}
